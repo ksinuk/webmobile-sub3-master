@@ -13,7 +13,7 @@
             <v-layout wrap>
               <!-- user name -->
               <v-flex xs12 sm6 md4>
-                <v-text-field label="display name*" required></v-text-field>
+                <v-text-field label="display name*" v-model="displayName" required>{{ displayName ? displayName : '' }}</v-text-field>
               </v-flex>
               <!-- user img -->
               <v-flex xs12 sm6 md4>
@@ -22,15 +22,16 @@
                   class="profileImg"
                 >
                   <img 
-                  id=image
-                  :src="photoURL ? noImage:this.$store.state.imgSrc.noImgSrc" alt="avatar">
+                  id="image"
+                  :src="photoURL ? photoURL:this.$store.state.imgSrc.noImgSrc" alt="avatar">
                 </v-avatar>
                 <!-- imageUpload -->
-                <input id=file type=file @change="uploadImage">
+                <input id="file" type="file" @change="uploadImage">
               </v-flex>
               <!-- password -->
               <v-flex xs12>
-                <v-text-field label="Password*" type="password" required></v-text-field>
+                <!--<v-text-field label="Password*" type="password" required></v-text-field>-->
+                <!-- password 변경 버튼 새로 만들기 -->
               </v-flex>
             </v-layout>
           </v-container>
@@ -38,7 +39,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click="dialog = false, changeSave()">Save</v-btn>
           <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
@@ -55,17 +56,17 @@ export default {
   },
   data () {
     return {
-      dialog: false,
-      photoURL: this.$store.state.firebaseUser.photoURL,
+      dialog: false
     }
   },
-  created() {
+  props: {
+    photoURL: {type: String},
+    displayName: {type: String}
   },
   methods: {
     uploadImage() {
       let file = document.getElementById('file')
       let image = document.getElementById('image')
-
       let target = event.currentTarget
       let xmlHttpRequest = new XMLHttpRequest()
       xmlHttpRequest.open('POST', 'https://api.imgur.com/3/image/', true)
@@ -77,13 +78,15 @@ export default {
           if (xmlHttpRequest.status == 200) {
             let result = JSON.parse(xmlHttpRequest.responseText)
             this.photoURL = result.data.link
-            console.log(this.photoURL)
           } else {
             alert("업로드 실패")
-            this.photoURL = "http://dy.gnch.or.kr/img/no-image.jpg"
+            this.photoURL = ""
           }
         }
       }
+    },
+    changeSave: function() {
+      FirebaseServices.updatedForUser(this.displayName, this.photoURL)
     }
   }
 }
