@@ -1,0 +1,93 @@
+<template>
+  <v-container class="loginCtn">
+    <v-layout row class="loginLayout">
+      <div class="py-5 pageDescript">
+        <h1 class="headline pb-2 loginh1">쉽고 빠르게<br>당신의 포트폴리오를</h1>
+        <h1 class="headline pb-2 loginh1">완성하기 위한 방법,</h1>
+        <p class="headline pb-2 loginp">바로 시작해 보세요.</p>
+      </div>
+      <div class="py-5">
+        <v-flex>
+          <!-- logo -->
+          <div>
+            <a class="homeBtn" href="/">DEVFOLIO</a>
+          </div>
+          <!-- hint text -->
+          <div>
+            <h3 class="loginh3">포트폴리오를 만들고,<br>공유하려면 가입하세요.</h3>
+          </div>
+          <!-- login function -->
+          <LoginButtons/>
+
+          <!-- <div>
+            <p>가입하면 서비스 이용약관, 개인정보 처리방침에 동의하게 됩니다.</p>
+          </div> -->
+        </v-flex>
+        <v-flex>
+          <div>
+            <span>계정이 있으신가요?</span>
+            <v-btn flat small style="width: 116px;">로그인하기</v-btn>
+          </div>
+          
+        </v-flex>
+      </div>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+import LoginButtons from '../components/LoginButtons'
+
+export default {
+  name: 'loginpage',
+  components: {
+    LoginButtons
+  },
+  data () {
+    return {
+    }
+  }
+}
+</script>
+
+<style scope>
+
+.loginh1, .loginp {
+  text-align: left;
+}
+.loginh3 {
+  text-align: center;
+}
+.loginCtn {
+  margin:100px auto;
+}
+.loginLayout {
+  /* background-color: white; */
+  /* text-align: center; */
+  /* display: inline-block; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+.homeBtn {
+  color: #0D47A1;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0px #1565C0, 8px 8px 0px #42A5F5, 12px 12px 0px #E3F2FD;
+  font-size: 1.9rem;
+  color: red;
+}
+.pageDescript {
+  max-width: 256px;
+}
+
+@media screen and (max-width: 1088px) {
+  .pageDescript {
+    display: none;
+  }
+}
+</style>
