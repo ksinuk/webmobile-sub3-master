@@ -30,8 +30,7 @@
               </v-flex>
               <!-- password -->
               <v-flex xs12>
-                <!--<v-text-field label="Password*" type="password" required></v-text-field>-->
-                <!-- password 변경 버튼 새로 만들기 -->
+                <v-text-field id="password" label="Password*" type="password"></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -87,6 +86,10 @@ export default {
     },
     changeSave: function() {
       FirebaseServices.updatedForUser(this.displayName, this.photoURL)
+      let password = document.getElementById('password')
+      if (password) {
+        FirebaseServices.changePassword(password)
+      }
     }
   }
 }
