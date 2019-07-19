@@ -225,7 +225,7 @@
                             <v-avatar>
                                 <v-icon>check_circle</v-icon>
                             </v-avatar>
-                          HTML [ 파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}]
+                          HTML 파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
 
                         </v-chip>
                       </template>
@@ -236,7 +236,7 @@
                             <v-avatar>
                                 <v-icon>check_circle</v-icon>
                             </v-avatar>
-                              CSS [ 파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}]
+                              CSS  파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
                         </v-chip>
                       </template>
                     </template>
@@ -246,7 +246,7 @@
                             <v-avatar>
                                 <v-icon>check_circle</v-icon>
                             </v-avatar>
-                              JavaScript [ 파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}]
+                              JavaScript  파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
                         </v-chip>
                       </template>
                     </template>

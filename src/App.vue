@@ -5,7 +5,7 @@
       <div>
         <router-view/>
       </div>
-      <Sidebar/>
+
       <TopButton/>
     </v-content>
   </v-app>
