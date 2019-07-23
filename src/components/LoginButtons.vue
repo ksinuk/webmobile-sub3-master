@@ -58,12 +58,23 @@
           ></v-text-field>
 
         <v-btn
+          v-show="viewSign"
           :loading="loading"
           :disabled="loading"
           color="success"
           @click="loader = 'loading'"
         >
           가입
+        </v-btn>
+
+        <v-btn
+          v-show="!viewSign"
+          :loading="loading"
+          :disabled="loading"
+          color="success"
+          @click="loader = 'loading'"
+        >
+          로그인
         </v-btn>
       </v-form>
 
@@ -78,6 +89,7 @@ export default {
   name: 'Loginbuttons',
   components: {
   },
+  props:['viewSign'],
   data () {
     return {
       // input rules
@@ -102,7 +114,12 @@ export default {
   watch: {
     loader () {
       if (this.loader === 'loading') {
-        this.createUserWithEmail()
+        if(this.viewSign == true) {
+          this.createUserWithEmail()
+        } else {
+          this.emailLogin()
+        }
+        
       }
       const thisCopy = this
       const l = thisCopy.loader
@@ -117,6 +134,9 @@ export default {
   methods: {
     async createUserWithEmail() {
       await FirebaseServices.createUserWithEmail(this.email, this.password)
+    },
+    emailLogin(){
+      FirebaseServices.loginUserWithEmail(this.email, this.password)
     },
     googleLogin() {
       FirebaseServices.loginUserWithGoogle()

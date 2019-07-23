@@ -167,38 +167,45 @@ export default {
     })
     console.log(user)
   },
-  // login 2-1. create user with e-mail
+  // login 2-1.1 create user with e-mail
   createUserWithEmail(email, password) {
-    let thisCopy = this
+    let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
-        thisCopy.createdbForNewUser(user.user.uid)
+        _this.createdbForNewUser(user.user.uid)
       })
       .catch(function(error) {
         console.log(error)
     })
   },
+  // login 2-1.2 login user whit e-mail
+  loginUserWithEmail(email, password) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(function(error) {
+        console.log(error)
+      })
+  },
   // login 2-2. login google
   loginUserWithGoogle() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithPopup(provider)
       .then(function(result) {
         if (result.additionalUserInfo.isNewUser) {
-          thisCopy.createdbForNewUser(result.user.uid)
+          _this.createdbForNewUser(result.user.uid)
         }
       }).catch(function(error) {
         console.log(error.code, error.message)
       })
   },
-  // login 2-3. facebook login
+  // login 2-3. login facebook
   loginUserWithFacebook() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.FacebookAuthProvider()
     firebase.auth().signInWithPopup(provider)
     .then(function(result) {
       if (result.additionalUserInfo.isNewUser) {
-        thisCopy.createdbForNewUser(result.user.uid)
+        _this.createdbForNewUser(result.user.uid)
       }
     }).catch(function(error) {
       console.log(error.code, error.message)
