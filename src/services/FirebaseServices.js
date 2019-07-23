@@ -4,6 +4,7 @@ import 'firebase/database'
 import 'firebase/auth'
 import 'firebase/firestore';
 
+import router from '../router'
 import store from '../store'
 
 const USERS = 'users'
@@ -135,10 +136,6 @@ export default {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         console.log('user is signed in')
-        // 로그인 상태면 store 에 유저정보 저장
-        store.state.firebaseUser.name = user.displayName
-        store.state.firebaseUser.email = user.email
-        store.state.firebaseUser.photoURL = user.photoURL
         return true
       } else {
         console.log('No user is signed in')
@@ -165,49 +162,78 @@ export default {
   },
   // 현재 로그인 된 유저의 프로필 정보를 업데이트
   updatedForUser(display_name, photo_url) {
-    var user = firebase.auth().currentUser;
-
+    var user = firebase.auth().currentUser
     user.updateProfile({
       displayName: display_name,
       photoURL: photo_url
     })
     console.log(user)
   },
-  // login 2-1. create user with e-mail
-  createUserWithEmail(email, password) {
-    let thisCopy = this
+  // login 2-1.1 create user with e-mail
+  createUserWithEmail(email, password, userName) {
+    let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
-        thisCopy.createdbForNewUser(user.user.uid)
+        _this.createdbForNewUser(user.user.uid)
+        // 이름 만들기
+        let _user = firebase.auth().currentUser
+        _user.updateProfile({
+          displayName: userName
+        })
       })
       .catch(function(error) {
         console.log(error)
     })
   },
+  // login 2-1.2 login user whit e-mail
+  loginUserWithEmail(email, password) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(function(result) {
+        // 로그인 상태면 store 에 유저정보 저장
+        console.log(result)
+        store.state.firebaseUser.uid = result.user.uid
+        store.state.firebaseUser.name = result.user.displayName
+        store.state.firebaseUser.email = result.user.email
+        store.state.firebaseUser.photoURL = result.user.photoURL
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+  },
   // login 2-2. login google
   loginUserWithGoogle() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithPopup(provider)
       .then(function(result) {
         if (result.additionalUserInfo.isNewUser) {
-          thisCopy.createdbForNewUser(result.user.uid)
+          _this.createdbForNewUser(result.user.uid)
         }
       }).catch(function(error) {
         console.log(error.code, error.message)
       })
   },
-  // login 2-3. facebook login
+  // login 2-3. login facebook
   loginUserWithFacebook() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.FacebookAuthProvider()
     firebase.auth().signInWithPopup(provider)
     .then(function(result) {
       if (result.additionalUserInfo.isNewUser) {
-        thisCopy.createdbForNewUser(result.user.uid)
+        _this.createdbForNewUser(result.user.uid)
       }
     }).catch(function(error) {
       console.log(error.code, error.message)
     })
-  }
+  },
+  // login 3. logout
+  logoutUser() {
+    firebase.auth().signOut().then(function() {
+    })
+    // 로그아웃 후 메인페이지로
+    .then(router.push('/'))
+    .catch(function(error) {
+      console.log(error)
+    })
+  },
 }

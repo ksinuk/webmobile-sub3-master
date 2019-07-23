@@ -9,7 +9,14 @@
       ></v-text-field>
     </v-flex>
 
+    <v-btn @click="logoutUser">로그아웃</v-btn>
     <div v-for="item in routeItems">
+      <!-- <v-btn
+        v-if="item.name == 'userpage'"
+        flat
+        :to="{ name: 'userpage', params: { userId: }}">
+        {{ item.name }}
+      </v-btn> -->
       <v-btn
       flat
       :to="item.path">
@@ -20,10 +27,14 @@
 </template>
 
 <script>
+import FirebaseServices from '../services/FirebaseServices'
+import firebase from 'firebase'
+
 export default {
   name: 'sideBarItems',
   data() {
     return {
+      userId: null,
       routeItems: [],
       searchItem: null
     }
@@ -41,6 +52,14 @@ export default {
       console.log(this.searchItem)
       this.$router.push('/search/' + this.searchItem)
       window.location.reload()
+    },
+    // getUser() {
+    //   let _user = firebase.auth().currentUser
+    //   this.userId = _user.displayName
+    // },
+    logoutUser() {
+      FirebaseServices.logoutUser()
+      alert('bye')
     }
   }
 }

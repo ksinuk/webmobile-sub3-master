@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import firebase from 'firebase'
 
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
@@ -16,7 +17,18 @@ import SearchResult from './views/SearchResult.vue'
 // 포트폴리오 입력 링크
 import PortfolioWrite from './views/PortfolioWrite.vue'
 
+
 Vue.use(Router)
+
+// 로그인 상태 정보를 vuex에 저장하고 판단
+const requireAuth = () => (to, from, next) => {
+  let user = firebase.auth().currentUser
+  if (!user) {
+    alert('login please')
+    return next('/login')
+  }
+  next()
+}
 
 export default new Router({
   mode: 'history',
@@ -44,9 +56,11 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
         },
         {
-            path: '/user',
+            path: '/user/:userId',
             name: 'userpage',
-            component: UserPage
+            component: UserPage,
+            // router guard
+            beforeEnter: requireAuth()
         },
         {
             path: '/login',
