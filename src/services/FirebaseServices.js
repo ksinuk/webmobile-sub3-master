@@ -219,11 +219,8 @@ export default {
   // login 3. logout
   logoutUser() {
     firebase.auth().signOut().then(function() {
-      store.state.firebaseUser.uid = null
-      store.state.firebaseUser.name = null
-      store.state.firebaseUser.email = null
-      store.state.firebaseUser.photoURL = null
     })
+    // 로그아웃 후 메인페이지로
     .then(router.push('/'))
     .catch(function(error) {
       console.log(error)
