@@ -10,6 +10,8 @@ import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
 import WritePort from './views/WritePort.vue'
 
+import Test from './views/TestPage.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -56,12 +58,16 @@ export default new Router({
             path: '/board/:board_id',
             name: 'boardedit',
             component: BoardEdit
-        }
-        ,
+        },
         {
             path: '/writeport',
             name: 'writeport',
             component: WritePort
-        }
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: Test
+        }        
     ]
 })

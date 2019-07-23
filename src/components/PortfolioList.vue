@@ -3,7 +3,7 @@
   <article role="article" id="work1" class="gallery-item is-init is-animated" data-animation="fade-left">
       <figure role="group" class="gallery-figure">
           <div class="gallery-image">
-            <img class="gallery-image-thumb" :src="ports.img" alt="예술의 전당 랜딩 페이지" aria-describedby="work1Description">
+            <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
 
           </div>
           <figcaption class="gallery-caption">
@@ -20,10 +20,9 @@
               <ul class="gallery-spec">
                   <li class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">&nbsp{{ports.viewport}}</span></li>
                   <li class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">&nbsp{{ports.ie_support}}</span></li>
-
               </ul>
-              <div id="work1Description">
-                  <p>{{ports.content}}</p>
+              <div id="work1Description" v-html="ports.content">
+                  
               </div>
               <div class="ui-group">
                   <a role="button" class="ui-button" v-bind:href="ports.demo_url" target="_blank">Demo</a>
@@ -44,7 +43,7 @@
               <tr>
                   <td data-th="Category"><span class="categ html">HTML</span></td>
                   <td data-th="Source"><a :href="html.url" target="_blank">{{html.file}}</a></td>
-                  <td data-th="Related Keywords">{{html.keyword}}</td>
+                  <td data-th="Related Keywords" v-html="html.keyword"></td>
               </tr>
 
             </template>
@@ -52,7 +51,7 @@
               <tr>
                 <td data-th="Category"><span class="categ css">CSS</span></td>
                 <td data-th="Source"><a :href="css.url" target="_blank">{{css.file}}</a></td>
-                <td data-th="Related Keywords">{{css.keyword}}</td>
+                <td data-th="Related Keywords" v-html="css.keyword"></td>
               </tr>
 
             </template>
@@ -60,7 +59,7 @@
               <tr>
                 <td data-th="Category"><span class="categ js">JS</span></td>
                 <td data-th="Source"><a :href="js.url" target="_blank">{{js.file}}</a></td>
-                <td data-th="Related Keywords">{{js.keyword}}</td>
+                <td data-th="Related Keywords" v-html="js.keyword"></td>
               </tr>
 
             </template>
@@ -91,6 +90,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
+#work1{
+    width:70%;
+    margin:auto;
+}
+
 /* section */
 @media screen and (max-width: 1499px)
 .l-section {
@@ -204,7 +208,7 @@ section {
 
 /* table*/
 
-a {
+>>>a {
     background-color: transparent;
     color: #30b7e8;
     text-decoration: none;
