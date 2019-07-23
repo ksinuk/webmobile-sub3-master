@@ -9,8 +9,8 @@
       <!-- 검색 결과가 있을 때 -->
       <div :query="query" v-if="resultList.length !== 0">
         <p style="align: center; font-size: 2rem; font-weight: 300; margin-top: 3rem; margin-bottom: 5rem;">"{{ query }}"의 검색 결과입니다.</p>
-        <v-layout>
-          <v-flex v-for="result in resultList" lg4 class="px-2">
+        <v-layout class="pb-5">
+          <v-flex v-for="result in resultList" lg4 class="px-3 py-3">
             <v-card>
                 <v-img
                 :src="result.img"
