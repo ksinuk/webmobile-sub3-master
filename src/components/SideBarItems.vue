@@ -1,10 +1,11 @@
-<!-- sidebar에서 제공되는 검색 기능 -->
 <template>
   <v-container id="sideCtn">
+    <!-- sidebar에서 제공되는 검색 기능 -->
     <v-flex>
       <v-text-field
-        label="search"
-        single-line
+        label="Search"
+        v-model="searchItem"
+        v-on:keyup.enter="findItem"
       ></v-text-field>
     </v-flex>
 
@@ -23,7 +24,8 @@ export default {
   name: 'sideBarItems',
   data() {
     return {
-      routeItems: []
+      routeItems: [],
+      searchItem: null
     }
   },
   created() {
@@ -33,6 +35,13 @@ export default {
         path: route.path
       })
     })
+  },
+  methods: {
+    findItem: function() {
+      console.log(this.searchItem)
+      this.$router.push('/search/' + this.searchItem)
+      window.location.reload()
+    }
   }
 }
 </script>
