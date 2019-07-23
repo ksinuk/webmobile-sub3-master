@@ -1,6 +1,10 @@
 <template>
   <div>
-    <BackBanner/>
+    <BackBanner>
+      <div slot="pageName">
+        <p style="font-size: 3rem; font-weight: 300; letter-spacing: 0.08rem; text-shadow: 2px 2px 2px #103b5b; color: white;">Board</p>
+      </div>
+    </BackBanner>
     <v-container >
       <BoardEditForm/>
     </v-container>

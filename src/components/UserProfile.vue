@@ -1,8 +1,6 @@
 <template>
   <div>
-
     <!-- user profile -->
-
     <v-layout row mt-5>
       <v-flex md4>
         <v-card flat color="transparent">
@@ -10,12 +8,12 @@
             size="256"
             class="profileImg"
           >
-            <img :src="photoURL ? noImg:this.$store.state.imgSrc.noImgSrc" alt="avatar">
+            <img :src="photoURL ? photoURL:this.$store.state.imgSrc.noImgSrc" alt="avatar">
           </v-avatar>
           <div>
             <v-btn small>My portfolio</v-btn>
             
-            <UserProfileBtn/>
+            <UserProfileBtn :photoURL="photoURL" :displayName="displayName"/>
 
           </div>
         </v-card>
@@ -55,8 +53,12 @@ export default {
     }
   },
   created() {
+    this.viewProfile()
   },
   methods: {
+    viewProfile: function() {
+      this.photoURL = this.$store.state.firebaseUser.photoURL
+    }
   }
 }
 </script>
