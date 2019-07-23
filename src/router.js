@@ -13,6 +13,9 @@ import WritePort from './views/WritePort.vue'
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
+// 포트폴리오 입력 링크
+import PortfolioWrite from './views/PortfolioWrite.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +72,11 @@ export default new Router({
             path: '/search/:search_value',
             name: 'search',
             component: SearchResult
+        },
+        {
+            path: '/write_portfolio',
+            name: 'write_portfolio',
+            component: PortfolioWrite
         }
     ]
 })
