@@ -1,3 +1,4 @@
+<!-- sidebar에서 제공되는 검색 기능 -->
 <template>
   <v-container id="sideCtn">
     <v-flex>

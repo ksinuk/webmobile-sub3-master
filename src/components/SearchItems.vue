@@ -1,3 +1,4 @@
+<!-- main page에서 제시되는 추천 검색어 -->
 <template>
   <v-layout row justify-center align-center class="px-5" style="padding-top: 15rem; padding-bottom: 15rem;">
     <v-flex>
