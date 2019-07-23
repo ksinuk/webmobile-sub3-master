@@ -107,6 +107,11 @@ export default {
     })
   },
 
+  // 파이어베이스에 포트폴리오를 입력하는 함수
+  postPortfolios() {
+
+  },
+
   getIntroduce(){
     const intro = db.collection('introduce')
     return intro
