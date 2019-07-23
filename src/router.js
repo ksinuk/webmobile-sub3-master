@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 
+// vuex에서 auth 정보 가져오기
+import store from './store'
+
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import Portfolio from './views/Portfolio.vue'
@@ -14,6 +17,15 @@ import WritePort from './views/WritePort.vue'
 import SearchResult from './views/SearchResult.vue'
 
 Vue.use(Router)
+
+const requireAuth = () => (to, from, next) => {
+  console.log(store.state.firebaseUser.uid)
+  if (store.state.firebaseUser.uid == null) {
+    alert('login please')
+    return next('/login')
+  }
+  next()
+}
 
 export default new Router({
   mode: 'history',
@@ -43,7 +55,8 @@ export default new Router({
         {
             path: '/user',
             name: 'userpage',
-            component: UserPage
+            component: UserPage,
+            beforeEnter: requireAuth()
         },
         {
             path: '/login',
