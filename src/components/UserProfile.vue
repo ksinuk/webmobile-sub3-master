@@ -34,7 +34,9 @@
             </div>
             <div class="green-box-part-right">
                 <h1>이미지 저장소</h1>
-                <div class="img-box"></div>
+                <div class="img-box">
+                    <i class="fas fa-database icon-db"></i>
+                </div>
             </div>
             <div class="text-box">
                 <p>Text - Double click to edit</p>
@@ -44,6 +46,10 @@
                 <div class="quest-tail">              
                 </div>
             </div>
+        </div>
+        <br>
+        <div class="file-list">
+            <h1>청춘에서만 구할 수</h1>
         </div>
     </v-layout>
 
@@ -138,10 +144,21 @@ export default {
         width:100%;
         height:300px;
         background-color: rgb(26, 188, 156);
+        display:inline-block;
     }
     .img-box{
         width:100%;
         height:300px;
         background-color: rgb(26, 188, 156);
+        display:inline-block;
+    }
+    .img-box .icon-db{
+        font-size:100px;
+        margin:50px 50px 0 50px;
+        display:inline-block;
+    }
+
+    .file-list{
+        display: block;
     }
 </style>
