@@ -53,7 +53,7 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
         },
         {
-            path: '/user',
+            path: '/user/:userId',
             name: 'userpage',
             component: UserPage,
             // router guard

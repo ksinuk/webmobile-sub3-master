@@ -67,7 +67,6 @@ export default {
 						return data
 					})
 				})
-
   },
   getPostId(board_id) {
     const postsCollection = db.collection(POSTS)
@@ -156,8 +155,7 @@ export default {
   },
   // 현재 로그인 된 유저의 프로필 정보를 업데이트
   updatedForUser(display_name, photo_url) {
-    var user = firebase.auth().currentUser;
-
+    var user = firebase.auth().currentUser
     user.updateProfile({
       displayName: display_name,
       photoURL: photo_url
@@ -165,11 +163,16 @@ export default {
     console.log(user)
   },
   // login 2-1.1 create user with e-mail
-  createUserWithEmail(email, password) {
+  createUserWithEmail(email, password, userName) {
     let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
         _this.createdbForNewUser(user.user.uid)
+        // 이름 만들기
+        let _user = firebase.auth().currentUser
+        _user.updateProfile({
+          displayName: userName
+        })
       })
       .catch(function(error) {
         console.log(error)

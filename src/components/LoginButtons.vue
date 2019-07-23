@@ -33,6 +33,8 @@
         v-model="valid"
         lazy-validation
         >
+
+        <!-- email -->
         <v-text-field
           v-model="email"
           :rules="emailRules"
@@ -43,6 +45,18 @@
           style="width:240px; margin: auto;"
           ></v-text-field>
 
+        <!-- displayName -->
+        <v-text-field
+          v-model="displayName"
+          :rules="nameRules"
+          label="이름"
+          required
+          single-line
+          solo
+          style="width:240px; margin: auto;"
+          ></v-text-field>
+
+        <!-- password -->
         <v-text-field
           v-model="password"
           :append-icon="pwShow ? 'visibility' : 'visibility_off'"
@@ -99,6 +113,11 @@ export default {
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
       ],
+      valid: true,
+      displayName: '',
+      nameRules: [
+        v => !!v || 'Name is required',
+      ],
       // pw rule
       pwShow: false,
       password: '',
@@ -133,7 +152,7 @@ export default {
   },
   methods: {
     async createUserWithEmail() {
-      await FirebaseServices.createUserWithEmail(this.email, this.password)
+      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName)
     },
     emailLogin(){
       FirebaseServices.loginUserWithEmail(this.email, this.password)
