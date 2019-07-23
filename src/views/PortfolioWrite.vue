@@ -6,7 +6,7 @@
       </div>
     </BackBanner>
     <!-- 개인정보 수집 -->
-    <div>
+    <div class="py-5 px-5">
         <p class="tit">개인정보 수집 및 이용에 대한 동의</p>
         <div class="scrollBox">
 
@@ -63,3 +63,22 @@ export default {
   }
 }
 </script>
+<style>
+    .tit {
+        font-size: 17px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .scrollBox {
+        font-size: 14px;
+        color: #666;
+        border: 1px solid #ddd;
+        height: 226px;
+        padding: 30px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        word-break: break-all;
+    }
+</style>
