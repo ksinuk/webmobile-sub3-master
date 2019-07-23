@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <MainBanner/>
     <div class="mx-auto" style="min-height: 100vh; background-color: white;">
       <h3 id="introAbout" class="small-heading pb-2">ABOUT US</h3>
