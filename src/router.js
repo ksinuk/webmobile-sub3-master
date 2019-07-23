@@ -10,6 +10,9 @@ import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
 import WritePort from './views/WritePort.vue'
 
+// 검색 결과 페이지 링크
+import SearchResult from './views/SearchResult.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -56,12 +59,16 @@ export default new Router({
             path: '/board/:board_id',
             name: 'boardedit',
             component: BoardEdit
-        }
-        ,
+        },
         {
             path: '/writeport',
             name: 'writeport',
             component: WritePort
+        },
+        {
+            path: '/search/:search_value',
+            name: 'search',
+            component: SearchResult
         }
     ]
 })
