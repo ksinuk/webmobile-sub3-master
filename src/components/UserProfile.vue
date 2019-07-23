@@ -29,11 +29,11 @@
         </v-flex> -->
         <div class="green-box">
             <div class="green-box-part-left">
-                <h2>완료정도</h2>
+                <h1>완료정도</h1>
                 <div class="complate-box"></div>
             </div>
             <div class="green-box-part-right">
-                <h2>이미지 저장소</h2>
+                <h1>이미지 저장소</h1>
                 <div class="img-box"></div>
             </div>
             <div class="text-box">
@@ -98,9 +98,10 @@ export default {
     .green-box-part-right{
         margin:10px 4% 10px 2%;
     }
-    .green-box-part-left h2 , .green-box-part-right h2{
+    .green-box-part-left h1 , .green-box-part-right h1{
         margin:10px 0;
         text-align: left;
+        font-size:22px;
     }
 
     .text-box > p{
