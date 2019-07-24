@@ -24,8 +24,8 @@
           <v-card-text>유저 상태정보(권한 등)</v-card-text>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">portfolio 제작 정도</h3>
-{{percent}}
+              <h3 class="headline mb-0">포트폴리오 제작 현황</h3>
+{{percent}}%
               <div id = "cont">
                 <svg viewPort="0 0 320 320" width="320" height="320" id="svg" xmlns="http://www.w3.org/2000/svg">
                 <circle class="cir" cx="160" cy="160" r="100" stroke="#000000" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
