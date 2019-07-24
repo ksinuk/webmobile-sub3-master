@@ -108,6 +108,8 @@ export default {
       .then((docSnapshots)=> {
       return docSnapshots.docs.map((doc) => {
       let data = doc.data()
+      data.pk = doc.id
+      data.like = false
       return data
       })
     })
@@ -143,6 +145,26 @@ export default {
       }
     })
   },
+  // 현재 로그인 user doc 가져오기
+  async currentUser() {
+    var user = firebase.auth().currentUser;
+    var docRef = db.collection(USERS);
+    const detailedUser = docRef.get().then((docSnapshots) => {
+      let results = docSnapshots.docs.map((doc) => {
+      let data = doc.data()
+      if (data.uid === user.uid) {
+        return data
+      }
+      })
+      for (var res in results) {
+        if (results[res] !== undefined) {
+          return results[res]
+        }
+      }
+    })
+    return detailedUser
+  },
+
   changePassword: function(password) {
       var user = firebase.auth().currentUser;
       var newPassword = password;
@@ -157,9 +179,18 @@ export default {
   // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
   async createdbForNewUser(userID) {
     await db.collection(USERS).doc(userID).set({
-      uid: userID
+      uid: userID,
+      bookmark: []
     })
   },
+  // users collection 데이터 수정
+  editUser(userId, bookmarkList) {
+    db.collection(USERS).doc(userId).set({
+      uid: userId,
+      bookmark: bookmarkList
+    })
+  },
+
   // 현재 로그인 된 유저의 프로필 정보를 업데이트
   updatedForUser(display_name, photo_url) {
     var user = firebase.auth().currentUser
@@ -235,5 +266,5 @@ export default {
     .catch(function(error) {
       console.log(error)
     })
-  },
+  }
 }
