@@ -1,6 +1,7 @@
 <template>
-  <v-stepper v-model="e6" vertical style="padding-top: 3rem; padding-bottom: 5rem; padding-left: 10rem; padding-right: 10rem; background-color: #fafafa">
-    <v-stepper-step :complete="e6 > 1" step="1">
+  <v-stepper non-linear v-model="e6" vertical style="padding-top: 3rem; padding-bottom: 5rem; padding-left: 10rem; padding-right: 10rem; background-color: #fafafa">
+    <!--<v-stepper-step editable :complete="e6 > 3" step="1">-->
+    <v-stepper-step editable step="1">
       ABOUT
       <small>자기 소개와 Skill을 작성하세요.</small>
     </v-stepper-step>
@@ -75,7 +76,7 @@
           ></v-textarea>
         </v-card-text>
       </v-card>
-      <div class="text-xs-center pb-3">
+      <div class="text-xs-center py-3">
         <v-btn color="teal" fab small dark @click="addSkill()">
           <v-icon>add</v-icon>
         </v-btn>
@@ -84,134 +85,135 @@
       <v-btn flat @click="e6 = 1">Cancel</v-btn>
     </v-stepper-content>
 
-    <v-stepper-step :complete="e6 > 2" step="2">
+    <!-- 2. portfolio 추가 -->
+    <v-stepper-step editable step="2">
       PORTFOLIOS
       <small>수행한 포트폴리오를 정리하세요.</small>
     </v-stepper-step>
 
     <v-stepper-content step="2">
-      <v-card>
+      <v-card class="mb-3">
         <v-card-text>
-          <table>
-            <tbody>
-              <tr>
-                <th scope="row">제목</th>
-                <td>
-                  <input type="text" name="name" id="name" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Viewport</th>
-                <td>
-                  <input type="text" name="etc_2" id="etc_2" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">IE support</th>
-                <td>
-                  <input type="text" name="email" id="email" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">프로젝트 설명</th>
-                <td>
-                  <input type="text" name="email" id="project" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Demo 링크</th>
-                <td>
-                  <input type="text" name="email" id="demo" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Repo 링크</th>
-                <td>
-                  <input type="text" name="email" id="repo" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">카테고리</th>
-                <td>
-                  <input type="text" name="email" id="repo" value="">
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">소스코드</th>
-                <td>
-                  <select name="subject" id="source" style="width:15%; margin-right:20px; float:left;">
-                    <option value="">선택하세요!</option>
-                    <option value="HTML">HTML</option>
-                    <option value="CSS">CSS</option>
-                    <option value="JavaScript">JavaScript</option>
-
-                  </select>
-                  <input type="text" name="etc_2" id="source_1" value="" style="width:15%; margin-right:20px; float:left;" placeholder="파일명">
-                  <input type="text" name="etc_2" id="source_2" value="" style="width:15%; float:left; margin-right:20px;" placeholder="git주소">
-                  <input type="text" name="etc_2" id="source_3" value="" style="width:30%; float:left; margin-right:20px;" placeholder="파일설명">
-                  <v-btn color="success"  style="width:15%; float:left" v-on:click="sourceClick" >확인</v-btn>
-                </td>
-              </tr>
-              <div id ="input_source">
+          <v-form ref="form">
+            <v-text-field
+              v-model="title"
+              :counter="20"
+              label="Title"
+              required
+            ></v-text-field>
+            <v-textarea
+            label="Description"
+            v-model="description"
+            hint="프로젝트를 설명해주세요."
+            rows=10
+          ></v-textarea>
+            <v-text-field
+              v-model="viewport"
+              label="Viewport"
+            ></v-text-field>
+            <v-text-field
+              v-model="ie"
+              label="IE Support"
+            ></v-text-field>
+            <v-text-field
+              v-model="demo"
+              label="Demo Link"
+            ></v-text-field>
+            <v-text-field
+              v-model="repository"
+              label="Repo Link"
+            ></v-text-field>
+            <v-simple-table>
+              <thead>
                 <tr>
-                    <td style="padding-left: 10rem; padding-bottom: 0; padding-top: 0; border-top:none;"></td>
-                    <td style="border-top:none;">
-                    <template v-for="(html,index) in category_html" >
-                        <template v-if="html !==null">
-                        <v-chip close color="teal" text-color="white" v-model="category_html[index]" style="">
-                            <v-avatar>
-                                <v-icon>check_circle</v-icon>
-                            </v-avatar>
-                          HTML 파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
-
-                        </v-chip>
-                      </template>
-                    </template>
-                    <template v-for="(css,index) in category_css" >
-                        <template v-if="css !==null">
-                        <v-chip close color="teal" text-color="white" v-model="category_css[index]" style="">
-                            <v-avatar>
-                                <v-icon>check_circle</v-icon>
-                            </v-avatar>
-                              CSS  파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
-                        </v-chip>
-                      </template>
-                    </template>
-                    <template v-for="(js,index) in category_js" >
-                        <template v-if="css !==null">
-                        <v-chip close color="teal" text-color="white" v-model="category_js[index]" style="">
-                            <v-avatar>
-                                <v-icon>check_circle</v-icon>
-                            </v-avatar>
-                              JavaScript  파일명: {{ html.file }}, URL : {{html.url}}, 설명 : {{html.keyword}}
-                        </v-chip>
-                      </template>
-                    </template>
+                  <th class="text-left">Category</th>
+                  <th class="text-left">File Name</th>
+                  <th class="text-left">Git Path</th>
+                  <th class="texdt-left">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <v-select
+                      v-model="category"
+                      :items="items"
+                      label="Category"
+                      solo
+                      required
+                    ></v-select>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="fileName"
+                      label="File Name"
+                      solo
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="gitPath"
+                      label="Git Path"
+                      solo
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="fileDes"
+                      label="Description"
+                      solo
+                    ></v-text-field>
+                  </td>
+                  <td class="text-xs-center">
+                    <v-btn color="teal" fab small dark @click="">
+                      <v-icon>add</v-icon>
+                    </v-btn>
                   </td>
                 </tr>
-              </div>
-              <tr>
-                <th>포트폴리오이미지</th>
-                <td>
-                  <div class="fileWrap">
-                    <div class="filebox bs3-primary preview-image">
-                      <label for="input_file">파일찾기</label>
-                      <input class="upload-name" v-model="fileName" placeholder="선택된 파일 없음">
-                      <input type="file" name="upfiles[]" id="input_file" class="upload-hidden" @change="processFile($event)">
-                    </div>
-                  </div>
-                  <span></span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </v-simple-table>
+            <template>
+              <v-file-input label="File input"></v-file-input>
+            </template>
+            <!--<v-file-input
+              v-model="files"
+              label="Image File Uploader"
+              color="primary accent-4"
+              accept="image/png, image/jpeg, image/bmp"
+              counter
+              multiple
+              placeholder="Input your portfolio images"
+              prepend-icon="mdi-paperclip"
+              outlined
+              :display-size="1000"
+            >
+              <template v-slot:selection="{ index, text }">
+                <v-chip
+                  v-if="index < 2"
+                  color="primary accent-4"
+                  dark
+                  label
+                  small
+                >
+                  {{ text }}
+                </v-chip>
+
+                <span
+                  v-else-if="index === 2"
+                  class="overline grey--text text--darken-3 mx-2"
+                >
+                  +{{ files.length - 2 }} File(s)
+                </span>
+              </template>
+            </v-file-input>-->
+          </v-form>
         </v-card-text>
       </v-card>
       <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
       <v-btn flat @click="e6 = 1">Cancel</v-btn>
     </v-stepper-content>
 
-    <v-stepper-step :complete="e6 > 3" step="3">
+    <v-stepper-step editable step="3">
       TEMPLATE
       <small>적용할 디자인을 선택하세요.</small>
     </v-stepper-step>
@@ -222,7 +224,7 @@
       <v-btn flat @click="e6 = 2">Cancel</v-btn>
     </v-stepper-content>
 
-    <v-stepper-step step="4">PREVIEW</v-stepper-step>
+    <v-stepper-step editable step="4">PREVIEW</v-stepper-step>
     <v-stepper-content step="4">
       <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
       <v-btn color="primary" @click="savePort()">Save</v-btn>
@@ -245,9 +247,19 @@ export default {
         description: null
       },
       skills: [],
-      category_css: [],
-      category_html: [],
-      category_js: []
+      title: null,
+      description: null,
+      viewport: null,
+      ie: null,
+      demo: null,
+      repository: null,
+      category: null,
+      fileName: null,
+      gitPath: null,
+      fileDes: null,
+      select: null,
+      items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
+      files: []
     }
   },
   methods: {
