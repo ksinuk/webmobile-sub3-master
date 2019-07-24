@@ -49,45 +49,42 @@
     </div>
     <!-- user book mark list-->
     <div class="my-5">
-      <p style="font-size: 2rem;">BOOKMARK</p>
-      <v-layout row wrap>
-          <v-flex>
-              <carousel per-page="3">
-                  <slide v-for="bookmark in bookmarkList" class="px-2">
-                      <v-card>
-                          <v-img
-                          :src="bookmark.img"
-                          height="200px"
-                          >
-                          </v-img>
+        <p style="font-size: 2rem;">BOOKMARK</p>
+        <v-layout row wrap>
+            <v-flex>
+                <carousel per-page="3">
+                    <slide v-for="bookmark in bookmarkList" class="px-2">
+                        <v-card>
+                            <v-img :src="bookmark.img" height="200px">
+                            </v-img>
 
-                          <v-card-title primary-title>
-                          <div>
-                              <div class="headline">{{ bookmark.title }}</div>
-                              <div>
-                                <tr>
-                                  <td v-for="hashtag in bookmark.hashtags">
-                                    <v-chip color="teal" text-color="white">
-                                      <v-avatar>
-                                          <v-icon>check_circle</v-icon>
-                                      </v-avatar>
-                                      {{ hashtag }}
-                                    </v-chip>
-                                  </td>
-                                </tr>
-                              </div>
-                          </div>
-                          </v-card-title>
-                          <v-card-actions>
-                              <v-btn flat color="purple">Explore</v-btn>
-                              <v-spacer></v-spacer>
-                          </v-card-actions>
-                      </v-card>
-                  </slide>
-              </carousel>
-          </v-flex>
-      </v-layout>
-    
+                            <v-card-title primary-title>
+                            <div>
+                                <div class="headline">{{ bookmark.title }}</div>
+                                <div>
+                                    <tr>
+                                    <td v-for="hashtag in bookmark.hashtags">
+                                        <v-chip color="teal" text-color="white">
+                                        <v-avatar>
+                                            <v-icon>check_circle</v-icon>
+                                        </v-avatar>
+                                        {{ hashtag }}
+                                        </v-chip>
+                                    </td>
+                                    </tr>
+                                </div>
+                            </div>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn flat color="purple">Explore</v-btn>
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </slide>
+                </carousel>
+            </v-flex>
+        </v-layout>
+    </div> 
     <!-- user edit modal -->
 </div>
 </template>

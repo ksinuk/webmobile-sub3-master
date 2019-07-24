@@ -1,7 +1,42 @@
+#work1{
+    width:80%;
+    margin:auto;
+}
 /* section */
 #work1{
     background-color: #30b7e8;
     color:white;
+}
+
+#modal{
+    position: fixed; /* Stay in place */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#modal-out{
+    border : 3px solid yellow;
+    background-color: #30b7e8;
+    position: absolute;
+    top:10%;
+    max-height:80%;
+    left:15%;
+    width:60%;
+    margin:auto;
+    padding:20px;
+    overflow:scroll;
+}
+
+.btn-end{
+    padding:15px;
+    margin:10px;
+    background-color: gray;
 }
 
 @media screen and (max-width: 1499px)
@@ -10,6 +45,7 @@
 }
 
 .l-section {
+    
     background: white;
 }
 
@@ -162,8 +198,8 @@ ul {
     padding-inline-start: 40px;
 }
 
-.ui-button {
-    background: white;
+.ui-button, .ui-button a:link, .ui-button a:visited{
+    background-color: white;
     border-radius: 44px;
     color: #30b7e8;
     display: inline-block;
