@@ -10,6 +10,7 @@ import store from '../store'
 const USERS = 'users'
 const POSTS = 'posts'
 const PORTFOLIO = 'portfolio'
+const PORTFOLIOS = 'tportfolio'
 
 // Firebase SDK snippet
 const firebaseConfig = {
@@ -115,10 +116,55 @@ export default {
     })
   },
 
+
+/*
+async currentUser() {
+  var user = firebase.auth().currentUser;
+  var docRef = db.collection(USERS);
+  const detailedUser = docRef.get().then((docSnapshots) => {
+    let results = docSnapshots.docs.map((doc) => {
+    let data = doc.data()
+    if (data.uid === user.uid) {
+      return data
+    }
+    })
+    for (var res in results) {
+      if (results[res] !== undefined) {
+        return results[res]
+      }
+    }
+  })
+  return detailedUser
+},
+*/
+  // 포트폴리오 목록 조회 리뉴얼
+  getPortfolio(user_id){
+    const portfolios = db.collection(PORTFOLIOS)
+    const detailPort= portfolios
+      .get()
+      .then((docSnapshots)=> {
+    let results= docSnapshots.docs.map((doc) => {
+      let data = doc.data()
+      if(data.uid==user_id){
+        console.log('데이터 반환')
+        console.log(data);
+        return data;
+      }
+
+
+      })
+      for (var res in results) {
+        if (results[res] !== undefined) {
+          return results[res]
+        }
+      }
+    })
+    return detailPort;
+  },
   // 파이어베이스에 포트폴리오를 입력하는 함수
   // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
   postPortfolios() {
-    // 
+    //
   },
 
   getIntroduce(){
