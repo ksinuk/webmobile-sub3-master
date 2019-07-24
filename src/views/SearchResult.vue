@@ -21,7 +21,11 @@
 
                   <v-card-title primary-title>
                   <div>
-                      <div class="headline">{{ result.title }}</div>
+                      <div class="headline">
+                        {{ result.title }}
+                        <v-icon v-if="result.like" class="mx-2" color="warning" @click="enrollLike(result.pk)">star</v-icon>
+                        <v-icon v-else class="mx-2" @click="enrollLike(result.pk)">star</v-icon>
+                      </div>
                       <div>
                         <tr>
                           <td v-for="hashtag in result.hashtags">
@@ -73,7 +77,10 @@ export default {
   data() {
     return {
       query: null,
-      resultList: []
+      resultList: [],
+      likeList: [],
+      uid: null,
+      like: false
     }
   },
   created() {
@@ -89,8 +96,36 @@ export default {
         if (tmp[idx].hashtags.includes(target)) {
           this.resultList.push(tmp[idx])
         }
+        else if (tmp[idx].title.includes(target)) {
+          this.resultList.push(tmp[idx])
+        }
       }
-      console.log(this.resultList)
+      var user = await FirebaseServices.currentUser();
+      this.resultList.forEach(function(result) {
+        if (user.bookmark.includes(result.pk)) {
+          result.like = true;
+        }
+      })
+      this.likeList = user.bookmark
+      this.uid = user.uid
+    },
+
+    // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장
+    enrollLike(pk) {
+      for (let result in this.resultList) {
+        if (this.resultList[result].pk === pk) {
+          if (this.resultList[result].like === true) {
+            this.resultList[result].like = false
+            this.likeList = this.likeList.filter(function(e) { return e !== pk})
+            // var index = user.bookmark.indexOf(pk)
+            // user.bookmark.splice(index, 1)
+          } else {
+            this.resultList[result].like = true
+            this.likeList.push(pk)
+          }
+        }
+      }
+      FirebaseServices.editUser(this.uid, this.likeList);
     }
   }
 }
