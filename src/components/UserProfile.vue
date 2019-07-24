@@ -16,26 +16,21 @@
             </v-card>
         </v-flex>
         
-        <!-- <v-flex md8>
-            <v-card>
-                <v-card-text>유저 상태정보(권한 등)</v-card-text>
-                <v-card-title primary-title>
-                    <div>
-                        <h3 class="headline mb-0">portfolio 제작 정도</h3>
-                        <div>내용물</div>
-                    </div>
-                </v-card-title>
-            </v-card>
-        </v-flex> -->
         <div class="green-box">
             <div class="green-box-part-left">
                 <h1>완료정도</h1>
-                <div class="complate-box"></div>
+                <div class="complate-box">
+                    <div class="back-circle"></div>
+                    <canvas class="front-circle"></canvas>
+                    <h3 class="text-circle">{{complatePercent+'%'}}</h3>
+                </div>
             </div>
             <div class="green-box-part-right">
                 <h1>이미지 저장소</h1>
                 <div class="img-box">
                     <i class="fas fa-database icon-db"></i>
+                    <i class="fas fa-angle-double-down icon-down"></i>
+                    <i class="fas fa-angle-double-up icon-up"></i>
                 </div>
             </div>
             <div class="text-box">
@@ -47,12 +42,11 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="file-list">
-            <h1>청춘에서만 구할 수</h1>
-        </div>
+        
     </v-layout>
-
+    <div class="file-list">
+        <h1>청춘에서만 구할 수</h1>
+    </div>
     <!-- user edit modal -->
 </div>
 </template>
@@ -71,14 +65,28 @@ export default {
         return {
             dialog: false,
             photoURL: this.$store.state.firebaseUser.photoURL,
+            complatePercent:70
         }
     },
     created() {
         this.viewProfile()
     },
+    mounted(){
+        this.makeChart()
+    },
     methods: {
-            viewProfile: function() {
+        viewProfile: function() {
             this.photoURL = this.$store.state.firebaseUser.photoURL
+        },
+        makeChart: function(){
+            var cc = document.querySelector('.front-circle')
+            let r = 75
+            var ctx = cc.getContext("2d")
+            ctx.beginPath();
+            ctx.arc(r*2, r, r-10, 2 * Math.PI*0.75, 2 * Math.PI*(this.complatePercent/100-0.25));
+            ctx.lineWidth = 20
+            ctx.strokeStyle = 'blue'
+            ctx.stroke();
         }
     }
 }
@@ -140,25 +148,64 @@ export default {
         border-left: 20px solid  transparent;
     }
 
-    .complate-box{
+    .complate-box, .img-box{
         width:100%;
-        height:300px;
+        height:250px;
         background-color: rgb(26, 188, 156);
         display:inline-block;
-    }
-    .img-box{
-        width:100%;
-        height:300px;
-        background-color: rgb(26, 188, 156);
-        display:inline-block;
+        position: relative;
     }
     .img-box .icon-db{
         font-size:100px;
-        margin:50px 50px 0 50px;
-        display:inline-block;
+        margin-top:50px;
+        position: absolute;
+        top:0;
+        left:50%;
+        transform: translateX(-50%)
+    }
+    .img-box .icon-up{
+        font-size:50px;
+        margin-bottom:20px;
+        position: absolute;
+        bottom:0;
+        left:60%;
+        transform: translateX(-50%)
+    }
+    .img-box .icon-down{
+        font-size:50px;
+        margin-bottom:20px;
+        position: absolute;
+        bottom:0;
+        left:40%;
+        transform: translateX(-50%)
     }
 
     .file-list{
-        display: block;
+        margin-top:50px;
     }
+
+    /*  chart ------------------------ */
+    .back-circle, .front-circle, .text-circle{
+        display:block;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+    }
+    .text-circle{
+        font-size:30px;
+    }
+    .back-circle{
+        border:20px solid gray;
+        height:150px;
+        width:150px;
+        border-radius: 75px;
+    }
+    .front-circle{
+        height:150px;
+        width:300px;
+        border-radius: 75px;
+    }
+    
+    
 </style>

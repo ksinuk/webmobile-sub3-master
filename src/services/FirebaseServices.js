@@ -30,25 +30,45 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 const db = firebase.firestore()
 
 export default {
+  //read user data
+  getUserData(uid) {
+      return new Promise(function(resolve,reject){
+          db.collection('userData').doc(uid).get()
+          .then(function(doc) {
+              if (doc.exists){
+                  resolve(doc.data())
+              }
+              else{
+                  resolve(null)
+              }
+          })
+      })
+  },
+  //write user data
+  setUserData(uid, css) {
+      return db.collection('userData').doc(uid).set({
+          css:css,
+      })
+  },
   // write post
   postPost(uid, title, body) {
-		return db.collection(POSTS).add({
-      uid,
-			title,
-      body,
-      notice: false,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
-		}).then(console.log('done'))
+      return db.collection(POSTS).add({
+          uid,
+          title,
+          body,
+          notice: false,
+          created_at: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(console.log('done'))
   },
   // 다음 코드는 같은 uid 인 포스트를 조회하여 바꿈
   editPost(pk, uid, title, body, notice) {
-		return db.collection(POSTS).doc(pk).set({
-      uid,
-			title,
-      body,
-      notice,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
-		}).then(console.log('done'))
+      return db.collection(POSTS).doc(pk).set({
+          uid,
+          title,
+          body,
+          notice,
+          created_at: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(console.log('done'))
   },
   getPosts() {
     const postsCollection = db.collection(POSTS)
@@ -96,27 +116,48 @@ export default {
   },
 
   getPortfolios(){
-    const portfolios = db.collection(PORTFOLIO)
-    return portfolios
-      .get()
-      .then((docSnapshots)=> {
-      return docSnapshots.docs.map((doc) => {
-      let data = doc.data()
-      return data
+        const portfolios = db.collection(PORTFOLIO)
+        return portfolios
+            .get()
+            .then((docSnapshots)=> {
+            return docSnapshots.docs.map((doc) => {
+                let data = doc.data()
+                return data
+            })
+        })
+  },
+  getUidPortfolios(uid){
+      return new Promise(function(resolve,reject){
+          console.log("getUidPortfolios!!!")
+          db.collection(PORTFOLIO).where('uid', '==', uid).get()
+          .then(function(snapshot) {
+              console.log("snapshot: ",snapshot)
+              if (snapshot.empty) {
+                  resolve(null)
+              }
+              let out = new Array()
+              snapshot.forEach(doc => {
+                  out.push(doc.data())
+                  console.log(doc.id, '=>', doc.data());
+              })
+              resolve(out)
+          })
+          .catch(function(res){
+              console.log("error : ",res)
+          })
       })
-    })
   },
 
   getIntroduce(){
-    const intro = db.collection('introduce')
-    return intro
-      .get()
-      .then((docSnapshots)=> {
-      return docSnapshots.docs.map((doc) => {
-      let data = doc.data()
-      return data
-      })
-    })
+        const intro = db.collection('introduce')
+        return intro
+        .get()
+        .then((docSnapshots)=> {
+            return docSnapshots.docs.map((doc) => {
+                let data = doc.data()
+                return data
+            })
+        })
   },
   // userstate 1. onAuthStateChanged
   // auth 개체 관찰자. auth의 변경을 감시함
