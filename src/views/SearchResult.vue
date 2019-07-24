@@ -89,6 +89,9 @@ export default {
         if (tmp[idx].hashtags.includes(target)) {
           this.resultList.push(tmp[idx])
         }
+        else if (tmp[idx].title.includes(target)) {
+          this.resultList.push(tmp[idx])
+        }
       }
       console.log(this.resultList)
     }
