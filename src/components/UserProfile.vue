@@ -25,7 +25,12 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">portfolio 제작 정도</h3>
-              <div>{{percent}}</div>
+{{percent}}
+              <div id = "cont">
+                <svg viewPort="0 0 320 320" width="320" height="320" id="svg" xmlns="http://www.w3.org/2000/svg">
+                <circle class="cir" cx="160" cy="160" r="100" stroke="#000000" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
+              </svg>
+</div>
             </div>
           </v-card-title>
         </v-card>
@@ -82,46 +87,6 @@ import FirebaseServices from '../services/FirebaseServices'
 import UserProfileBtn from './UserProfileBtn.vue'
 import { Carousel, Slide } from 'vue-carousel';
 
-// import UserProfileBtn from './UserProfileTestBtn.vue'
-
-
-/*
-import FirebaseService from '@/services/FirebaseServices'
-import PortfolioList from '@/components/PortfolioList.vue'
-import Introduce from '@/components/Introduce.vue'
-
-export default {
-
-    name: 'portfolio',
-    components: {
-        ImageBanner,
-        PortfolioList,
-        Introduce
-    },
-    data(){
-        return {
-            portfolios:[],
-            intros:[],
-            introp:[],
-            css:1,
-
-        }
-    },
-
-    mounted(){
-        this.getMyPortfolio()
-        this.getMyIntro()
-    },
-    methods :{
-        async getMyPortfolio(){
-      //  var user = FirebaseService.auth().currentUser;
-        //유저정보에 따라 구현
-        this.portfolios = await FirebaseService.getPortfolios()
-
-
-
-      },
-*/
 export default {
   name: 'UserProfile',
   components: {
@@ -199,6 +164,15 @@ export default {
       console.log(totalCount);
       this.percent = (count/totalCount)*100;
       console.log(this.percent);
+      var val = this.percent;
+
+    var $circle = $('#svg .cir');
+    var r = $circle.attr('r');
+    var per = ((100 - val) / 100) * Math.PI * r * 2;
+
+    $circle.css({
+      strokeDashoffset: per
+    });
     }
 
   }
@@ -208,5 +182,13 @@ export default {
 <style>
 .profileImg {
   margin: 10px;
+}
+#svg .cir{
+  stroke-dasharray: 628.3185307179587;
+  stroke-dashoffset:628.3185307179587;
+  transition: stroke-dashoffset 1s linear;
+}
+#svg {
+   transform: rotate(-90deg);
 }
 </style>
