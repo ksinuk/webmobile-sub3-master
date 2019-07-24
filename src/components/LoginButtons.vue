@@ -46,7 +46,10 @@
           ></v-text-field>
 
         <!-- displayName -->
+        <!-- 회원가입 폼에서만 보임 -->
         <v-text-field
+          name="nameForm"
+          v-show="viewSign"
           v-model="displayName"
           :rules="nameRules"
           label="이름"
@@ -54,6 +57,8 @@
           single-line
           solo
           style="width:240px; margin: auto;"
+          v-on:keyup="characterCheck()"
+          v-on:keydown="characterCheck()"
           ></v-text-field>
 
         <!-- password -->
@@ -165,6 +170,16 @@ export default {
     },
     goHome() {
       this.$router.push('/')
+    },
+    // 유저네임 특수문자 제한
+    characterCheck() {
+      let RegExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi
+      let obj = document.getElementsByName("nameForm")[0]
+      if (RegExp.test(obj.value)) {
+        // 현재 데이터와 연결해서 특수문자 입력을 받으면 마지막 문자를 제거
+        this.displayName = obj.value.substring(0, obj.value.length - 1)
+        alert('특수문자는 입력하실 수 없습니다.')
+      }
     }
   }
 }
