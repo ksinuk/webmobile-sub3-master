@@ -15,7 +15,6 @@ import store from './store'
 import Header from './components/Header'
 import TopButton from './components/TopButton'
 
-
 export default {
   name: 'App',
   store,

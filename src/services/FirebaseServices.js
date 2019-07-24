@@ -144,14 +144,14 @@ export default {
     })
   },
   changePassword: function(password) {
-      var user = firebase.auth().currentUser;
-      var newPassword = password;
+    var user = firebase.auth().currentUser;
+    var newPassword = password;
 
-      user.updatePassword(newPassword).then(function() {
-          console.log('password is updated.')
-      }).catch(function(error) {
-          console.log('password update is failed.')
-      })
+    user.updatePassword(newPassword).then(function() {
+        console.log('password is updated.')
+    }).catch(function(error) {
+        console.log('password update is failed.')
+    })
   },
   // login 1. create DB
   // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
@@ -169,13 +169,25 @@ export default {
     })
     console.log(user)
   },
+  // store 에 있는 유저정보 업데이트
+  // updatedStoreUser() {
+  //   let _user = firebase.auth().currentUser
+  //   console.log('updatedStoreUser call :', _user)
+  //   if (_user) {
+  //     console.log('in user', _user)
+  //     store.commit('getUserName', _user.displayName)
+  //   } else {
+  //     console.log('no user')
+  //     store.commit('getUserName', '')
+  //   }
+  // },
   // login 2-1.1 create user with e-mail
   createUserWithEmail(email, password, userName) {
     let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
         _this.createdbForNewUser(user.user.uid)
-        // 이름 만들기
+        // 유저 생성하면서 입력받은 이름 설정
         let _user = firebase.auth().currentUser
         _user.updateProfile({
           displayName: userName
@@ -187,14 +199,10 @@ export default {
   },
   // login 2-1.2 login user whit e-mail
   loginUserWithEmail(email, password) {
+    let _this = this
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(function(result) {
-        // 로그인 상태면 store 에 유저정보 저장
-        console.log(result)
-        store.state.firebaseUser.uid = result.user.uid
-        store.state.firebaseUser.name = result.user.displayName
-        store.state.firebaseUser.email = result.user.email
-        store.state.firebaseUser.photoURL = result.user.photoURL
+        _this.updatedStoreUser()
       })
       .catch(function(error) {
         console.log(error)
@@ -209,7 +217,8 @@ export default {
         if (result.additionalUserInfo.isNewUser) {
           _this.createdbForNewUser(result.user.uid)
         }
-      }).catch(function(error) {
+      })
+      .catch(function(error) {
         console.log(error.code, error.message)
       })
   },
@@ -218,22 +227,24 @@ export default {
     let _this = this
     let provider = new firebase.auth.FacebookAuthProvider()
     firebase.auth().signInWithPopup(provider)
-    .then(function(result) {
-      if (result.additionalUserInfo.isNewUser) {
-        _this.createdbForNewUser(result.user.uid)
-      }
-    }).catch(function(error) {
-      console.log(error.code, error.message)
-    })
+      .then(function(result) {
+        if (result.additionalUserInfo.isNewUser) {
+          _this.createdbForNewUser(result.user.uid)
+        }
+        console.log(result)
+      })
+      .catch(function(error) {
+        console.log(error.code, error.message)
+      })
   },
   // login 3. logout
   logoutUser() {
-    firebase.auth().signOut().then(function() {
-    })
-    // 로그아웃 후 메인페이지로
-    .then(router.push('/'))
-    .catch(function(error) {
-      console.log(error)
-    })
+    let _this = this
+    firebase.auth().signOut()
+      // 로그아웃 후 메인페이지로
+      .then(router.push('/'))
+      .catch(function(error) {
+        console.log(error)
+      })
   },
 }

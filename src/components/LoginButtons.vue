@@ -103,6 +103,7 @@
 
 <script>
 import FirebaseServices from '../services/FirebaseServices'
+import router from '../router'
 
 export default {
   name: 'Loginbuttons',
