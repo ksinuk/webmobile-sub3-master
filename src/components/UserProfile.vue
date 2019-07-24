@@ -31,7 +31,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-
+    <!-- user book mark list-->
+    
     <!-- user edit modal -->
   </div>
 </template>
@@ -39,12 +40,16 @@
 <script>
 import firebase from 'firebase'
 import UserProfileBtn from './UserProfileBtn.vue'
+import { Carousel, Slide } from 'vue-carousel';
+
 // import UserProfileBtn from './UserProfileTestBtn.vue'
 
 export default {
   name: 'UserProfile',
   components: {
-    UserProfileBtn
+    UserProfileBtn,
+    Carousel,
+    Slide
   },
   data () {
     return {
