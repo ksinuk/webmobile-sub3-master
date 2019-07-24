@@ -158,6 +158,7 @@ export default {
   methods: {
     async getPosts() {
         this.posts = await FirebaseServices.getPosts()
+        console.log(this.posts)
         for (var post in this.posts) {
           if (this.posts[post].notice === true) {
             this.tmp.push(this.posts[post])

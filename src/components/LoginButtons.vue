@@ -33,6 +33,8 @@
         v-model="valid"
         lazy-validation
         >
+
+        <!-- email -->
         <v-text-field
           v-model="email"
           :rules="emailRules"
@@ -43,6 +45,18 @@
           style="width:240px; margin: auto;"
           ></v-text-field>
 
+        <!-- displayName -->
+        <v-text-field
+          v-model="displayName"
+          :rules="nameRules"
+          label="이름"
+          required
+          single-line
+          solo
+          style="width:240px; margin: auto;"
+          ></v-text-field>
+
+        <!-- password -->
         <v-text-field
           v-model="password"
           :append-icon="pwShow ? 'visibility' : 'visibility_off'"
@@ -58,12 +72,23 @@
           ></v-text-field>
 
         <v-btn
+          v-show="viewSign"
           :loading="loading"
           :disabled="loading"
           color="success"
           @click="loader = 'loading'"
         >
           가입
+        </v-btn>
+
+        <v-btn
+          v-show="!viewSign"
+          :loading="loading"
+          :disabled="loading"
+          color="success"
+          @click="loader = 'loading'"
+        >
+          로그인
         </v-btn>
       </v-form>
 
@@ -78,6 +103,7 @@ export default {
   name: 'Loginbuttons',
   components: {
   },
+  props:['viewSign'],
   data () {
     return {
       // input rules
@@ -86,6 +112,11 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
+      ],
+      valid: true,
+      displayName: '',
+      nameRules: [
+        v => !!v || 'Name is required',
       ],
       // pw rule
       pwShow: false,
@@ -102,7 +133,12 @@ export default {
   watch: {
     loader () {
       if (this.loader === 'loading') {
-        this.createUserWithEmail()
+        if(this.viewSign == true) {
+          this.createUserWithEmail()
+        } else {
+          this.emailLogin()
+        }
+        
       }
       const thisCopy = this
       const l = thisCopy.loader
@@ -116,7 +152,10 @@ export default {
   },
   methods: {
     async createUserWithEmail() {
-      await FirebaseServices.createUserWithEmail(this.email, this.password)
+      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName)
+    },
+    emailLogin(){
+      FirebaseServices.loginUserWithEmail(this.email, this.password)
     },
     googleLogin() {
       FirebaseServices.loginUserWithGoogle()

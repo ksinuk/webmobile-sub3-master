@@ -9,6 +9,7 @@ export default new Vuex.Store({
     imgurID: "Client-ID eadc208fc721efd",
     // firebase user info
     firebaseUser: {
+      uid: null,
       name: null,
       email: null,
       photoURL: null,

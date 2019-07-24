@@ -1,6 +1,7 @@
 <template>
   <v-container class="loginCtn">
-    <v-layout row class="loginLayout">
+    <!-- 회원가입 화면 -->
+    <v-layout v-show="viewSign" row class="loginLayout">
       <div class="py-5 pageDescript">
         <h1 class="headline pb-2 loginh1">쉽고 빠르게<br>당신의 포트폴리오를</h1>
         <h1 class="headline pb-2 loginh1">완성하기 위한 방법,</h1>
@@ -17,7 +18,7 @@
             <h3 class="loginh3">포트폴리오를 만들고,<br>공유하려면 가입하세요.</h3>
           </div>
           <!-- login function -->
-          <LoginButtons/>
+          <LoginButtons v-bind:viewSign="viewSign"/>
 
           <!-- <div>
             <p>가입하면 서비스 이용약관, 개인정보 처리방침에 동의하게 됩니다.</p>
@@ -26,9 +27,34 @@
         <v-flex>
           <div>
             <span>계정이 있으신가요?</span>
-            <v-btn flat small style="width: 116px;">로그인하기</v-btn>
+            <v-btn flat small style="width: 116px;" @click="viewSign = !viewSign">로그인하기</v-btn>
           </div>
-          
+        </v-flex>
+      </div>
+    </v-layout>
+
+
+    <!-- 로그인 화면 -->
+    <v-layout v-show="!viewSign" row class="loginLayout">
+      <div class="py-5">
+        <v-flex>
+          <!-- logo -->
+          <div>
+            <a class="homeBtn" href="/">DEVFOLIO</a>
+          </div>
+
+          <!-- login function -->
+          <LoginButtons v-bind:viewSign="viewSign"/>
+
+          <!-- <div>
+            <p>가입하면 서비스 이용약관, 개인정보 처리방침에 동의하게 됩니다.</p>
+          </div> -->
+        </v-flex>
+        <v-flex>
+          <div>
+            <span>계정이 없으신가요?</span>
+            <v-btn flat small style="width: 116px;" @click="viewSign = !viewSign">가입하기</v-btn>
+          </div>
         </v-flex>
       </div>
     </v-layout>
@@ -45,6 +71,7 @@ export default {
   },
   data () {
     return {
+      viewSign: true,
     }
   }
 }

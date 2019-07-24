@@ -47,29 +47,77 @@
     <div class="file-list">
         <h1>청춘에서만 구할 수</h1>
     </div>
+    <!-- user book mark list-->
+    <div class="my-5">
+      <p style="font-size: 2rem;">BOOKMARK</p>
+      <v-layout row wrap>
+          <v-flex>
+              <carousel per-page="3">
+                  <slide v-for="bookmark in bookmarkList" class="px-2">
+                      <v-card>
+                          <v-img
+                          :src="bookmark.img"
+                          height="200px"
+                          >
+                          </v-img>
+
+                          <v-card-title primary-title>
+                          <div>
+                              <div class="headline">{{ bookmark.title }}</div>
+                              <div>
+                                <tr>
+                                  <td v-for="hashtag in bookmark.hashtags">
+                                    <v-chip color="teal" text-color="white">
+                                      <v-avatar>
+                                          <v-icon>check_circle</v-icon>
+                                      </v-avatar>
+                                      {{ hashtag }}
+                                    </v-chip>
+                                  </td>
+                                </tr>
+                              </div>
+                          </div>
+                          </v-card-title>
+                          <v-card-actions>
+                              <v-btn flat color="purple">Explore</v-btn>
+                              <v-spacer></v-spacer>
+                          </v-card-actions>
+                      </v-card>
+                  </slide>
+              </carousel>
+          </v-flex>
+      </v-layout>
+    
     <!-- user edit modal -->
 </div>
 </template>
 
 <script>
 import firebase from 'firebase'
+import FirebaseServices from '../services/FirebaseServices'
 import UserProfileBtn from './UserProfileBtn.vue'
+import { Carousel, Slide } from 'vue-carousel';
+
 // import UserProfileBtn from './UserProfileTestBtn.vue'
 
 export default {
     name: 'UserProfile',
     components: {
-        UserProfileBtn
+        UserProfileBtn,
+        Carousel,
+        Slide
     },
     data () {
         return {
             dialog: false,
             photoURL: this.$store.state.firebaseUser.photoURL,
-            complatePercent:70
+            complatePercent:70,
+            bookmarkList: []
         }
     },
     created() {
         this.viewProfile()
+        this.viewBookmark()
     },
     mounted(){
         this.makeChart()
@@ -87,6 +135,16 @@ export default {
             ctx.lineWidth = 20
             ctx.strokeStyle = 'blue'
             ctx.stroke();
+        },
+        async viewBookmark() {
+            var bookmarks = await FirebaseServices.getPortfolios();
+            var user = await FirebaseServices.currentUser();
+            for (let book in bookmarks) {
+                if (user.bookmark.includes(bookmarks[book].pk)) {
+                this.bookmarkList.push(bookmarks[book])
+                }
+            }
+            console.log(this.bookmarkList)
         }
     }
 }

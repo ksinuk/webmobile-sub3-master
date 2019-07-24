@@ -4,6 +4,7 @@ import 'firebase/database'
 import 'firebase/auth'
 import 'firebase/firestore';
 
+import router from '../router'
 import store from '../store'
 
 const USERS = 'users'
@@ -70,6 +71,7 @@ export default {
           created_at: firebase.firestore.FieldValue.serverTimestamp()
       }).then(console.log('done'))
   },
+  // 전체 포스트 목록을 조회
   getPosts() {
     const postsCollection = db.collection(POSTS)
 		return postsCollection
@@ -86,8 +88,9 @@ export default {
 						return data
 					})
 				})
-
   },
+
+  // board_id를 기반으로 하나의 게시글을 불러와 편집
   getPostId(board_id) {
     const postsCollection = db.collection(POSTS)
 		return postsCollection
@@ -107,6 +110,8 @@ export default {
           }
 				})
   },
+
+  // 포스트 삭제
   deletePost(board_id) {
     db.collection(POSTS).doc(board_id).delete().then(function() {
         console.log("Document successfully deleted!");
@@ -115,37 +120,46 @@ export default {
     });
   },
 
+  // 포트폴리오 목록 조회
   getPortfolios(){
-        const portfolios = db.collection(PORTFOLIO)
-        return portfolios
-            .get()
-            .then((docSnapshots)=> {
-            return docSnapshots.docs.map((doc) => {
-                let data = doc.data()
-                return data
-            })
-        })
+    const portfolios = db.collection(PORTFOLIO)
+    return portfolios
+      .get()
+      .then((docSnapshots)=> {
+      return docSnapshots.docs.map((doc) => {
+        let data = doc.data()
+        data.pk = doc.id
+        data.like = false
+        return data
+      })
+    })
   },
   getUidPortfolios(uid){
-      return new Promise(function(resolve,reject){
-          console.log("getUidPortfolios!!!")
-          db.collection(PORTFOLIO).where('uid', '==', uid).get()
-          .then(function(snapshot) {
-              console.log("snapshot: ",snapshot)
-              if (snapshot.empty) {
-                  resolve(null)
-              }
-              let out = new Array()
-              snapshot.forEach(doc => {
-                  out.push(doc.data())
-                  console.log(doc.id, '=>', doc.data());
-              })
-              resolve(out)
-          })
-          .catch(function(res){
-              console.log("error : ",res)
-          })
-      })
+    return new Promise(function(resolve,reject){
+        console.log("getUidPortfolios!!!")
+        db.collection(PORTFOLIO).where('uid', '==', uid).get()
+        .then(function(snapshot) {
+            console.log("snapshot: ",snapshot)
+            if (snapshot.empty) {
+                resolve(null)
+            }
+            let out = new Array()
+            snapshot.forEach(doc => {
+                out.push(doc.data())
+                console.log(doc.id, '=>', doc.data());
+            })
+            resolve(out)
+        })
+        .catch(function(res){
+            console.log("error : ",res)
+        })
+    })
+  },
+
+  // 파이어베이스에 포트폴리오를 입력하는 함수
+  // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
+  postPortfolios() {
+    // 
   },
 
   getIntroduce(){
@@ -165,10 +179,6 @@ export default {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         console.log('user is signed in')
-        // 로그인 상태면 store 에 유저정보 저장
-        store.state.firebaseUser.name = user.displayName
-        store.state.firebaseUser.email = user.email
-        store.state.firebaseUser.photoURL = user.photoURL
         return true
       } else {
         console.log('No user is signed in')
@@ -176,6 +186,26 @@ export default {
       }
     })
   },
+  // 현재 로그인 user doc 가져오기
+  async currentUser() {
+    var user = firebase.auth().currentUser;
+    var docRef = db.collection(USERS);
+    const detailedUser = docRef.get().then((docSnapshots) => {
+      let results = docSnapshots.docs.map((doc) => {
+      let data = doc.data()
+      if (data.uid === user.uid) {
+        return data
+      }
+      })
+      for (var res in results) {
+        if (results[res] !== undefined) {
+          return results[res]
+        }
+      }
+    })
+    return detailedUser
+  },
+
   changePassword: function(password) {
       var user = firebase.auth().currentUser;
       var newPassword = password;
@@ -190,54 +220,92 @@ export default {
   // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
   async createdbForNewUser(userID) {
     await db.collection(USERS).doc(userID).set({
-      uid: userID
+      uid: userID,
+      bookmark: []
     })
   },
+  // users collection 데이터 수정
+  editUser(userId, bookmarkList) {
+    db.collection(USERS).doc(userId).set({
+      uid: userId,
+      bookmark: bookmarkList
+    })
+  },
+
   // 현재 로그인 된 유저의 프로필 정보를 업데이트
   updatedForUser(display_name, photo_url) {
-    var user = firebase.auth().currentUser;
-
+    var user = firebase.auth().currentUser
     user.updateProfile({
       displayName: display_name,
       photoURL: photo_url
     })
     console.log(user)
   },
-  // login 2-1. create user with e-mail
-  createUserWithEmail(email, password) {
-    let thisCopy = this
+  // login 2-1.1 create user with e-mail
+  createUserWithEmail(email, password, userName) {
+    let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
-        thisCopy.createdbForNewUser(user.user.uid)
+        _this.createdbForNewUser(user.user.uid)
+        // 이름 만들기
+        let _user = firebase.auth().currentUser
+        _user.updateProfile({
+          displayName: userName
+        })
       })
       .catch(function(error) {
         console.log(error)
     })
   },
+  // login 2-1.2 login user whit e-mail
+  loginUserWithEmail(email, password) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(function(result) {
+        // 로그인 상태면 store 에 유저정보 저장
+        console.log(result)
+        store.state.firebaseUser.uid = result.user.uid
+        store.state.firebaseUser.name = result.user.displayName
+        store.state.firebaseUser.email = result.user.email
+        store.state.firebaseUser.photoURL = result.user.photoURL
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+  },
   // login 2-2. login google
   loginUserWithGoogle() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithPopup(provider)
       .then(function(result) {
         if (result.additionalUserInfo.isNewUser) {
-          thisCopy.createdbForNewUser(result.user.uid)
+          _this.createdbForNewUser(result.user.uid)
         }
       }).catch(function(error) {
         console.log(error.code, error.message)
       })
   },
-  // login 2-3. facebook login
+  // login 2-3. login facebook
   loginUserWithFacebook() {
-    let thisCopy = this
+    let _this = this
     let provider = new firebase.auth.FacebookAuthProvider()
     firebase.auth().signInWithPopup(provider)
     .then(function(result) {
       if (result.additionalUserInfo.isNewUser) {
-        thisCopy.createdbForNewUser(result.user.uid)
+        _this.createdbForNewUser(result.user.uid)
       }
     }).catch(function(error) {
       console.log(error.code, error.message)
+    })
+  },
+  // login 3. logout
+  logoutUser() {
+    firebase.auth().signOut().then(function() {
+    })
+    // 로그아웃 후 메인페이지로
+    .then(router.push('/'))
+    .catch(function(error) {
+      console.log(error)
     })
   }
 }
