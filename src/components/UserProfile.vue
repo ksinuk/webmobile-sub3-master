@@ -25,11 +25,12 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">포트폴리오 제작 현황</h3>
-{{percent}}%
+
               <div id = "cont">
                 <svg viewPort="0 0 320 320" width="320" height="320" id="svg" xmlns="http://www.w3.org/2000/svg">
-                <circle class="cir" cx="160" cy="160" r="100" stroke="#000000" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
+                <circle class="cir" cx="160" cy="160" r="100" stroke="#5895DC" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
               </svg>
+              <span id="mypercent">{{percent}}%</span>
 </div>
             </div>
           </v-card-title>
@@ -190,5 +191,14 @@ export default {
 }
 #svg {
    transform: rotate(-90deg);
+}
+
+#mypercent {
+  position: absolute;
+  margin-top: 3.4em;
+  margin-left: -4.7em;
+  text-align: center;
+  font-size: 40px;
+
 }
 </style>
