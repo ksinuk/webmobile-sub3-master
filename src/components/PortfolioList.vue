@@ -1,6 +1,6 @@
 <template lang="html">
     <!-- 포트폴리오 엔트리: 예술의 전당 -->
-    <article role="article" id="work1" class="is-init is-animated" data-animation="fade-left">
+    <article role="article" id="work1" class="is-init is-animated" :class="{css1:cssArr[0],css2:cssArr[1],css3:cssArr[2]}" data-animation="fade-left">
         <div class="gallery-image" @click="open('open')">
             <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
         </div><br>
@@ -10,8 +10,12 @@
                 <figcaption class="gallery-caption">
                     <h3 class="gallery-title">{{ports.title}}</h3>
                     <ul class="gallery-spec">
-                        <li class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">&nbsp{{ports.viewport}}</span></li>
-                        <li class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">&nbsp{{ports.ie_support}}</span></li>
+                        <li class="gallery-spec-item">
+                            <strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">&nbsp{{ports.viewport}}</span>
+                        </li>
+                        <li class="gallery-spec-item">
+                            <strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">&nbsp{{ports.ie_support}}</span>
+                        </li>
                     </ul>
                     <div id="work1Description" v-html="ports.content">    
                     </div>
@@ -31,27 +35,25 @@
                     </thead>
                     <tbody>
                         <template v-for="html in ports.category_html">
-                        <tr>
-                            <td data-th="Category"><span class="categ html">HTML</span></td>
-                            <td data-th="Source"><a :href="html.url" target="_blank">{{html.file}}</a></td>
-                            <td data-th="Related Keywords" v-html="html.keyword"></td>
-                        </tr>
-
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a :href="html.url" target="_blank">{{html.file}}</a></td>
+                                <td data-th="Related Keywords" v-html="html.keyword"></td>
+                            </tr>
                         </template>
                         <template v-for="css in ports.category_css">
-                        <tr>
-                            <td data-th="Category"><span class="categ css">CSS</span></td>
-                            <td data-th="Source"><a :href="css.url" target="_blank">{{css.file}}</a></td>
-                            <td data-th="Related Keywords" v-html="css.keyword"></td>
-                        </tr>
-
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a :href="css.url" target="_blank">{{css.file}}</a></td>
+                                <td data-th="Related Keywords" v-html="css.keyword"></td>
+                            </tr>
                         </template>
                         <template v-for="js in ports.category_js">
-                        <tr>
-                            <td data-th="Category"><span class="categ js">JS</span></td>
-                            <td data-th="Source"><a :href="js.url" target="_blank">{{js.file}}</a></td>
-                            <td data-th="Related Keywords" v-html="js.keyword"></td>
-                        </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a :href="js.url" target="_blank">{{js.file}}</a></td>
+                                <td data-th="Related Keywords" v-html="js.keyword"></td>
+                            </tr>
                         </template>
 
                     </tbody>
@@ -64,8 +66,28 @@
 
 </template>
 
+<style lang="css" scoped>
+.css1{
+    @import "./PortfolioListCss1.css";
+}
+.css2{
+    @import "./PortfolioListCss2.css";
+}
+.css3{
+    @import "./PortfolioListCss3.css";
+}
+</style>
+
+
+
 <script>
 import FirebaseService from '@/services/FirebaseServices'
+// import Css1 from "./PortfolioListCss1.css"
+// import Css2 from "./PortfolioListCss2.css"
+// import Css3 from "./PortfolioListCss3.css"
+
+
+
 export default {
     name :'PortfolioList',
     data() {
@@ -73,13 +95,32 @@ export default {
         //  ports : this.portfolio  
             out:false,
             ismodal:false,
+            cssClass:'',
+            cssStyle:'',
+            cssAddr:'',
+            cssArr:[false,false,false]
         }
     },
     props:{
         ports: {type: null},
         cssmod:{type: null},
     },
+    components:{
+    },
     created(){
+        this.cssAddr = "./PortfolioListCss"+this.cssmod+".css"
+        this.cssStyle = '<style lang="css" scoped :src="'+this.cssAddr+'"></style>'
+        if(this.cssmod==3){
+            this.ismodal = true
+        }
+    },
+    beforeCreate(){
+
+
+    },
+    mounted(){
+       
+
     },
     methods:{
         open:function(point){
@@ -88,17 +129,20 @@ export default {
                 this.out = !this.out
             }
         },
-    }
+    },
+    watch:{
+        cssmod:function(){
+            if(this.cssmod==3){
+                this.ismodal = true
+                this.out = false
+            }
+
+            for(let i=0;i<3;i++){
+                this.cssArr[i] = false
+            }
+
+            this.cssArr[this.cssmod-1] = true
+        },
+    },
 }
 </script>
-
-<style lang="css" scoped src="./PortfolioListCss1.css">
-</style>
-
-<!--
-<style lang="css" scoped src="./PortfolioListCss2.css">
-</style>
-
-<style lang="css" scoped src="./PortfolioListCss3.css">
-</style>
--->
