@@ -25,11 +25,12 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">포트폴리오 제작 현황</h3>
-{{percent}}%
+
               <div id = "cont">
                 <svg viewPort="0 0 320 320" width="320" height="320" id="svg" xmlns="http://www.w3.org/2000/svg">
-                <circle class="cir" cx="160" cy="160" r="100" stroke="#000000" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
+                <circle class="cir" cx="160" cy="160" r="100" stroke="#5895DC" fill="none" stroke-width="10" stroke-linecap="round" ></circle>
               </svg>
+              <span id="mypercent">{{percent}}%</span>
 </div>
             </div>
           </v-card-title>
@@ -162,13 +163,13 @@ export default {
       }
       console.log(count);
       console.log(totalCount);
-      this.percent = (count/totalCount)*100;
+      this.percent = Math.round((count/totalCount)*100);
       console.log(this.percent);
       var val = this.percent;
 
     var $circle = $('#svg .cir');
     var r = $circle.attr('r');
-    var per = ((100 - val) / 100) * Math.PI * r * 2;
+    var per = Math.round(((100 - val) / 100) * Math.PI * r * 2);
 
     $circle.css({
       strokeDashoffset: per
@@ -184,11 +185,20 @@ export default {
   margin: 10px;
 }
 #svg .cir{
-  stroke-dasharray: 628.3185307179587;
-  stroke-dashoffset:628.3185307179587;
+  stroke-dasharray: 628;
+  stroke-dashoffset:628;
   transition: stroke-dashoffset 1s linear;
 }
 #svg {
    transform: rotate(-90deg);
+}
+
+#mypercent {
+  position: absolute;
+  margin-top: 3.4em;
+  margin-left: -4.7em;
+  text-align: center;
+  font-size: 40px;
+
 }
 </style>
