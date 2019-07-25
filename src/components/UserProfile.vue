@@ -96,8 +96,6 @@ import FirebaseServices from '../services/FirebaseServices'
 import UserProfileBtn from './UserProfileBtn.vue'
 import { Carousel, Slide } from 'vue-carousel';
 
-// import UserProfileBtn from './UserProfileTestBtn.vue'
-
 export default {
     name: 'UserProfile',
     components: {
@@ -109,7 +107,7 @@ export default {
         return {
             dialog: false,
             photoURL: this.$store.state.firebaseUser.photoURL,
-            complatePercent:70,
+            Percent:70,
             bookmarkList: []
         }
     },
@@ -119,6 +117,7 @@ export default {
     },
     mounted(){
         this.makeChart()
+        this.getPortfolio()
     },
     methods: {
         viewProfile: function() {
@@ -143,7 +142,58 @@ export default {
                 }
             }
             console.log(this.bookmarkList)
+        },
+
+        async getPortfolio(){
+        console.log('test')
+        var user = await FirebaseServices.currentUser();
+        if(user){
+            console.log(user.uid);
         }
+        else{
+            console.log('유저정보 가져오기 실패');
+        }
+        let portfolio = await FirebaseServices.getPortfolio(user.uid);
+        console.log("test"+portfolio.type)
+        let count =0;
+        let totalCount =3;
+        totalCount+= (8*portfolio.portfolios.length);
+        totalCount+= (3*portfolio.skills.length);
+        if(portfolio.aboutme!='') count++;
+        if(portfolio.hashtags.length!=0) count++;
+        if(portfolio.type!=0) count++;
+        let temp = portfolio.portfolios;
+        for(let i=0; i<portfolio.portfolios.length;i++){
+            if(temp[i].content!='') count++;
+            if(temp[i].demo_url!='') count++;
+            if(temp[i].git.length!=0) count++;
+            if(temp[i].ie_support!='') count++;
+            if(temp[i].img!='') count++;
+            if(temp[i].repos_url!='') count++;
+            if(temp[i].title!='') count++;
+            if(temp[i].viewport!='') count++;
+        }
+        let temp2 = portfolio.skills;
+        for(let i=0; i<temp2.length;i++){
+            if(temp2[i].description !='') count++;
+            if(temp2[i].level !=0) count++;
+            if(temp2[i].skillname !='') count++;
+        }
+        console.log(count);
+        console.log(totalCount);
+        this.percent = Math.round((count/totalCount)*100);
+        console.log(this.percent);
+        var val = this.percent;
+
+        var $circle = $('#svg .cir');
+        var r = $circle.attr('r');
+        var per = Math.round(((100 - val) / 100) * Math.PI * r * 2);
+
+        $circle.css({
+        strokeDashoffset: per
+        });
+        }
+
     }
 }
 </script>
@@ -264,4 +314,24 @@ export default {
     }
     
     
+    .profileImg {
+        margin: 10px;
+    }
+    #svg .cir{
+        stroke-dasharray: 628;
+        stroke-dashoffset:628;
+        transition: stroke-dashoffset 1s linear;
+    }
+    #svg {
+        transform: rotate(-90deg);
+    }
+
+    #mypercent {
+        position: absolute;
+        margin-top: 3.4em;
+        margin-left: -4.7em;
+        text-align: center;
+        font-size: 40px;
+
+    }
 </style>
