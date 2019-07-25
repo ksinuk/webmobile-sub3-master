@@ -24,8 +24,11 @@ export default new Vuex.Store({
     changeItem : function(state, payload){
       state.searchItem=payload;
     },
-    getUserName(state, rename) {
+    setUserName(state, rename) {
       state.firebaseUser.name = rename
+    },
+    setUserState(state, bool) {
+      state.firebaseUser.inUser = bool
     }
   },
   actions: {

@@ -247,17 +247,17 @@ async currentUser() {
     console.log(user)
   },
   // store 에 있는 유저정보 업데이트
-  // updatedStoreUser() {
-  //   let _user = firebase.auth().currentUser
-  //   console.log('updatedStoreUser call :', _user)
-  //   if (_user) {
-  //     console.log('in user', _user)
-  //     store.commit('getUserName', _user.displayName)
-  //   } else {
-  //     console.log('no user')
-  //     store.commit('getUserName', '')
-  //   }
-  // },
+  updatedStoreUser() {
+    let _user = firebase.auth().currentUser
+    if (_user) {
+      store.commit('setUserName', _user.displayName)
+      store.commit('setUserState', true)
+    } else {
+      store.commit('setUserName', '')
+      store.commit('setUserState', false)
+    }
+    console.log(store)
+  },
   // login 2-1.1 create user with e-mail
   createUserWithEmail(email, password, userName) {
     let _this = this
@@ -279,7 +279,6 @@ async currentUser() {
     let _this = this
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(function(result) {
-        _this.updatedStoreUser()
       })
       .catch(function(error) {
         console.log(error)
@@ -318,10 +317,12 @@ async currentUser() {
   logoutUser() {
     firebase.auth().signOut().then(function() {
     })
-    // 로그아웃 후 메인페이지로
-    .then(router.push('/'))
-    .catch(function(error) {
-      console.log(error)
-    })
+      // 로그아웃 후 세션삭제
+      .then(sessionStorage.clear())
+      // 홈페이지로 이동
+      .then(router.push('/'))
+      .catch(function(error) {
+        console.log(error)
+      })
   }
 }
