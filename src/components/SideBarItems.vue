@@ -57,4 +57,3 @@ export default {
   margin-top: 70px;
 }
 </style>
-
