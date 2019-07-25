@@ -162,13 +162,13 @@ export default {
       }
       console.log(count);
       console.log(totalCount);
-      this.percent = (count/totalCount)*100;
+      this.percent = Math.round((count/totalCount)*100);
       console.log(this.percent);
       var val = this.percent;
 
     var $circle = $('#svg .cir');
     var r = $circle.attr('r');
-    var per = ((100 - val) / 100) * Math.PI * r * 2;
+    var per = Math.round(((100 - val) / 100) * Math.PI * r * 2);
 
     $circle.css({
       strokeDashoffset: per
@@ -184,8 +184,8 @@ export default {
   margin: 10px;
 }
 #svg .cir{
-  stroke-dasharray: 628.3185307179587;
-  stroke-dashoffset:628.3185307179587;
+  stroke-dasharray: 628;
+  stroke-dashoffset:628;
   transition: stroke-dashoffset 1s linear;
 }
 #svg {
