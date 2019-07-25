@@ -11,11 +11,15 @@
     <div v-show="this.$store.state.firebaseUser.inUser">
       <v-btn @click="logoutUser">로그아웃</v-btn>
       <h1>{{ this.$store.state.firebaseUser.name }}</h1>
-      <router-link :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.name }}">My Page</router-link>
+      <v-btn flat :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.name }}">My Page</v-btn>
     </div>
-    
-    <div v-for="item in routeItems">
-      <v-btn flat :to="item.path">{{ item.name }}</v-btn>
+
+    <div>
+      <!-- 로그인 되어 있으면 가림 -->
+      <v-btn v-show="!this.$store.state.firebaseUser.inUser" flat to="/login">loginpage</v-btn>
+      
+      <v-btn flat to="/board">board</v-btn>
+      <v-btn flat to="/write_portfolio">write_portfolio</v-btn>
     </div>
   </v-container>
 </template>
@@ -27,17 +31,8 @@ export default {
   name: "sideBarItems",
   data() {
     return {
-      routeItems: [],
       searchItem: null
     };
-  },
-  created() {
-    this.$router.options.routes.forEach(route => {
-      this.routeItems.push({
-        name: route.name,
-        path: route.path
-      })
-    })
   },
   methods: {
     findItem: function() {
