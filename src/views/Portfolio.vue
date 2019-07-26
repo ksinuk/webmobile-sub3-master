@@ -272,6 +272,7 @@ export default {
         }
         else{
             firebase.auth().onAuthStateChanged(function(user) {
+                console.log("user: ",user)
                 if (user) {
                     th.isuser = true
                     th.getMyPortfolio(user.uid)
@@ -283,6 +284,10 @@ export default {
                         else{
                             th.css = 1
                         }
+                        console.log("th.css: ",th.css)
+                    })
+                    .catch(function(){
+                        th.css = 1
                     })
                 }
             })
