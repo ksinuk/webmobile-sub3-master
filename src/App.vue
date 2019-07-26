@@ -15,8 +15,6 @@ import store from './store'
 import Header from './components/Header'
 import TopButton from './components/TopButton'
 
-import firebase from 'firebase'
-import FirebaseServices from './services/FirebaseServices'
 
 export default {
   name: 'App',
@@ -24,17 +22,6 @@ export default {
   components:{
       Header,
       TopButton,
-  },
-  created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-          console.log('User is logined')
-          FirebaseServices.updatedStoreUser()
-      } else {
-          console.log('User is not logged in.')
-          FirebaseServices.updatedStoreUser()
-      }
-    })
   }
 }
 

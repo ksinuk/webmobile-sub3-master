@@ -1,13 +1,6 @@
 <!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
   <div class="portfolio">
-    <ImageBanner/>
-    <div id="select-css" v-if="isuser">
-        <button id="css1" @click="changeCss(1)">1</button><br>
-        <button id="css2" @click="changeCss(2)">2</button><br>
-        <button id="css3" @click="changeCss(3)">3</button><br>
-    </div>
-
     <section role="region" id="works" class="l-section">
         <Introduce :intro="intros[0]"></Introduce>
         <div class="l-section-holder">
@@ -16,12 +9,10 @@
                 <span class="primary">My works</span>
             </h2>
             <div id="portfolio" class="section-content gallery alternate">
-                <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
-                    <hr>
-                </v-flex>
                 <v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css"></PortfolioList>
+                    <PortfolioList :ports="ex" v-if="css==1"></PortfolioList>
+                    <PortfolioList2 :ports="ex" v-else-if="css==2"></PortfolioList2>
+                    <PortfolioList3 :ports="ex" v-else-if="css==3"></PortfolioList3>
                     <hr>
                 </v-flex>
             </div>
@@ -36,6 +27,8 @@ import ImageBanner from '@/components/ImageBanner.vue'
 import FirebaseService from '@/services/FirebaseServices'
 import PortfolioList from '@/components/PortfolioList.vue'
 import Introduce from '@/components/Introduce.vue'
+import PortfolioList2 from '@/components/PortfolioList2.vue'
+import PortfolioList3 from '@/components/PortfolioList3.vue'
 
 import firebase from 'firebase/app'
 
@@ -45,7 +38,12 @@ export default {
     components: {
         ImageBanner,
         PortfolioList,
-        Introduce
+        PortfolioList2,
+        PortfolioList3
+    },
+    props:{
+        css: {type: null},
+
     },
     data(){
         return {
@@ -205,42 +203,6 @@ export default {
                             keyword:'JavaScript, jQuery 1'
                         }
                     ],
-                },
-                {
-                    title:'다목적 탭스 플러그인',
-                    img:require("@/assets/example3.png"),
-                    viewport:'jQuery 플러그인',
-                    ie_support:'IE8+',
-                    demo_url:'./Portfolio-KMA/',
-                    repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-                    content:'<p>웹 접근성 및 폭넓은 커스터마이징에 초점을 맞춘 jQuery용 탭스 플러그인입니다. 활성화 및 비활성화할 탭의 선택이나 사용자 셀렉터 설정 같은 기본적인 설정은 물론, 반응형 아코디언 레이아웃 및 자동재생 기능을 갖추고 있어 아코디언 또는 캐루셀로도 응용 가능합니다.</p>\
-                                <p>마크업의 접근성은 물론 키보드 사용자를 위한 키보드 내비게이션 강화로 보다 넓은 사용자층을 타깃으로 하는 프로젝트에 사용할 수 있으며, 기본으로 제공되는 애니메이션 효과 이외에도 손쉬운 애니메이션 커스터마이징을 가능하게 해 크리에이티브한 디자인에도 적용할 수 있습니다.</p>\
-                            ',
-                    category_html:[],
-                    category_css:[
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.core.scss',
-                            file:'skeletabs.core.scss',
-                            keyword:'CSS, Sass'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.animation.scss',
-                            file:'skeletabs.animation.scss',
-                            keyword:'CSS, Sass, CSS3 animation'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.theme.default.scss',
-                            file:'skeletabs.theme.default.scss',
-                            keyword:'CSS, Sass'
-                        },
-                    ],
-                    category_js:[
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/js/skeletabs.js',
-                            file:'skeletabs.js',
-                            keyword:'JavaScript, jQuery'
-                        }
-                    ],
                 }
             ],
             
@@ -253,9 +215,6 @@ export default {
 
     created(){
         let th = this
-
-        this.getMyIntro()
-        console.log("intros: ",this.intros)
 
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
@@ -284,7 +243,7 @@ export default {
                             th.css = 1
                         }
                     })
-                }
+                } 
             })
         }
     },
@@ -300,12 +259,7 @@ export default {
                     FirebaseService.setUserData(user.uid,th.css)
                 }
             })
-        },
-        async getMyIntro(){
-            //  var user = FirebaseService.auth().currentUser;
-            this.intros = await FirebaseService.getIntroduce();
         }
-
     },
     watch: {
         css:function(){
@@ -633,49 +587,6 @@ p, dl, ol, ul {
     border-radius: 22px 22px 0 0;
 }
 
-
-
-table {
-    border: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin: 1em 0;
-    width: 100%;
-}
-
-table th, table td {
-    border-bottom: 1px solid #e6e9ea;
-    padding: .3em 1em;
-    text-align: left;
-}
-
-td {
-    display: table-cell;
-    vertical-align: inherit;
-}
-
-table thead th {
-    background-color: rgba(77,128,153,0.05);
-    border-top-width: 1px;
-    color: #94979c;
-    padding: 1.2em 1em;
-}
-
-table caption, table th {
-    font-weight: 500;
-    text-align: left;
-}
-
-th {
-    display: table-cell;
-    vertical-align: inherit;
-    font-weight: bold;
-    text-align: -internal-center;
-}
-
-table thead {
-    font-family: "Quicksand",sans-serif;
-}
 
 
 </style>
