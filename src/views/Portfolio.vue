@@ -1,12 +1,12 @@
-<!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
   <div class="portfolio">
     <ImageBanner/>
-    <div id="select-css" v-if="isuser">
-        <button id="css1" @click="changeCss(1)">1</button><br>
-        <button id="css2" @click="changeCss(2)">2</button><br>
-        <button id="css3" @click="changeCss(3)">3</button><br>
+    <div id="select-css">
+        <button id="css1" @click="css=1">1</button><br>
+        <button id="css2" @click="css=2">2</button><br>
+        <button id="css3" @click="css=3">3</button><br>
     </div>
+
 
     <section role="region" id="works" class="l-section">
         <Introduce :intro="intros[0]"></Introduce>
@@ -16,14 +16,226 @@
                 <span class="primary">My works</span>
             </h2>
             <div id="portfolio" class="section-content gallery alternate">
-                <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
-                    <hr>
+                <v-flex v-for="i in portfolios.length">
+
+                    <PortfolioList :ports="portfolios[i-1]" :index="i"></PortfolioList>
                 </v-flex>
-                <v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css"></PortfolioList>
-                    <hr>
-                </v-flex>
+                <!-- 포트폴리오 엔트리: 예술의 전당 -->
+                <article role="article" id="work1" class="gallery-item is-init is-animated" data-animation="fade-left">
+                    <figure role="group" class="gallery-figure">
+                        <div class="gallery-image">
+                        <img class="gallery-image-thumb" src="@/assets/example1.png" alt="예술의 전당 랜딩 페이지" aria-describedby="work1Description">
+
+                        </div>
+                        <figcaption class="gallery-caption">
+                            <h3 class="gallery-title">예술의 전당 랜딩 페이지</h3>
+                            <ul class="gallery-spec">
+                                <li class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">반응형</span></li>
+                                <li class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">IE9+</span></li>
+
+                            </ul>
+                            <div id="work1Description">
+                                <p><a href="http://www.sac.or.kr/" target="_blank">예술의 전당 사이트</a>의 메인 페이지를 부트스트랩 4를 기반으로 한 반응형 구조로 리뉴얼해 보았습니다.</p>
+                                <p><a href="https://v4-alpha.getbootstrap.com/" target="_blank">부트스트랩의 4 alpha 버전</a>을 기반으로 제작되었고, 이 버전의 부트스트랩이 사용하는 Sass를 테마 제작에도 사용했으며, IE9+를 지원하는 jQuery 3.1 및 jQuery UI가 사용되었습니다.</p>
+                            </div>
+                            <div class="ui-group">
+                                <a role="button" class="ui-button" href="./Portfolio-SAC/" target="_blank">Demo</a>
+                                <a role="button" class="ui-button" href="https://github.com/findawayer/Portfolio-SAC/tree/gh-pages" target="_blank">Repos</a>
+                            </div>
+                        </figcaption>
+                    </figure>
+                    <table class="gallery-table">
+                        <thead>
+                            <tr>
+                                <th class="gallery-table-col category">Category</th>
+                                <th class="gallery-table-col source">Source</th>
+                                <th class="gallery-table-col keywords">Related keywords</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/index.html" target="_blank">index.html</a></td>
+                                <td data-th="Related Keywords">HTML5, ARIA, SVG</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/bootstrap-theme.scss" target="_blank">bootstrap-custom.css</a></td>
+                                <td data-th="Related Keywords">Responsive, Bootstrap 4</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/style.scss" target="_blank">style.scss</a></td>
+                                <td data-th="Related Keywords">CSS3, Sass, Compass</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-SAC/tree/gh-pages/scss/partials" target="_blank">Sass partials</a></td>
+                                <td data-th="Related Keywords">CSS3, Sass, Compass, Responsive</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/js/main.js" target="_blank">main.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 3, <a href="http://kenwheeler.github.io/slick/" target="_blank">slick</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <!-- 포트폴리오 엔트리: 기상청 -->
+                <article role="article" id="work2" class="gallery-item is-init is-animated" data-animation="fade-right">
+                    <figure role="group" class="gallery-figure">
+                        <div class="gallery-image">
+                            <img class="gallery-image-thumb" src="@/assets/example2.png" alt="오리지널 영화 사이트" aria-describedby="work3Description">
+
+                        </div>
+                        <figcaption class="gallery-caption">
+                            <h3 class="gallery-title">대한민국 기상청 랜딩 페이지</h3>
+                            <ul class="gallery-spec">
+                                <li class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">데스크탑</span></li>
+                                <li class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">IE8+</span></li>
+
+                            </ul>
+                            <div id="work2Description">
+                                <p><a href="http://www.kma.go.kr/index.jsp" target="_blank">기상청</a> 사이트의 대문을 리뉴얼해 보았습니다. 인터페이스용 그림에는 SVG를 적극적으로 활용했고, 백업 png를 병용했습니다.</p>
+                                <p>공공기관 사이트로서 보다 많은 사용자 환경에 대응하기 위해 익스플로러 8까지의 호환성 지원, 웹 접근성 관리가 되어 있습니다.</p>
+                            </div>
+                            <div class="ui-group">
+                                <a role="button" class="ui-button" href="./Portfolio-KMA/" target="_blank">Demo</a>
+                                <a role="button" class="ui-button" href="https://github.com/findawayer/Portfolio-KMA/tree/gh-pages" target="_blank">Repos</a>
+                            </div>
+                        </figcaption>
+                    </figure>
+                    <table class="gallery-table">
+                        <thead>
+                            <tr>
+                                <th class="gallery-table-col category">Category</th>
+                                <th class="gallery-table-col source">Source</th>
+                                <th class="gallery-table-col keywords">Related keywords</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/index.html" target="_blank">index.html</a></td>
+                                <td data-th="Related Keywords">HTML5, ARIA, SVG</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/scss/style.scss" target="_blank">style.scss</a></td>
+                                <td data-th="Related Keywords">CSS3, Sass, Compass</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/tree/gh-pages/scss/partials" target="_blank">Sass partials</a></td>
+                                <td data-th="Related Keywords">CSS3, Sass, Compass, CSS sprite</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/common.js" target="_blank">common.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1, <a href="https://modernizr.com/" target="_blank">Modernizr</a></td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/main.js" target="_blank">main.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1, jQuery UI, AJAX</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JSON</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/json/meteo.json" target="_blank">meteo.json</a></td>
+                                <td data-th="Related Keywords">JSON</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <!-- 포트폴리오 엔트리: 영화 사이트 -->
+                <article role="article" id="work3" class="gallery-item is-init is-animated" data-animation="fade-left">
+                    <figure role="group" class="gallery-figure">
+                        <div class="gallery-image">
+                            <img class="gallery-image-thumb" src="@/assets/example3.png" alt="오리지널 영화 사이트" aria-describedby="work3Description">
+
+                        </div>
+                        <figcaption class="gallery-caption">
+                            <h3 class="gallery-title">오리지널 영화 사이트</h3>
+                            <ul class="gallery-spec">
+                                <li class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">모바일</span></li>
+
+                            </ul>
+                            <div id="work3Description">
+                                <p>오리지널 영화 정보 및 예매사이트를 모바일 전용으로 구성해 보았습니다. <b>영화 목록 페이지</b>, <b>특정 영화 정보 페이지</b>, <b>티켓 예매 페이지</b> 3가지 샘플을 포함하고 있습니다.</p>
+                                <p>기기별 기본 UX를 최대한 유지하기 위해 검색상자나 선택상자 등은 네이티브 형식을 사용했으며, 유튜브의 트레일러 영상 불러오기, 날짜 선택기 등의 기능이 추가돼 있습니다.</p>
+                            </div>
+                            <div class="ui-group">
+                                <a role="button" class="ui-button" href="./Portfolio-KMA/" target="_blank">Demo</a>
+                                <a role="button" class="ui-button" href="https://github.com/findawayer/Portfolio-KMA/tree/gh-pages" target="_blank">Repos</a>
+                            </div>
+                        </figcaption>
+                    </figure>
+                    <table class="gallery-table">
+                        <thead>
+                            <tr>
+                                <th class="gallery-table-col category">Category</th>
+                                <th class="gallery-table-col source">Source</th>
+                                <th class="gallery-table-col keywords">Related keywords</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/index.html" target="_blank">index.html</a></td>
+                                <td data-th="Related Keywords">HTML5</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/movie.html" target="_blank">movie.html</a></td>
+                                <td data-th="Related Keywords">HTML5</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ html">HTML</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/order.html" target="_blank">order.html</a></td>
+                                <td data-th="Related Keywords">HTML5</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/style.less" target="_blank">style.less</a></td>
+                                <td data-th="Related Keywords">CSS3, LESS</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/tree/gh-pages/less/partials" target="_blank">LESS partials</a></td>
+                                <td data-th="Related Keywords">CSS3, LESS, Responsive</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ css">CSS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/dhtmlxcalendar_material_dark.less" target="_blank">dhtmlxcalendar material dark.less</a></td>
+                                <td data-th="Related Keywords">CSS3, LESS</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/common.js" target="_blank">common.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1, <a href="http://hammerjs.github.io/" target="_blank">HammerJS</a></td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/movie.js" target="_blank">movie.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1, <a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank">YouTube Iframe Player</a>, <a href="https://dhtmlx.com/docs/products/dhtmlxCalendar/" target="_blank">dhtmlXCalendar</a>, starRate(자작)</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/plugins/starRate/starRate.js" target="_blank">starRate.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1</td>
+                            </tr>
+                            <tr>
+                                <td data-th="Category"><span class="categ js">JS</span></td>
+                                <td data-th="Source"><a href="https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/order.js" target="_blank">order.js</a></td>
+                                <td data-th="Related Keywords">JavaScript, jQuery 1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+
             </div>
         </div>
     </section>
@@ -37,8 +249,6 @@ import FirebaseService from '@/services/FirebaseServices'
 import PortfolioList from '@/components/PortfolioList.vue'
 import Introduce from '@/components/Introduce.vue'
 
-import firebase from 'firebase/app'
-
 export default {
 
     name: 'portfolio',
@@ -49,282 +259,39 @@ export default {
     },
     data(){
         return {
-            examples:[
-                {
-                    title:'예술의 전당 랜딩 페이지',
-                    img:require("@/assets/example1.png"),
-                    viewport:'반응형',
-                    ie_support:'IE9+',
-                    demo_url:'./Portfolio-SAC/',
-                    repos_url:'https://github.com/findawayer/Portfolio-SAC/tree/gh-pages',
-                    content:'<p><a href="http://www.sac.or.kr/" target="_blank">예술의 전당 사이트</a>의 메인 페이지를 부트스트랩 4를 기반으로 한 반응형 구조로 리뉴얼해 보았습니다.</p> \
-                                <p><a href="https://v4-alpha.getbootstrap.com/" target="_blank">부트스트랩의 4 alpha 버전</a>을 기반으로 제작되었고, 이 버전의 부트스트랩이 사용하는 Sass를 테마 제작에도 사용했으며, IE9+를 지원하는 jQuery 3.1 및 jQuery UI가 사용되었습니다.</p>\
-                            ',
-                    category_html:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/index.html',
-                            file:'index.html',
-                            keyword:'HTML5, ARIA, SVG'
-                        }
-                    ],
-                    category_css:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/bootstrap-theme.scss',
-                            file:'bootstrap-custom.css',
-                            keyword:'Responsive, Bootstrap 4'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/style.scss',
-                            file:'style.scss',
-                            keyword:'CSS3, Sass, Compass'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-SAC/tree/gh-pages/scss/partials',
-                            file:'Sass partials',
-                            keyword:'CSS3, Sass, Compass, Responsive'
-                        }
-                    ],
-                    category_js:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/js/main.js',
-                            file:'main.js',
-                            keyword:'JavaScript, jQuery 3, <a href="http://kenwheeler.github.io/slick/" target="_blank">slick</a>'
-                        }
-                    ],
-                },
-                {
-                    title:'대한민국 기상청 랜딩 페이지',
-                    img:require("@/assets/example2.png"),
-                    viewport:'IE8+',
-                    ie_support:'데스크탑',
-                    content:'<p><a href="http://www.kma.go.kr/index.jsp" target="_blank">기상청</a> 사이트의 대문을 리뉴얼해 보았습니다. 인터페이스용 그림에는 SVG를 적극적으로 활용했고, 백업 png를 병용했습니다.</p> \
-                                <p>공공기관 사이트로서 보다 많은 사용자 환경에 대응하기 위해 익스플로러 8까지의 호환성 지원, 웹 접근성 관리가 되어 있습니다.</p> \
-                            ',
-                    demo_url:'./Portfolio-KMA/',
-                    repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-                    category_html:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/index.html',
-                            file:'index.html',
-                            keyword:'HTML5, ARIA, SVG'
-                        }
-                    ],
-                    category_css:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/scss/style.scss',
-                            file:'style.scss',
-                            keyword:'CSS3, Sass, Compass'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages/scss/partials',
-                            file:'Sass partials',
-                            keyword:'CSS3, Sass, Compass, CSS sprite'
-                        },
-                    ],
-                    category_js:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/common.js',
-                            file:'common.js',
-                            keyword:'JavaScript, jQuery 1, <a href="https://modernizr.com/" target="_blank">Modernizr</a>'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/main.js',
-                            file:'main.js',
-                            keyword:'JavaScript, jQuery 1, jQuery UI, AJAX'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/json/meteo.json',
-                            file:'meteo.json',
-                            keyword:'JSON'
-                        }
-                    ],
-                },
-                {
-                    title:'오리지널 영화 사이트',
-                    img:require("@/assets/example3.png"),
-                    viewport:'모바일',
-                    ie_support:'',
-                    demo_url:'./Portfolio-KMA/',
-                    repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-                    content:'<p>오리지널 영화 정보 및 예매사이트를 모바일 전용으로 구성해 보았습니다. <b>영화 목록 페이지</b>, <b>특정 영화 정보 페이지</b>, <b>티켓 예매 페이지</b> 3가지 샘플을 포함하고 있습니다.</p>\
-                                <p>기기별 기본 UX를 최대한 유지하기 위해 검색상자나 선택상자 등은 네이티브 형식을 사용했으며, 유튜브의 트레일러 영상 불러오기, 날짜 선택기 등의 기능이 추가돼 있습니다.</p>\
-                            ',
-                    category_html:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/index.html',
-                            file:'index.html',
-                            keyword:'HTML5'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/movie.html',
-                            file:'movie.html',
-                            keyword:'HTML5'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/order.html',
-                            file:'order.html',
-                            keyword:'HTML5'
-                        }
-                    ],
-                    category_css:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/style.less',
-                            file:'style.scss',
-                            keyword:'CSS3, LESS'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/tree/gh-pages/less/partials',
-                            file:'dhtmlxcalendar material dark.less',
-                            keyword:'CSS3, LESS, Responsive'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/dhtmlxcalendar_material_dark.less',
-                            file:'Sass partials',
-                            keyword:'CSS3, LESS'
-                        },
-                    ],
-                    category_js:[
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/common.js',
-                            file:'common.js',
-                            keyword:'JavaScript, jQuery 1, <a href="http://hammerjs.github.io/" target="_blank">HammerJS</a>'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/movie.js',
-                            file:'movie.js',
-                            keyword:'JavaScript, jQuery 1, <a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank">YouTube Iframe Player</a>, <a href="https://dhtmlx.com/docs/products/dhtmlxCalendar/" target="_blank">dhtmlXCalendar</a>, starRate(자작)'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/plugins/starRate/starRate.js',
-                            file:'starRate.js',
-                            keyword:'JavaScript, jQuery 1'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/order.js',
-                            file:'order.js',
-                            keyword:'JavaScript, jQuery 1'
-                        }
-                    ],
-                },
-                {
-                    title:'다목적 탭스 플러그인',
-                    img:require("@/assets/example3.png"),
-                    viewport:'jQuery 플러그인',
-                    ie_support:'IE8+',
-                    demo_url:'./Portfolio-KMA/',
-                    repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-                    content:'<p>웹 접근성 및 폭넓은 커스터마이징에 초점을 맞춘 jQuery용 탭스 플러그인입니다. 활성화 및 비활성화할 탭의 선택이나 사용자 셀렉터 설정 같은 기본적인 설정은 물론, 반응형 아코디언 레이아웃 및 자동재생 기능을 갖추고 있어 아코디언 또는 캐루셀로도 응용 가능합니다.</p>\
-                                <p>마크업의 접근성은 물론 키보드 사용자를 위한 키보드 내비게이션 강화로 보다 넓은 사용자층을 타깃으로 하는 프로젝트에 사용할 수 있으며, 기본으로 제공되는 애니메이션 효과 이외에도 손쉬운 애니메이션 커스터마이징을 가능하게 해 크리에이티브한 디자인에도 적용할 수 있습니다.</p>\
-                            ',
-                    category_html:[],
-                    category_css:[
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.core.scss',
-                            file:'skeletabs.core.scss',
-                            keyword:'CSS, Sass'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.animation.scss',
-                            file:'skeletabs.animation.scss',
-                            keyword:'CSS, Sass, CSS3 animation'
-                        },
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.theme.default.scss',
-                            file:'skeletabs.theme.default.scss',
-                            keyword:'CSS, Sass'
-                        },
-                    ],
-                    category_js:[
-                        {
-                            url:'https://github.com/findawayer/Skeletabs/blob/master/src/js/skeletabs.js',
-                            file:'skeletabs.js',
-                            keyword:'JavaScript, jQuery'
-                        }
-                    ],
-                }
-            ],
-            
-            intros:[],
             portfolios:[],
-            isuser:false,
-            css:0,
+            intros:[],
+            introp:[],
+            css:1,
+
         }
     },
 
-    created(){
-        let th = this
-
+    mounted(){
+        this.getMyPortfolio()
         this.getMyIntro()
-        console.log("intros: ",this.intros)
-
-        if(this.$route.params.uid){
-            let uid = this.$route.params.uid
-            th.getMyPortfolio(uid)
-            FirebaseService.getUserData(uid)
-            .then(function(data){
-                if(data){
-                    th.css = data.css
-                }
-                else{
-                    th.css = 1
-                }
-            })
-        }
-        else{
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    th.isuser = true
-                    th.getMyPortfolio(user.uid)
-                    FirebaseService.getUserData(user.uid)
-                    .then(function(data){
-                        if(data){
-                            th.css = data.css
-                        }
-                        else{
-                            th.css = 1
-                        }
-                    })
-                }
-            })
-        }
     },
     methods :{
-        async getMyPortfolio(uid){
-            this.portfolios = await FirebaseService.getUidPortfolios(uid)
-        },
-        changeCss(num){
-            this.css = num
-            let th = this
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    FirebaseService.setUserData(user.uid,th.css)
-                }
-            })
-        },
-        async getMyIntro(){
-            //  var user = FirebaseService.auth().currentUser;
-            this.intros = await FirebaseService.getIntroduce();
-        }
+        async getMyPortfolio(){
+      //  var user = FirebaseService.auth().currentUser;
+        //유저정보에 따라 구현
+        this.portfolios = await FirebaseService.getPortfolios()
 
+
+
+      },
+
+        async getMyIntro(){
+        //  var user = FirebaseService.auth().currentUser;
+          this.intros = await FirebaseService.getIntroduce();
+
+        }
     },
     watch: {
         css:function(){
-            let css = this.css
-            let body = document.querySelector('.l-section')
             console.log("css: ",this.css)
-            if(this.css==1){
-                body.style.backgroundColor = 'white'
-                body.style.color = 'black'
-            }
-            else if(this.css==2){
-                body.style.backgroundColor = 'rgb(40,40,40)'
-                body.style.color = 'rgb(255, 255, 255)'
-            }
-            else if(this.css=3){
-                body.style.backgroundColor = '#30b7e8'
-                body.style.color = 'rgb(255, 255, 255)'
-            }
         }
+
     }
 }
 </script>
@@ -355,7 +322,7 @@ export default {
     background-color: white;
 }
 #select-css #css2{
-    color:white;
+    color:greenyellow;
     background-color: black;
 }
 #select-css #css3{
@@ -471,10 +438,12 @@ section {
 
 /*portfolio  head */
 .secondary {
+    background-color: white !important;
     border-color: #424242 !important;
 }
 
 .primary {
+    background-color: white !important;
     border-color: #1976d2 !important;
 }
 .section-heading .secondary {
