@@ -2,7 +2,7 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
-import 'firebase/firestore';
+import 'firebase/firestore'
 
 import router from '../router'
 import store from '../store'

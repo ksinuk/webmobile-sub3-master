@@ -102,11 +102,25 @@
               required
             ></v-text-field>
             <v-textarea
-            label="Description"
-            v-model="portItem.description"
-            hint="프로젝트를 설명해주세요."
-            rows=10
-          ></v-textarea>
+              label="Description"
+              v-model="portItem.description"
+              hint="프로젝트를 설명해주세요."
+              rows=10
+            ></v-textarea>
+            <v-text-field
+              label="Hashtag"
+              v-on:keyup.enter="enrollTag()"
+            ></v-text-field>
+            <template>
+              <td v-for="(tag, index) in portItem.hashtags">
+                <v-chip close color="teal" text-color="white" v-model="portItem.hashtags[index]">
+                    <v-avatar>
+                        <v-icon>check_circle</v-icon>
+                    </v-avatar>
+                    {{ tag }}
+                </v-chip>
+              </td>
+            </template>
             <v-text-field
               v-model="portItem.viewport"
               label="Viewport"
@@ -220,11 +234,26 @@
               required
             ></v-text-field>
             <v-textarea
-            label="Description"
-            v-model="portfolio.description"
-            hint="프로젝트를 설명해주세요."
-            rows=10
-          ></v-textarea>
+              label="Description"
+              v-model="portfolio.description"
+              hint="프로젝트를 설명해주세요."
+              rows=10
+            ></v-textarea>
+            <v-text-field
+              v-model="hashtag"
+              label="Hashtag"
+              v-on:keyup.enter="enrollTag()"
+            ></v-text-field>
+            <template>
+              <td v-for="(tag, index) in portfolio.hashtags">
+                <v-chip close color="teal" text-color="white" v-model="portfolio.hashtags[index]">
+                    <v-avatar>
+                        <v-icon>check_circle</v-icon>
+                    </v-avatar>
+                    {{ tag }}
+                </v-chip>
+              </td>
+            </template>
             <v-text-field
               v-model="portfolio.viewport"
               label="Viewport"
@@ -409,6 +438,7 @@ export default {
         description: null
       },
       skills: [],
+      hashtag: null,
       source: {
         category: null,
         fileName: null,
@@ -422,6 +452,7 @@ export default {
         viewport: null,
         ie: null,
         demo: null,
+        hashtags: [],
         repository: null,
         sources: [],
         imageNames: [],
@@ -533,6 +564,11 @@ export default {
         this.portfolio.dumpList = []
       }
       console.log(this.portfolios)
+    },
+    // tag 추가 하기
+    enrollTag: function() {
+      this.portfolio.hashtags.push(this.hashtag)
+      this.hashtag = null
     },
     // firebase에 최종 저장하기
     async savePort() {
