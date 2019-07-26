@@ -1,19 +1,60 @@
+<<<<<<< HEAD
+=======
 #work1{
     width:80%;
     margin:auto;
 }
+>>>>>>> feature/goto3ksinuk
 /* section */
 #work1{
-    background-color: rgb(40,40,40);
+    background-color: #30b7e8;
     color:white;
 }
 
+<<<<<<< HEAD
+=======
+#modal{
+    position: fixed; /* Stay in place */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#modal-out{
+    border : 3px solid yellow;
+    background-color: #30b7e8;
+    position: absolute;
+    top:10%;
+    max-height:80%;
+    left:15%;
+    width:60%;
+    margin:auto;
+    padding:20px;
+    overflow:scroll;
+}
+
+.btn-end{
+    padding:15px;
+    margin:10px;
+    background-color: gray;
+}
+
+>>>>>>> feature/goto3ksinuk
 @media screen and (max-width: 1499px)
 .l-section {
     padding: 100px 5vw;
 }
 
 .l-section {
+<<<<<<< HEAD
+=======
+    
+>>>>>>> feature/goto3ksinuk
     background: white;
 }
 
@@ -25,7 +66,7 @@
 }
 
 .gallery-title::before {
-    color: #30b7e8;
+    color: white;
     display: inline-block;
     width: 130px;
     position: relative;
@@ -52,15 +93,6 @@ h3 {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     font-weight: bold;
-}
-
-.gallery-item{
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-
-.gallery-caption{
-    padding:10px;
 }
 
 .gallery-title {
@@ -123,11 +155,15 @@ section {
     content: "";
 }
 
+
+
+
+
 /* table*/
 
->>>a {
+a {
     background-color: transparent;
-    color: #89ddff;
+    color: rgb(155, 34, 34);
     text-decoration: none;
     cursor: pointer;
 }
@@ -139,8 +175,8 @@ section {
 }
 
 .categ.css {
-    background: #00bfdd;
-    color: white;
+    background: white;
+    color: #00bfdd;
 }
 
 .categ {
@@ -171,10 +207,15 @@ ul {
     padding-inline-start: 40px;
 }
 
+<<<<<<< HEAD
 .ui-button {
-    background: #30b7e8;
+    background: white;
+=======
+.ui-button, .ui-button a:link, .ui-button a:visited{
+    background-color: white;
+>>>>>>> feature/goto3ksinuk
     border-radius: 44px;
-    color: white;
+    color: #30b7e8;
     display: inline-block;
     min-width: 7em;
     height: 44px;
@@ -185,7 +226,7 @@ ul {
     letter-spacing: -.03em;
     line-height: 18px;
     font-family: "Quicksand",sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     text-align: center;
     box-sizing: border-box;

@@ -1,13 +1,13 @@
-/* section */
 #work1{
-    background-color: #30b7e8;
-    color:white;
+    width:70%;
+    margin:auto;
 }
 
-@media screen and (max-width: 1499px)
-.l-section {
-    padding: 100px 5vw;
-}
+/* section */
+// @media screen and (max-width: 1499px)
+// .l-section {
+//     padding: 100px 5vw;
+// }
 
 .l-section {
     background: white;
@@ -21,7 +21,7 @@
 }
 
 .gallery-title::before {
-    color: white;
+    color: #30b7e8;
     display: inline-block;
     width: 130px;
     position: relative;
@@ -30,7 +30,6 @@
     line-height: 1;
     font-size: 64px;
     font-weight: 400;
-    content: counter(article,decimal-leading-zero);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -118,7 +117,7 @@ section {
 
 a {
     background-color: transparent;
-    color: rgb(155, 34, 34);
+    color: #30b7e8;
     text-decoration: none;
     cursor: pointer;
 }
@@ -130,8 +129,8 @@ a {
 }
 
 .categ.css {
-    background: white;
-    color: #00bfdd;
+    background: #00bfdd;
+    color: white;
 }
 
 .categ {
@@ -163,9 +162,9 @@ ul {
 }
 
 .ui-button {
-    background: white;
+    background: #30b7e8;
     border-radius: 44px;
-    color: #30b7e8;
+    color: white;
     display: inline-block;
     min-width: 7em;
     height: 44px;
@@ -176,7 +175,7 @@ ul {
     letter-spacing: -.03em;
     line-height: 18px;
     font-family: "Quicksand",sans-serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     text-align: center;
     box-sizing: border-box;
@@ -238,7 +237,7 @@ p, dl, ol, ul {
 
 
 table {
-    border: 1px solid white;
+    border: 0;
     border-collapse: collapse;
     border-spacing: 0;
     margin: 1em 0;
@@ -257,9 +256,9 @@ td {
 }
 
 table thead th {
-    background-color: rgba(128, 136, 139, 0.5);
+    background-color: rgba(77,128,153,0.05);
     border-top-width: 1px;
-    color: white;
+    color: #94979c;
     padding: 1.2em 1em;
 }
 
