@@ -1,6 +1,6 @@
 <template lang="html">
     <!-- 포트폴리오 엔트리: 예술의 전당 -->
-    <article role="article" id="work1" class="is-init is-animated" :class="{css1:cssArr[0],css2:cssArr[1],css3:cssArr[2]}" data-animation="fade-left">
+    <article role="article" id="work1" class="is-init is-animated" :class="{css1:cssArr[0],css2:cssArr[1],css3:cssArr[2]}" data-animation="fade-left" v-if="isok">
         <div class="gallery-image" @click="open('open')">
             <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
         </div><br>
@@ -93,6 +93,7 @@ export default {
     data() {
         return {
         //  ports : this.portfolio  
+            isok:false,
             out:false,
             ismodal:false,
             cssClass:'',
@@ -110,8 +111,14 @@ export default {
     created(){
         this.cssAddr = "./PortfolioListCss"+this.cssmod+".css"
         this.cssStyle = '<style lang="css" scoped :src="'+this.cssAddr+'"></style>'
+        console.log("this.cssmod: ",this.cssmod)
         if(this.cssmod==3){
             this.ismodal = true
+            this.isok = true
+        }
+        else if(this.cssmod==1 || this.cssmod==2){
+            this.ismodal = false
+            this.isok = true
         }
     },
     beforeCreate(){
@@ -133,11 +140,17 @@ export default {
     watch:{
         cssmod:function(){
             this.out = false
+            this.isok = false
             if(this.cssmod==3){
                 this.ismodal = true
+                this.isok = true
+            }
+            else if(this.cssmod==1 || this.cssmod==2){
+                this.ismodal = false
+                this.isok = true
             }
             else{
-                this.ismodal = false
+                this.isok = false
             }
 
             for(let i=0;i<3;i++){

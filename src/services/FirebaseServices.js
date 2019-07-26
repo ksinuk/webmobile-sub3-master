@@ -33,6 +33,26 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 const db = firebase.firestore()
 
 export default {
+  //read user data
+  getUserData(uid) {
+      return new Promise(function(resolve,reject){
+          db.collection('userData').doc(uid).get()
+          .then(function(doc) {
+              if (doc.exists){
+                  resolve(doc.data())
+              }
+              else{
+                  resolve(null)
+              }
+          })
+      })
+  },
+  //write user data
+  setUserData(uid, css) {
+      return db.collection('userData').doc(uid).set({
+          css:css,
+      })
+  },
   // write post
   postPost(uid, title, body) {
 		return db.collection(POSTS).add({
@@ -115,6 +135,27 @@ export default {
       return data
       })
     })
+  },
+  getUidPortfolios(uid){
+      return new Promise(function(resolve,reject){
+          console.log("getUidPortfolios!!!")
+          db.collection(PORTFOLIO).where('uid', '==', uid).get()
+          .then(function(snapshot) {
+              console.log("snapshot: ",snapshot)
+              if (snapshot.empty) {
+                  resolve(null)
+              }
+              let out = new Array()
+              snapshot.forEach(doc => {
+                  out.push(doc.data())
+                  console.log(doc.id, '=>', doc.data());
+              })
+              resolve(out)
+          })
+          .catch(function(res){
+              console.log("error : ",res)
+          })
+      })
   },
 
 
