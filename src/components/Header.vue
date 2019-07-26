@@ -1,9 +1,17 @@
 <template>
   <nav>
     <v-flex>
-      <v-toolbar fixed dark flat class="py-2" style="background: none;">
+      <v-toolbar absolute dark flat class="py-2" style="background: none;">
         <router-link :to="'/'" id="title">DevFolio</router-link>
-        <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
+      <!-- 제공되는 검색 기능 -->
+      <v-flex>
+        <v-text-field
+          label="Search"
+          v-model="searchItem"
+          v-on:keyup.enter="findItem"
+          ></v-text-field>
+      </v-flex>
       </v-toolbar>
       <!-- sidebar -->
       <v-navigation-drawer v-model="drawer" fixed right class="grey lighten-3">
@@ -30,10 +38,18 @@ export default {
   data() {
     return {
        drawer: false,
+       searchItem: null,
     }
   },
   components: {
     SideBarItems
+  },
+  methods: {
+    findItem: function() {
+      console.log(this.searchItem)
+      this.$router.push("/search/" + this.searchItem)
+      window.location.reload()
+    },
   }
 }
 </script>
