@@ -17,8 +17,6 @@
        :can-cancel="true"
        :on-cancel="onCancel"
        :is-full-page="fullPage"></loading>
-
-
    </div>
     <newFooter></newFooter>
   </div>
