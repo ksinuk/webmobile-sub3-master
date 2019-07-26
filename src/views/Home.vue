@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
     <MainBanner/>
     <div class="mx-auto" style="min-height: 100vh; background-color: white;">
       <h3 id="introAbout" class="small-heading pb-2">ABOUT US</h3>
@@ -12,6 +12,12 @@
       <h2 class="headline py-5">당신을 위한 추천 포트폴리오</h2>
       <RankList/>
     </div>
+    <div class="vld-parent">
+       <loading :active.sync="isLoading"
+       :can-cancel="true"
+       :on-cancel="onCancel"
+       :is-full-page="fullPage"></loading>
+   </div>
     <newFooter></newFooter>
   </div>
 </template>
@@ -25,6 +31,10 @@ import SearchItems from '@/components/SearchItems'
 import Footer from '@/components/Footer.vue'
 import newFooter from '@/components/newFooter.vue'
 
+import Loading from 'vue-loading-overlay';
+   // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
   name: 'home',
   components: {
@@ -33,7 +43,30 @@ export default {
     MainBanner,
     SearchItems,
     newFooter,
-  }
+    Loading
+  },
+  mounted(){
+    this.doAjax();
+  },
+  data() {
+          return {
+              isLoading: false,
+              fullPage: true
+          }
+      },
+
+      methods: {
+          doAjax() {
+              this.isLoading = true;
+              // simulate AJAX
+              setTimeout(() => {
+                this.isLoading = false
+              },1000)
+          },
+          onCancel() {
+            console.log('User cancelled the loader.')
+          }
+      }
 }
 </script>
 
