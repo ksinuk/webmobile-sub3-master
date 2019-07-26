@@ -17,11 +17,15 @@
             </h2>
             <div id="portfolio" class="section-content gallery alternate">
                 <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
+                    <PortfolioList :ports="portfolio" v-if="css==1"></PortfolioList>
+                    <PortfolioList2 :ports="portfolio" v-else-if="css==2"></PortfolioList2>
+                    <PortfolioList3 :ports="portfolio" v-else-if="css==3"></PortfolioList3>
                     <hr>
                 </v-flex>
                 <v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css"></PortfolioList>
+                    <PortfolioList :ports="ex" v-if="css==1"></PortfolioList>
+                    <PortfolioList2 :ports="ex" v-else-if="css==2"></PortfolioList2>
+                    <PortfolioList3 :ports="ex" v-else-if="css==3"></PortfolioList3>
                     <hr>
                 </v-flex>
             </div>
@@ -36,6 +40,8 @@ import ImageBanner from '@/components/ImageBanner.vue'
 import FirebaseService from '@/services/FirebaseServices'
 import PortfolioList from '@/components/PortfolioList.vue'
 import Introduce from '@/components/Introduce.vue'
+import PortfolioList2 from '@/components/PortfolioList2.vue'
+import PortfolioList3 from '@/components/PortfolioList3.vue'
 
 import firebase from 'firebase/app'
 
@@ -45,7 +51,8 @@ export default {
     components: {
         ImageBanner,
         PortfolioList,
-        Introduce
+        PortfolioList2,
+        PortfolioList3
     },
     data(){
         return {
@@ -254,9 +261,6 @@ export default {
     created(){
         let th = this
 
-        this.getMyIntro()
-        console.log("intros: ",this.intros)
-
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
             th.getMyPortfolio(uid)
@@ -284,7 +288,7 @@ export default {
                             th.css = 1
                         }
                     })
-                }
+                } 
             })
         }
     },
@@ -300,12 +304,7 @@ export default {
                     FirebaseService.setUserData(user.uid,th.css)
                 }
             })
-        },
-        async getMyIntro(){
-            //  var user = FirebaseService.auth().currentUser;
-            this.intros = await FirebaseService.getIntroduce();
         }
-
     },
     watch: {
         css:function(){
