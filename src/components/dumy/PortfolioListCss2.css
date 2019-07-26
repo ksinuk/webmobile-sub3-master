@@ -1,3 +1,7 @@
+#work1{
+    width:80%;
+    margin:auto;
+}
 /* section */
 #work1{
     background-color: rgb(40,40,40);
@@ -48,6 +52,15 @@ h3 {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     font-weight: bold;
+}
+
+.gallery-item{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.gallery-caption{
+    padding:10px;
 }
 
 .gallery-title {
@@ -110,13 +123,9 @@ section {
     content: "";
 }
 
-
-
-
-
 /* table*/
 
-a {
+>>>a {
     background-color: transparent;
     color: #89ddff;
     text-decoration: none;
@@ -278,4 +287,3 @@ th {
 table thead {
     font-family: "Quicksand",sans-serif;
 }
-
