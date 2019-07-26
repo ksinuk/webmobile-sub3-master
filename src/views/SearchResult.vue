@@ -46,14 +46,6 @@
                       <v-spacer></v-spacer>
                   </v-card-actions>
               </v-card>
-              <div class="vld-parent">
-       <loading :active.sync="isLoading"
-       :can-cancel="true"
-       :on-cancel="onCancel"
-       :is-full-page="fullPage"></loading>
-
-
-   </div>
             </v-flex>
           </v-layout>
         </div>
@@ -76,16 +68,11 @@ import FirebaseServices from '../services/FirebaseServices'
 import BackBanner from '@/components/BackBanner.vue'
 import newFooter from '@/components/newFooter.vue'
 
-import Loading from 'vue-loading-overlay';
-   // Import stylesheet
-import 'vue-loading-overlay/dist/vue-loading.css';
-
 export default {
   name: 'SearchResult',
   components: {
     BackBanner,
-    newFooter,
-     Loading
+    newFooter
   },
   data() {
     return {
@@ -93,14 +80,9 @@ export default {
       resultList: [],
       likeList: [],
       uid: null,
-      like: false,
-      isLoading: false,
-           fullPage: true
+      like: false
     }
   },
-  mounted(){
-  this.doAjax();
-},
   created() {
     this.getItems()
   },
@@ -144,17 +126,7 @@ export default {
         }
       }
       FirebaseServices.editUser(this.uid, this.likeList);
-    },
-    doAjax() {
-            this.isLoading = true;
-            // simulate AJAX
-            setTimeout(() => {
-              this.isLoading = false
-            },1000)
-        },
-        onCancel() {
-          console.log('User cancelled the loader.')
-        }
+    }
   }
 }
 </script>

@@ -96,6 +96,8 @@ import FirebaseServices from '../services/FirebaseServices'
 import UserProfileBtn from './UserProfileBtn.vue'
 import { Carousel, Slide } from 'vue-carousel';
 
+// import UserProfileBtn from './UserProfileTestBtn.vue'
+
 export default {
     name: 'UserProfile',
     components: {
@@ -107,7 +109,7 @@ export default {
         return {
             dialog: false,
             photoURL: this.$store.state.firebaseUser.photoURL,
-            Percent:70,
+            complatePercent:70,
             bookmarkList: []
         }
     },
@@ -297,6 +299,7 @@ export default {
         top:50%;
         left:50%;
         transform: translate(-50%,-50%);
+        margin:0;
     }
     .text-circle{
         font-size:30px;

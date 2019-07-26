@@ -10,8 +10,6 @@ import store from '../store'
 const USERS = 'users'
 const POSTS = 'posts'
 const PORTFOLIO = 'portfolio'
-const PORTFOLIOS = 'tportfolio'
-const MYPORT = 'portfolios'
 
 // Firebase SDK snippet
 const firebaseConfig = {
@@ -201,18 +199,12 @@ async currentUser() {
         }
       }
     })
-    return detailPort;
   },
+
   // 파이어베이스에 포트폴리오를 입력하는 함수
   // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-  postPortfolios(user, aboutMe, skills, portfolios) {
-    return db.collection(MYPORT).doc(user).set({
-      uid: user,
-      aboutMe: aboutMe,
-			skills: skills,
-      portfolios: portfolios,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
-		}).then(console.log('done'))
+  postPortfolios() {
+    // 
   },
 
   getIntroduce(){
@@ -260,14 +252,14 @@ async currentUser() {
   },
 
   changePassword: function(password) {
-    var user = firebase.auth().currentUser;
-    var newPassword = password;
+      var user = firebase.auth().currentUser;
+      var newPassword = password;
 
-    user.updatePassword(newPassword).then(function() {
-        console.log('password is updated.')
-    }).catch(function(error) {
-        console.log('password update is failed.')
-    })
+      user.updatePassword(newPassword).then(function() {
+          console.log('password is updated.')
+      }).catch(function(error) {
+          console.log('password update is failed.')
+      })
   },
   // login 1. create DB
   // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
@@ -294,25 +286,13 @@ async currentUser() {
     })
     console.log(user)
   },
-  // store 에 있는 유저정보 업데이트
-  updatedStoreUser() {
-    let _user = firebase.auth().currentUser
-    if (_user) {
-      store.commit('setUserName', _user.displayName)
-      store.commit('setUserState', true)
-    } else {
-      store.commit('setUserName', '')
-      store.commit('setUserState', false)
-    }
-    console.log(store)
-  },
   // login 2-1.1 create user with e-mail
   createUserWithEmail(email, password, userName) {
     let _this = this
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(user) {
         _this.createdbForNewUser(user.user.uid)
-        // 유저 생성하면서 입력받은 이름 설정
+        // 이름 만들기
         let _user = firebase.auth().currentUser
         _user.updateProfile({
           displayName: userName
@@ -324,9 +304,14 @@ async currentUser() {
   },
   // login 2-1.2 login user whit e-mail
   loginUserWithEmail(email, password) {
-    let _this = this
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(function(result) {
+        // 로그인 상태면 store 에 유저정보 저장
+        console.log(result)
+        store.state.firebaseUser.uid = result.user.uid
+        store.state.firebaseUser.name = result.user.displayName
+        store.state.firebaseUser.email = result.user.email
+        store.state.firebaseUser.photoURL = result.user.photoURL
       })
       .catch(function(error) {
         console.log(error)
@@ -341,8 +326,7 @@ async currentUser() {
         if (result.additionalUserInfo.isNewUser) {
           _this.createdbForNewUser(result.user.uid)
         }
-      })
-      .catch(function(error) {
+      }).catch(function(error) {
         console.log(error.code, error.message)
       })
   },
@@ -351,72 +335,22 @@ async currentUser() {
     let _this = this
     let provider = new firebase.auth.FacebookAuthProvider()
     firebase.auth().signInWithPopup(provider)
-      .then(function(result) {
-        if (result.additionalUserInfo.isNewUser) {
-          _this.createdbForNewUser(result.user.uid)
-        }
-        console.log(result)
-      })
-      .catch(function(error) {
-        console.log(error.code, error.message)
-      })
+    .then(function(result) {
+      if (result.additionalUserInfo.isNewUser) {
+        _this.createdbForNewUser(result.user.uid)
+      }
+    }).catch(function(error) {
+      console.log(error.code, error.message)
+    })
   },
   // login 3. logout
   logoutUser() {
     firebase.auth().signOut().then(function() {
     })
-    // 로그아웃 후 세션삭제
-    .then(sessionStorage.clear())
-    // 홈페이지로 이동
+    // 로그아웃 후 메인페이지로
     .then(router.push('/'))
     .catch(function(error) {
       console.log(error)
-    })
-  },
-  login() {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(function(error) {
-        console.log(error)
-      })
-      .then('done')
-  },
-  updateUser() {
-    // 이미지 올리면 유저 변경
-  },
-  // 이미지 업로더
-  uploadfile(user, loadFile) {
-    let filename = loadFile.name
-
-    let storageRef = firebase.storage().ref('/' + user + '/' + filename)
-    let uploadTask = storageRef.put(loadFile)
-
-    uploadTask.on('state_changed', function(snapshot) {
-      // progressbar
-      // 진행정도를 보여줌
-      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done')
-      switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED:
-          console.log('Upload is paused')
-          break
-        case firebase.storage.TaskState.RUNNING: 
-          console.log('Upload is running')
-          break
-      }
-    }, function(error) {
-      console.log(error)
-      switch (error.code) {
-        case 'storage/unauthorized':
-          break
-        case 'storage/canceled':
-          break
-        case 'storage/unknown':
-          break
-      }
-    }, function() {
-        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log('File available at', downloadURL)
-      })
     })
   }
 }
