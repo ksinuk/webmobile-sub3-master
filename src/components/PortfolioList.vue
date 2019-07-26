@@ -66,15 +66,15 @@
 
 </template>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .css1{
-    @import "./PortfolioListCss1.css";
+    @import "./PortfolioListCss1.scss";
 }
 .css2{
-    @import "./PortfolioListCss2.css";
+    @import "./PortfolioListCss2.scss";
 }
 .css3{
-    @import "./PortfolioListCss3.css";
+    @import "./PortfolioListCss3.scss";
 }
 </style>
 
@@ -132,9 +132,12 @@ export default {
     },
     watch:{
         cssmod:function(){
+            this.out = false
             if(this.cssmod==3){
                 this.ismodal = true
-                this.out = false
+            }
+            else{
+                this.ismodal = false
             }
 
             for(let i=0;i<3;i++){
@@ -142,6 +145,8 @@ export default {
             }
 
             this.cssArr[this.cssmod-1] = true
+            console.log("cssArr: ",this.cssArr)
+            console.log("cssmod: ",this.cssmod)
         },
     },
 }
