@@ -4,7 +4,9 @@
       <!-- login provider -->
       <v-flex>
         <div id="loginProvider">
-          <v-btn depressed small style="color: #0F9D58;"
+          <v-btn 
+            class="loginBtn"
+            depressed small style="color: #0F9D58;"
             @click="googleLogin">
             <v-icon right dark style="
               margin-left: 0px;
@@ -15,7 +17,9 @@
         </div>
 
         <div id="loginProvider">
-          <v-btn depressed small style="color: #3b5998;"
+          <v-btn
+            class="loginBtn"
+            depressed small style="color: #3b5998;"
             @click="facebookLogin">
             <v-icon right dark style="
               margin-left: 0px;
@@ -27,59 +31,132 @@
       </v-flex>
 
       <v-divider></v-divider>
+
       <!-- email with password -->
       <v-form
         ref="form"
-        v-model="valid"
-        lazy-validation
+        v-model="form"
         >
-
         <!-- email -->
         <v-text-field
           v-model="email"
           :rules="emailRules"
-          label="이메일 주소"
-          required
-          single-line
-          solo
+          filled
+          label="Email address"
+          type="email"
           style="width:240px; margin: auto;"
-          ></v-text-field>
-
+        ></v-text-field>
         <!-- displayName -->
         <!-- 회원가입 폼에서만 보임 -->
         <v-text-field
-          name="nameForm"
-          v-show="viewSign"
           v-model="displayName"
+          v-show="viewSign"
           :rules="nameRules"
-          label="이름"
-          required
-          single-line
-          solo
+          filled
+          label="name"
+          name="nameForm"
           style="width:240px; margin: auto;"
           v-on:keyup="characterCheck()"
           v-on:keydown="characterCheck()"
-          ></v-text-field>
-
+        ></v-text-field>
         <!-- password -->
         <v-text-field
           v-model="password"
           :append-icon="pwShow ? 'visibility' : 'visibility_off'"
-          :type="pwShow ? 'text' : 'password'"
           :rules="pwRules"
-          label="비밀번호"
-          hint="At least 8 characters"
-          counter
+          filled
+          label="Password"
+          :type="pwShow ? 'text' : 'password'"
           @click:append="pwShow = !pwShow"
-          single-line
-          solo
           style="width:240px; margin: auto;"
-          ></v-text-field>
+        ></v-text-field>
+
+        <!-- 개인정보 동의란 -->
+        <!-- checkBox -->
+        <v-checkbox
+          v-show="viewSign"
+          v-model="agreement"
+          :rules="agreeRules"
+        >
+          <template
+            v-slot:label>
+            <div
+            style="font-size: 11px">
+              I agree to the&nbsp;
+              <a href="#"
+                style="color: black"
+                @click.stop.prevent="dialog = true">Terms of Service</a>
+              &nbsp;and&nbsp;
+              <a href="#"
+                style="color: black"
+                @click.stop.prevent="dialog = true">Privacy Policy</a>*
+            </div>
+          </template>
+        </v-checkbox>
+        <!-- 개인정보동의 modal -->
+        <v-dialog
+          v-model="dialog"
+          absolute
+          max-width="400"
+          persistent
+        >
+          <v-card>
+            <v-card-title class="title">개인정보 수집 및 이용에 대한 동의</v-card-title>
+            <v-card-text style="text-align: left">
+              <p>1. 개인정보의 수집 및 이용목적</p>
+              <div>
+                실명확인 및 본인여부 확인, 포트폴리오 제공,채용정보 안내 및 채용선별 자료 등으로 이용
+              </div>
+              <v-divider></v-divider>
+              <p>2. 개인정보 수집 항목</p>
+              <div class="text-left">
+                1. 필수항목<br>
+                    개인식별정보 (성명, 생년월일, 비밀번호, 사진 등)<br>
+                    기초정보 (희망연봉, 전화번호, 종교, 휴대전화번호, E-mail, 자택주소 등)<br>
+                    신상정보 (병역사항, 병역기간, 군별, 계급, 보훈대상여부, 장애대상여부, 미필사유 등)<br>
+                    학력정보 (재학기간, 학교, 전공, 졸업여부, 소재지, 성적 등)<br>
+                    포트폴리오<br>
+                2. 선택항목<br>
+                    Git 정보 (Git 주소, 코드 등)<br>
+                    홈페이지 정보 (홈페이지 링크 정보, 홈페이지 트래픽 정보)
+              </div>
+              <v-divider></v-divider>
+              <p>3. 개인정보의 보유 및 이용기간</p>
+              <div>
+                회사는 개인정보 수집 및 이용목적이 달성된 경우, 개인정보의 수집 및 이용에 대한 동의를 철회하는 경우에는 해당 정보를 지체 없이 파기 합니다.
+              </div>
+            </v-card-text>
+
+            <v-divider></v-divider>
+            
+            <p style="font-size:12px">※ 귀하는 상기의 개인정보 수집 및 이용 동의를 거부할 수 있습니다.</p>
+
+            <v-card-actions>
+              <v-btn
+                flat
+                text
+                @click="agreement = false, dialog = false"
+              >
+                No
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                flat
+                class="white--text"
+                color="deep-purple accent-4"
+                @click="agreement = true, dialog = false"
+              >
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
         <v-btn
+          class="loginBtn"
           v-show="viewSign"
           :loading="loading"
-          :disabled="loading"
+          :disabled="!form"
           color="success"
           @click="loader = 'loading'"
         >
@@ -87,6 +164,7 @@
         </v-btn>
 
         <v-btn
+          class="loginBtn"
           v-show="!viewSign"
           :loading="loading"
           :disabled="loading"
@@ -96,7 +174,6 @@
           로그인
         </v-btn>
       </v-form>
-
     </v-flex>
   </v-layout>
 </template>
@@ -112,14 +189,16 @@ export default {
   props:['viewSign'],
   data () {
     return {
+      // login modal
+      agreement: false,
+      dialog: false,
+      // form
+      form: false,
       // input rules
-      valid: true,
       email: '',
       emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+/.test(v) || 'E-mail must be valid'
+        v => (v || '').match(/@/) || 'Please enter a valid email',
       ],
-      valid: true,
       displayName: '',
       nameRules: [
         v => !!v || 'Name is required',
@@ -128,8 +207,12 @@ export default {
       pwShow: false,
       password: '',
       pwRules: [
-        v => !!v || 'Required.',
+        v => !!v || 'password is Required.',
         v => v.length >= 8 || 'Min 8 characters',
+      ],
+      // service rule
+      agreeRules: [
+        v => !!v || 'This field is required',
       ],
       // loading button
       loader: null,
@@ -187,7 +270,7 @@ export default {
 </script>
 
 <style>
-.v-btn {
+.loginBtn {
   width:240px;
 }
 .v-divider {
