@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -10,7 +9,6 @@ export default new Vuex.Store({
     imgurID: "Client-ID eadc208fc721efd",
     // firebase user info
     firebaseUser: {
-      inUser: false,
       uid: null,
       name: null,
       email: null,
@@ -23,12 +21,6 @@ export default new Vuex.Store({
   mutations: {
     changeItem : function(state, payload){
       state.searchItem=payload;
-    },
-    setUserName(state, rename) {
-      state.firebaseUser.name = rename
-    },
-    setUserState(state, bool) {
-      state.firebaseUser.inUser = bool
     }
   },
   actions: {

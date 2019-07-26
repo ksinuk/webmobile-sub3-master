@@ -11,6 +11,7 @@ import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
 import WritePort from './views/WritePort.vue'
 
+import Test from './views/TestPage.vue'
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
@@ -22,8 +23,8 @@ Vue.use(Router)
 
 // 로그인 상태 정보를 vuex에 저장하고 판단
 const requireAuth = () => (to, from, next) => {
-  let _user = firebase.auth().currentUser
-  if (!_user) {
+  let user = firebase.auth().currentUser
+  if (!user) {
     alert('login please')
     return next('/login')
   }
@@ -81,6 +82,11 @@ export default new Router({
             path: '/writeport',
             name: 'writeport',
             component: WritePort
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: Test
         },
         {
             path: '/search/:search_value',

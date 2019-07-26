@@ -1,3 +1,8 @@
+#work1{
+    width:70%;
+    margin:auto;
+}
+
 /* section */
 @media screen and (max-width: 1499px)
 .l-section {
@@ -25,7 +30,7 @@
     line-height: 1;
     font-size: 64px;
     font-weight: 400;
-    content: counter(article,decimal-leading-zero);
+
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -111,7 +116,7 @@ section {
 
 /* table*/
 
-a {
+>>>a {
     background-color: transparent;
     color: #30b7e8;
     text-decoration: none;
@@ -271,5 +276,5 @@ th {
 }
 
 table thead {
-    font-family:"Quicksand",sans-serif;
+    font-family: "Quicksand",sans-serif;
 }

@@ -2,7 +2,7 @@
   <nav>
     <v-flex>
       <v-toolbar fixed dark flat class="py-2" style="background: none;">
-        <router-link :to="'/'" id="title">DevFolio</router-link>
+        <a href="/" id="title">DevFolio</a>
         <v-spacer></v-spacer>
       </v-toolbar>
       <!-- sidebar -->
