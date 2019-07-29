@@ -20,7 +20,7 @@
 
   <div class="title_line on"></div>
 
-                    <h2 style="font-size: 9em; margin-top:0.3em; color:#8cddeb;">Hello.</h2>
+                    <h1 style="font-size: 9em; margin-top:0.3em; color:#8cddeb;">Hello.</h1>
                     <i class="title_sm on" data-ani="title_sm" style="top: -10px;">This is ny kim</i>
                     <div class="hello_text">
                       <p>안녕하세요, '<span>N</span>' 입니다.&nbsp;
