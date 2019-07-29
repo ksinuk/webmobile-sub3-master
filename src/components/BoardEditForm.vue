@@ -29,7 +29,7 @@
 
 <script>
 // firebase
-import FirebaseServices from '../services/FirebaseServices';
+import FirebaseServices from '../services/FirebaseServices'
 import firebase from 'firebase'
 
 import router from '../router'
