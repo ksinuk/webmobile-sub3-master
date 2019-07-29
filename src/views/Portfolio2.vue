@@ -20,7 +20,7 @@
 
   <div class="title_line on"></div>
 
-                    <h1 class="title on1">Hello.</h1>
+                    <h2 style="font-size: 9em; margin-top:0.3em; color:#8cddeb;">Hello.</h2>
                     <i class="title_sm on" data-ani="title_sm" style="top: -10px;">This is ny kim</i>
                     <div class="hello_text">
                       <p>안녕하세요, '<span>N</span>' 입니다.&nbsp;
@@ -198,7 +198,7 @@ element.style {
 
 .article_hello .hello_text {
     font-family: 'NotoSans', AppleGothic, sans-serif, Helvetica;
-    transition: margin .5s, font-size .5s;
+    transition: margin .5s;
     margin: 2.5em 0 1em;
     padding: 0 3.5em;
     font-family: 'LotteMartDream', sans-serif;
