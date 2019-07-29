@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import firebase from 'firebase'
-
+import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import Portfolio from './views/Portfolio.vue'
@@ -91,6 +91,12 @@ export default new Router({
             path: '/write_portfolio',
             name: 'write_portfolio',
             component: PortfolioWrite
-        }
+        },
+        {
+            path: '/admin',
+            name: 'adminpage',
+            component: AdminPage
+        },
+        
     ]
 })
