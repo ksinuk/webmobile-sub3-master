@@ -35,25 +35,37 @@ const db = firebase.firestore()
 export default {
   //read user data
   getUserData(uid) {
-      return new Promise(function(resolve,reject){
-          db.collection('userData').doc(uid).get()
-          .then(function(doc) {
-              if (doc.exists){
-                  resolve(doc.data())
-              }
-              else{
-                  resolve(null)
-              }
-          })
-      })
+        return new Promise(function(resolve,reject){
+            db.collection('userData').doc(uid).get()
+            .then(function(doc) {
+                if (doc.exists){
+                    resolve(doc.data())
+                }
+                else{
+                    resolve(null)
+                }
+            })
+        })
   },
   //write user data
   setUserData(uid, css, visit) {
-      console.log("write visit: ",visit)
-      return db.collection('userData').doc(uid).set({
-          css:css,
-          visitNum:visit
-      })
+        console.log("write visit: ",visit)
+        return db.collection('userData').doc(uid).set({
+            css:css,
+            visitNum:visit
+        })
+  },
+  setBookMark(from,to,del){
+        if(!del){
+            return db.collection('userData').doc(to).update({
+                bookmarks: firebase.firestore.FieldValue.arrayUnion(from)
+            })
+        }
+        else{
+            return db.collection('userData').doc(to).update({
+                bookmarks: firebase.firestore.FieldValue.arrayRemove(from)
+            })
+        }
   },
   // write post
   postPost(uid, title, body) {

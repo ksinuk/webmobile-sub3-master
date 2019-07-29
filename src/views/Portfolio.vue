@@ -2,7 +2,7 @@
 <template lang="html">
   <div class="portfolio">
     <ImageBanner/>
-    <div id="select-css" v-if="isuser">
+    <div id="select-css" v-if="iscontrol">
         <button id="css1" @click="changeCss(1)">1</button><br>
         <button id="css2" @click="changeCss(2)">2</button><br>
         <button id="css3" @click="changeCss(3)">3</button><br>
@@ -10,6 +10,10 @@
 
     <section role="region" id="works" class="l-section">
         <h1>총 방문자 수 : {{visitNum}}</h1>
+        <h1>북마크한 유저의 수 : {{toBookMarkNum}}</h1>
+
+        <button v-if="user && uid && !mybookmark" class="bookMarkBtnIn" @click="doMybookmark(false)">북마크 하기</button>
+        <button v-if="user && uid && mybookmark" class="bookMarkBtnOut" @click="doMybookmark(true)">북마크 취소</button>
 
         <Introduce :intro="intros[0]"></Introduce>
         <div class="l-section-holder">
@@ -42,7 +46,6 @@ import Introduce from '@/components/Introduce.vue'
 import firebase from 'firebase/app'
 
 export default {
-
     name: 'portfolio',
     components: {
         ImageBanner,
@@ -248,9 +251,13 @@ export default {
             
             intros:[],
             portfolios:[],
-            isuser:false,
+            uid:'',
+            user:'',
+            mybookmark:false,
+            iscontrol:false,
             css:0,
-            visitNum:'None',
+            visitNum:0,
+            toBookMarkNum:0,
         }
     },
 
@@ -258,9 +265,10 @@ export default {
         let th = this
 
         this.getMyIntro()
-
+        
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
+            th.uid = uid
             th.getMyPortfolio(uid)
             FirebaseService.getUserData(uid)
             .then(function(data){
@@ -268,6 +276,15 @@ export default {
                     th.css = data.css
                     if(data.visitNum) th.visitNum = data.visitNum+1
                     else th.visitNum = 1
+
+                    th.toBookMarkNum = data.bookmarks.length
+                    for(let i=0;i<data.bookmarks.length;i++){
+                        let bookmark = data.bookmarks[i]
+                        if(bookmark == th.user.uid) {
+                            th.mybookmark = true
+                        }
+                    }
+
                 }
                 else{
                     th.css = 1
@@ -275,21 +292,29 @@ export default {
                 }
                 FirebaseService.setUserData(uid,th.css,th.visitNum)
             })
+
+            firebase.auth().onAuthStateChanged(function(user){
+                if (user){
+                    th.user = user
+                }
+            })
             
         }
         else{
             firebase.auth().onAuthStateChanged(function(user) {
-                console.log("user: ",user)
                 if (user) {
-                    th.isuser = true
+                    th.user = user
+                    th.iscontrol = true
                     th.getMyPortfolio(user.uid)
                     FirebaseService.getUserData(user.uid)
                     .then(function(data){
                         if(data){
                             th.css = data.css
+                            th.visitNum = data.visitNum
                         }
                         else{
                             th.css = 1
+                            th.visitNum = 0
                         }
                     })
                     .catch(function(){
@@ -315,6 +340,11 @@ export default {
         async getMyIntro(){
             //  var user = FirebaseService.auth().currentUser;
             this.intros = await FirebaseService.getIntroduce();
+        },
+        doMybookmark(del){
+            this.mybookmark = !del
+            this.toBookMarkNum += del ? -1:1
+            FirebaseService.setBookMark(this.user.uid,this.uid,del)
         }
 
     },
@@ -686,6 +716,33 @@ th {
 
 table thead {
     font-family: "Quicksand",sans-serif;
+}
+
+.bookMarkBtnIn , .bookMarkBtnOut{
+    display:inline-block;
+    margin:5px 10px;
+    padding:10px;
+    font-size:20px;
+}
+.bookMarkBtnIn{
+    border:6px solid skyblue;
+    background-color: blue;
+    color:white;
+}
+.bookMarkBtnOut{
+    border:6px solid pink;
+    background-color: red;
+    color:white;
+}
+.bookMarkBtnIn:hover{
+    border:6px solid blue;
+    background-color: skyblue;
+    color:white;
+}
+.bookMarkBtnOut:hover{
+    border:6px solid red;
+    background-color: pink;
+    color:white;
 }
 
 
