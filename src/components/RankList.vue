@@ -1,7 +1,8 @@
 <template>
     <v-layout row wrap>
         <v-flex>
-            <carousel per-page="4">
+            <!-- 0729 err fix -->
+            <carousel :per-page="pageNum">
                 <slide v-for="number in images.length" class="px-2">
                     <v-card>
                         <v-img
@@ -40,6 +41,7 @@
         },
         data() {
             return {
+                pageNum: 4,
                 images: ["https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300"]
             }
         }
