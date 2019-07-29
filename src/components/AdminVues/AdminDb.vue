@@ -112,6 +112,7 @@ export default {
         .then(
           _this.users.splice(index, 1)
         )
+        .catch(err => alert(err))
     }
   }
 }
