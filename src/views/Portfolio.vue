@@ -9,6 +9,8 @@
     </div>
 
     <section role="region" id="works" class="l-section">
+        <h1>총 방문자 수 : {{visitNum}}</h1>
+
         <Introduce :intro="intros[0]"></Introduce>
         <div class="l-section-holder">
             <h2 class="section-heading is-init is-animated" data-animation="fade-up">
@@ -248,6 +250,7 @@ export default {
             portfolios:[],
             isuser:false,
             css:0,
+            visitNum:'None',
         }
     },
 
@@ -255,7 +258,6 @@ export default {
         let th = this
 
         this.getMyIntro()
-        console.log("intros: ",this.intros)
 
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
@@ -264,11 +266,16 @@ export default {
             .then(function(data){
                 if(data){
                     th.css = data.css
+                    if(data.visitNum) th.visitNum = data.visitNum+1
+                    else th.visitNum = 1
                 }
                 else{
                     th.css = 1
+                    th.visitNum = 0
                 }
+                FirebaseService.setUserData(uid,th.css,th.visitNum)
             })
+            
         }
         else{
             firebase.auth().onAuthStateChanged(function(user) {
@@ -284,7 +291,6 @@ export default {
                         else{
                             th.css = 1
                         }
-                        console.log("th.css: ",th.css)
                     })
                     .catch(function(){
                         th.css = 1
@@ -302,7 +308,7 @@ export default {
             let th = this
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                    FirebaseService.setUserData(user.uid,th.css)
+                    FirebaseService.setUserData(user.uid,th.css,th.visitNum)
                 }
             })
         },
@@ -316,7 +322,7 @@ export default {
         css:function(){
             let css = this.css
             let body = document.querySelector('.l-section')
-            console.log("css: ",this.css)
+
             if(this.css==1){
                 body.style.backgroundColor = 'white'
                 body.style.color = 'black'
