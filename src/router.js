@@ -11,6 +11,10 @@ import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
 import WritePort from './views/WritePort.vue'
 
+import AdminUser from './components/AdminVues/AdminUser.vue'
+import AdminDb from './components/AdminVues/AdminDb.vue'
+import AdminStorage from './components/AdminVues/AdminStorage.vue'
+
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
@@ -95,7 +99,25 @@ export default new Router({
         {
             path: '/admin',
             name: 'adminpage',
-            component: AdminPage
+            component: AdminPage,
+            children: [
+                {
+                  path: 'user',
+                  name: 'adminuser',
+                  component: AdminUser
+                },
+                {
+                  path: 'data',
+                  name: 'admindb',
+                  component: AdminDb
+                },
+                {
+                    path: 'storage',
+                    name: 'adminstorage',
+                    component: AdminStorage
+                },
+
+            ]
         },
         
     ]

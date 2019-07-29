@@ -1,19 +1,25 @@
 <template>
-  <v-container>
-    <h1>admin page</h1>
+  <div>
+    <h1 style="margin-top:80px;">어드민 페이지</h1>
+    <v-layout row justify-center>
 
-    <AdminUser/>
+        <AdminDrawer style="background-color: rgba(255, 255, 255, 0);"/>
 
-  </v-container>
+        <router-view/>
+
+    </v-layout>
+
+  </div>
+  
 </template>
 
 <script>
-import AdminUser from '../components/AdminUser'
+import AdminDrawer from '../components/AdminVues/AdminDrawer'
 
 export default {
   name: 'adminpage',
   components: {
-    AdminUser
+    AdminDrawer,
   },
   data () {
     return {

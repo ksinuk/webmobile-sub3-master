@@ -1,6 +1,8 @@
 <template>
   <v-container>
-
+    <div>
+      DB page
+    </div>
     <v-data-table
       :headers="headers"
       :items="users"
@@ -8,16 +10,29 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.displayName }}</td>
+        <td>
+          {{ props.item.displayName }}
+        </td>
         <td class="text-xs-right">{{ props.item.email }}</td>
         <td class="text-xs-right">{{ props.item.emailVerified }}</td>
         <td class="text-xs-right">{{ props.item.disabled }}</td>
         <td class="text-xs-right">{{ props.item.metadata.lastSignInTime }}</td>
         <td class="text-xs-right">{{ props.item.metadata.creationTime }}</td>
-        <td><button @click="postCall(props.item.uid)">postCall</button></td>
+        <td>
+          <v-menu bottom offset-y>
+            <v-icon slot="activator" style="font-size: 1rem;">fas fa-ellipsis-v</v-icon>
+            <v-list>
+              <v-list-tile v-for="(item, i) in items" :key="i">
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </td>
       </template>
     </v-data-table>
 
+    <!-- <button @click="deleteUser(props.item.uid, props.index)">delete</button>
+    <button @click="">edit</button> -->
     <v-btn @click="searchItem()">불러오기</v-btn>
 
   </v-container>
@@ -68,6 +83,17 @@ export default {
           value: 'iron'
         }
       ],
+      items: [
+        {
+          title: 'edit'
+        },
+        {
+          title: 'delete'
+        },
+        {
+          title: 'disabled'
+        }
+      ],
       users: []
     }
   },
@@ -78,11 +104,14 @@ export default {
           this.users = result.data
         })
     },
-    postCall: function(uid) {
+    deleteUser: function(uid, index) {
+      let _this = this
       this.$http.post("http://localhost:3000/api/users", { user: uid })
         .then((result) => {
-          console.log(result)
         })
+        .then(
+          _this.users.splice(index, 1)
+        )
     }
   }
 }
