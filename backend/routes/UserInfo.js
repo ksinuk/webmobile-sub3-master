@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
+// firebase config
 var admin = require('firebase-admin');
-
 var serviceAccountKey = require('../firebaseAccount.json')
 
 admin.initializeApp({
@@ -29,12 +28,17 @@ router.get('/', function (req, res, next) {
   listAllUsers();
 });
 
-// router.get('/:id', function (req, res, next) {
-//   var id = parseInt(req.params.id, 10)
-//   var tt= tests.filter(function (test) {
-//     return test.id === id
-//   });
-//   res.send(tt)
-// });
+// 유저 삭제
+router.post('/', function(req, res, next) {
+  var user = req.body.user
+  admin.auth().deleteUser(req.body.user)
+  .then(function() {
+    res.send('deleted done')
+    console.log('Successfully deleted user');
+  })
+  .catch(function(error) {
+    console.log('Error deleting user:', error);
+  });
+})
 
 module.exports = router;
