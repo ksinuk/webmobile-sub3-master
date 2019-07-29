@@ -1,7 +1,7 @@
 <!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
   <div class="portfolio">
-    <Banner v-bind:title="item.title"/>
+    <Banner v-bind:title="item.title" v-bind:subtitle="item.subtitle" v-bind:banner="banner" v-bind:user="user"/>
     <AboutMe/>
     <PortfolioList/>
     <Footer/>
@@ -28,7 +28,9 @@ export default {
     },
     data() {
         return {
-            item: []
+            item: [],
+            banner: null,
+            user: null
         }
     },
 
@@ -37,10 +39,11 @@ export default {
     },
     methods: {
         async getPortfolio() {
-            const user = await firebase.auth().currentUser;
-            console.log(user);
-            this.item = await FirebaseServices.getMyPort(user.uid);
-            console.log(this.item);
+            this.user = await firebase.auth().currentUser;
+            console.log(this.user); 
+            this.item = await FirebaseServices.getMyPort(this.user.uid);
+            this.banner = this.item.bannerImg[0];
+
         }
     }
 }

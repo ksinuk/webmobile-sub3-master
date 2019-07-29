@@ -217,7 +217,7 @@ async currentUser() {
 		}).then(console.log('done'))
   },
   // 나의 포트폴리오 가져오기
-  getMyPort(user_id) {
+  async getMyPort(user_id) {
     const portfolios = db.collection(MYPORT)
     const detailPort= portfolios
       .get()
