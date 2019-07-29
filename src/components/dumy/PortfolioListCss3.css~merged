@@ -1,13 +1,13 @@
+/* section */
 #work1{
-    width:70%;
-    margin:auto;
+    background-color: #30b7e8;
+    color:white;
 }
 
-/* section */
-// @media screen and (max-width: 1499px)
-// .l-section {
-//     padding: 100px 5vw;
-// }
+@media screen and (max-width: 1499px)
+.l-section {
+    padding: 100px 5vw;
+}
 
 .l-section {
     background: white;
@@ -21,7 +21,7 @@
 }
 
 .gallery-title::before {
-    color: #30b7e8;
+    color: white;
     display: inline-block;
     width: 130px;
     position: relative;
@@ -30,7 +30,7 @@
     line-height: 1;
     font-size: 64px;
     font-weight: 400;
-
+    content: counter(article,decimal-leading-zero);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -111,24 +111,14 @@ section {
 }
 
 
+
+
+
 /* table*/
-.vhtml >>> a{
-    background-color: transparent;
-    color: #30b7e8;
-    text-decoration: none;
-    cursor: pointer;
-}
 
-a{
+a {
     background-color: transparent;
-    color: #30b7e8;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-td >>> a{
-    background-color: transparent;
-    color: #30b7e8;
+    color: rgb(155, 34, 34);
     text-decoration: none;
     cursor: pointer;
 }
@@ -140,8 +130,8 @@ td >>> a{
 }
 
 .categ.css {
-    background: #00bfdd;
-    color: white;
+    background: white;
+    color: #00bfdd;
 }
 
 .categ {
@@ -173,9 +163,9 @@ ul {
 }
 
 .ui-button {
-    background: #30b7e8;
+    background: white;
     border-radius: 44px;
-    color: white;
+    color: #30b7e8;
     display: inline-block;
     min-width: 7em;
     height: 44px;
@@ -186,7 +176,7 @@ ul {
     letter-spacing: -.03em;
     line-height: 18px;
     font-family: "Quicksand",sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     text-align: center;
     box-sizing: border-box;
@@ -248,7 +238,7 @@ p, dl, ol, ul {
 
 
 table {
-    border: 0;
+    border: 1px solid white;
     border-collapse: collapse;
     border-spacing: 0;
     margin: 1em 0;
@@ -267,9 +257,9 @@ td {
 }
 
 table thead th {
-    background-color: rgba(77,128,153,0.05);
+    background-color: rgba(128, 136, 139, 0.5);
     border-top-width: 1px;
-    color: #94979c;
+    color: white;
     padding: 1.2em 1em;
 }
 
