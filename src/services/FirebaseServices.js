@@ -48,9 +48,11 @@ export default {
       })
   },
   //write user data
-  setUserData(uid, css) {
+  setUserData(uid, css, visit) {
+      console.log("write visit: ",visit)
       return db.collection('userData').doc(uid).set({
           css:css,
+          visitNum:visit
       })
   },
   // write post
