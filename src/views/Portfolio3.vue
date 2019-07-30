@@ -29,8 +29,7 @@ export default {
     data() {
         return {
             item: [],
-            banner: null,
-            user: null
+            banner: null
         }
     },
 
@@ -39,11 +38,10 @@ export default {
     },
     methods: {
         async getPortfolio() {
-            this.user = await firebase.auth().currentUser;
-            console.log(this.user);
-            this.item = await FirebaseServices.getMyPort(this.user.uid);
-            this.banner = this.item.bannerImg[0];
-
+            const profile = await firebase.auth().onAuthStateChanged(function(user) {
+                console.log(user);
+                return user;
+            })
         }
     }
 }
