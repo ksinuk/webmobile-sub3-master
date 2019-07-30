@@ -40,7 +40,7 @@ export default {
     methods: {
         async getPortfolio() {
             this.user = await firebase.auth().currentUser;
-            console.log(this.user); 
+            console.log(this.user);
             this.item = await FirebaseServices.getMyPort(this.user.uid);
             this.banner = this.item.bannerImg[0];
 

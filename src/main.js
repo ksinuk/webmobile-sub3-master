@@ -5,8 +5,10 @@ import 'vuetify/dist/vuetify.min.css'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VueTinySlider from 'vue-tiny-slider';
+import VueTinySlider from 'vue-tiny-slider'
+import axios from 'axios'
 
+Vue.prototype.$http = axios
 
 Vue.use(Vuetify, {
   iconfont : 'fa'

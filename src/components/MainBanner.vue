@@ -26,7 +26,8 @@ export default {
     }
   },
   mounted() {
-    this.startRotation();
+    // 0729 error 주석처리
+    // this.startRotation();
   },
 
   methods : {
@@ -70,7 +71,8 @@ document.addEventListener('DOMContentLoaded',function(event){
         }, 20000);
      }
      // check if dataText[i] exists
-    if (i < dataText[i].length) {
+    //  0729 오류 fix
+    if (i < dataText.length) {
       // text exists! start typewriter animation
      typeWriter(dataText[i], 0, function(){
        // after callback (and whole text has been animated), start next text

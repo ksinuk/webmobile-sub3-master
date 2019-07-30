@@ -39,7 +39,7 @@
             <h3 class="headline mb-0">서비스</h3>
             <ul>
               <a href="/portfolio"><li>플랫폼1</li></a>
-              <a href="/writeport"><li>플랫폼2</li></a>
+              <a href="/portfolio2"><li>플랫폼2</li></a>
               <a href="/writeport"><li>플랫폼3</li></a>
             </ul>
           </div>
