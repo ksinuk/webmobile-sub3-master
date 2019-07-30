@@ -43,116 +43,50 @@
                        <div class="work_list" data-columns="2">
                          <div class="column size-1of2">
                            <div class="work_item">
-                             <figure>
+                             <figure class="snip1384">
                                <img src="../assets/example1.png" alt="코인원의 관리자 계정 페이지" class="work_image">
                                  <figcaption class="work_caption">
                                      <div class="caption_textWrap">
-                                         <strong class="caption_title">Coinone Admin</strong>
+                                         <h3>Coinone Admin</h3>
                                            <p class="caption_desc">코인원의 관리자 계정 페이지</p>
                                            </div>  <a href=" work/work_coinone.html "></a>
                                            </figcaption>
                                          </figure>
                                        </div>
                                        <div class="work_item">
-                                         <figure>
+                                         <figure class="snip1384">
                                            <img src="../assets/example2.png" alt="랜딩 페이지 (풀반응형)" class="work_image">
                                              <figcaption class="work_caption external">
                                                <div class="caption_textWrap">
-                                                   <strong class="caption_title">STAYGE One</strong>
+                                                   <h3>STAYGE One</h3>
                                                      <p class="caption_desc">랜딩 페이지 (풀반응형)</p>
                                                     </div>
                                                       <a href=" work/view_stayge/index.html" target="_blank"></a>
-                                                      </figcaption>
-                                                     </figure>
-                                                   </div>
-                                                   <div class="work_item">
-                                                     <figure>
-                                                        <img src="../assets/example3.png" alt="협약식 체결 화면" class="work_image">
+                                                </figcaption>
+                                              </figure>
+                                        </div>
+                                        <div class="work_item">
+                                                     <figure class="snip1384">
+                                                       <img src="../assets/example3.png" alt="협약식 체결 화면" class="work_image">
                                                           <figcaption class="work_caption external">
                                                               <div class="caption_textWrap">
-                                                                  <strong class="caption_title">Presentation Page</strong>
+                                                                  <h3>Presentation Page</h3>
                                                                     <p class="caption_desc">협약식 체결 화면</p>  </div>
                                                                       <a href=" work/view_partners/index.html" target="_blank"></a>
                                                                       </figcaption>
                                                                      </figure>
                                                                    </div>
-                                                                   <div class="work_item">
-                                                                     <figure>
-                                                                        <img src="../assets/example4.jpg" alt="Changstarr 가사 정보 페이지(웹, 모바일)" class="work_image">
-                                                                          <figcaption class="work_caption">
-                                                                              <div class="caption_textWrap">
-                                                                                  <strong class="caption_title">Lyrics for Changstarr</strong>
-                                                                                   <p class="caption_desc">Changstarr 가사 정보 페이지(웹, 모바일)</p>
-                                                                                   </div>
-                                                                                    <a href=" work/work_changstarr.html "></a>
-                                                                                    </figcaption>
-                                                                                   </figure>
-                                                                                 </div>
-                                                                                 <div class="work_item">
-                                                                                   <figure>
-                                                                                      <img src="../assets/example5.jpg" alt="SBI저축은행 하이브리드앱" class="work_image">
-                                                                                        <figcaption class="work_caption">
-                                                                                            <div class="caption_textWrap">
-                                                                                                <strong class="caption_title">SBI BANK</strong>
-                                                                                                  <p class="caption_desc">SBI저축은행 하이브리드앱</p>
-                                                                                                  </div>
-                                                                                                    <a href=" work/work_sbi.html "></a>
-                                                                                                    </figcaption>
-                                                                                                  </figure>
-                                                                                                </div>
-                                                                                              </div>
-                                                                                              <div class="column size-1of2">
-                                                                                                <div class="work_item">
-                                                                                                  <figure>
-                                                                                                     <img src="../assets/example1.png" alt="랜딩 페이지 (풀반응형)" class="work_image">
-                                                                                                       <figcaption class="work_caption external">
-                                                                                                           <div class="caption_textWrap">
-                                                                                                               <strong class="caption_title">AR GEAR</strong>
-                                                                                                                 <p class="caption_desc">랜딩 페이지 (풀반응형)</p>
-                                                                                                                 </div>
-                                                                                                                   <a href=" work/view_arGear/index.html" target="_blank"></a>
-                                                                                                                 </figcaption>
-                                                                                                                </figure>
-                                                                                                              </div>
-                                                                                                              <div class="work_item">
-                                                                                                                <figure>
-                                                                                                                 <img src="../assets/example2.png" alt="펀딩 플랫폼" class="work_image">
-                                                                                                                  <figcaption class="work_caption">
-                                                                                                                      <div class="caption_textWrap">
-                                                                                                                          <strong class="caption_title">ICO Platform</strong>
-                                                                                                                           <p class="caption_desc">펀딩 플랫폼</p>
-                                                                                                                           </div>
-                                                                                                                             <a href=" work/work_icop.html "></a>
-                                                                                                                             </figcaption>
-                                                                                                                            </figure>
-                                                                                                                          </div>
-                                                                                                                          <div class="work_item">
-                                                                                                                            <figure>
-                                                                                                                               <img src="../assets/example3.png" alt="랜딩 페이지(풀반응형)" class="work_image">
-                                                                                                                                 <figcaption class="work_caption external">
-                                                                                                                                     <div class="caption_textWrap">
-                                                                                                                                         <strong class="caption_title">Chain SIGN</strong>
-                                                                                                                                          <p class="caption_desc">랜딩 페이지(풀반응형)</p>
-                                                                                                                                          </div>
-                                                                                                                                           <a href="http://chainsign.co.kr/" target="_blank"></a>
-                                                                                                                                           </figcaption>
-                                                                                                                                          </figure>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="work_item">
-                                                                                                                                          <figure>
-                                                                                                                                             <img src="../assets/example4.jpg" alt="3M 제품 사용자를 위한 플랫폼" class="work_image">
-                                                                                                                                              <figcaption class="work_caption">  <div class="caption_textWrap">
-                                                                                                                                                 <strong class="caption_title">3M HCA</strong>
-                                                                                                                                                  <p class="caption_desc">3M 제품 사용자를 위한 플랫폼</p>
-                                                                                                                                                  </div>
-                                                                                                                                                   <a href=" work/work_hca.html "></a>
-                                                                                                                                                   </figcaption>
-                                                                                                                                                  </figure>
-                                                                                                                                                </div>
-                                                                                                                                              </div>
-                                                                                                                                            </div>
-                                                                                                                                          </div>
-                                                                                                                                        </div>
+
+
+                                                                    </div>
+                                <div class="column size-1of2">
+
+
+
+  </div>
+        </div>
+  </div>
+      </div>
 
             </v-flex>
 
@@ -167,6 +101,154 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
+/* Tablet &amp; Desktop Device */
+
+
+/* Tablet Device */
+
+
+
+figure.snip1384 {
+  font-family: 'Raleway', Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+  min-width: 230px;
+  max-width: 1000px;
+  width: 100%;
+  color: #ffffff;
+  text-align: center;
+  background-color: #fafafa;
+  font-size: 16px;
+
+}
+
+@media ( min-width: 1000px ) {
+  figure.snip1384{
+    margin-left: 20%;
+  }
+}
+
+@media (min-width: 500px) and ( max-width: 999px ) {
+  figure.snip1384{
+      margin-left: 5%;
+  }
+}
+@media ( max-width: 499px ) {
+  figure.snip1384{
+      margin-left: 0%;
+  }
+}
+figure.snip1384 * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.35s ease;
+  transition: all 0.35s ease;
+}
+figure.snip1384 img {
+  max-width: 100%;
+  backface-visibility: hidden;
+  vertical-align: top;
+}
+figure.snip1384:after,
+figure.snip1384 figcaption {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+figure.snip1384:after {
+  content: '';
+  background-color: rgba(0, 0, 0, 0.65);
+  -webkit-transition: all 0.35s ease;
+  transition: all 0.35s ease;
+  opacity: 0;
+}
+figure.snip1384 figcaption {
+  z-index: 1;
+  padding: 40px;
+}
+figure.snip1384 h3,
+figure.snip1384 .links {
+  width: 100%;
+  margin: 5px 0;
+  padding: 0;
+}
+figure.snip1384 h3 {
+  line-height: 1.1em;
+  font-weight: 700;
+  font-size: 1.4em;
+  margin-top: 5em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+figure.snip1384 p {
+  font-size: 0.8em;
+  font-weight: 300;
+  letter-spacing: 1px;
+  opacity: 0;
+  top: 50%;
+  -webkit-transform: translateY(40px);
+  transform: translateY(40px);
+}
+figure.snip1384 i {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 20px 25px;
+  font-size: 34px;
+  opacity: 0;
+  -webkit-transform: translateX(-10px);
+  transform: translateX(-10px);
+}
+figure.snip1384 a {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+figure.snip1384:hover img,
+figure.snip1384.hover img {
+  zoom: 1;
+  filter: alpha(opacity=50);
+  -webkit-opacity: 0.5;
+  opacity: 0.5;
+}
+figure.snip1384:hover:after,
+figure.snip1384.hover:after {
+  opacity: 1;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+figure.snip1384:hover h3,
+figure.snip1384.hover h3,
+figure.snip1384:hover p,
+figure.snip1384.hover p,
+figure.snip1384:hover i,
+figure.snip1384.hover i {
+  -webkit-transform: translate(0px, 0px);
+  transform: translate(0px, 0px);
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
