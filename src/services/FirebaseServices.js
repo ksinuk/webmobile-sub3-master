@@ -231,14 +231,17 @@ async currentUser() {
 		}).then(console.log('done'))
   },
   // 나의 포트폴리오 가져오기
-  async getMyPort(user_id) {
+  async getMyPort() {
+    var user = await firebase.auth().currentUser;
     const portfolios = db.collection(MYPORT)
-    const detailPort= portfolios
+    console.log(user);
+    const detailPort = portfolios
       .get()
       .then((docSnapshots)=> {
       let results = docSnapshots.docs.map((doc) => {
         let data = doc.data()
-        if(data.uid == user_id) {
+        if(data.uid == user.uid) {
+          console.log(data);
           return data;
         }
       })
@@ -249,6 +252,7 @@ async currentUser() {
         }
       }
     })
+    console.log(detailPort);
     return detailPort;
   },
 
