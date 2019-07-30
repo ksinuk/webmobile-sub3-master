@@ -49,7 +49,6 @@ export default {
   },
   //write user data
   setUserData(uid, css, visit) {
-        console.log("write visit: ",visit)
         return db.collection('userData').doc(uid).set({
             css:css,
             visitNum:visit
@@ -66,6 +65,20 @@ export default {
                 bookmarks: firebase.firestore.FieldValue.arrayRemove(from)
             })
         }
+  },
+  getBookMarkFromUid(uid){
+        return new Promise(function(resolve,reject){
+            db.collection('userData').where("bookmarks", "array-contains", uid).get()
+            .then(function(doc) {
+                let out = []
+                for(let i=0;i<doc.size;i++){
+                    let temp = doc.docs[i].data()
+                    temp['uid'] = doc.docs[i].id
+                    out.push(temp)
+                }
+                resolve(out)
+            })
+        })
   },
   // write post
   postPost(uid, title, body) {
@@ -152,7 +165,6 @@ export default {
   },
   getUidPortfolios(uid){
       return new Promise(function(resolve,reject){
-          console.log("getUidPortfolios!!!")
           db.collection(PORTFOLIO).where('uid', '==', uid).get()
           .then(function(snapshot) {
               console.log("snapshot: ",snapshot)

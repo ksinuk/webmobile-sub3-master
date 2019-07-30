@@ -284,7 +284,6 @@ export default {
                             th.mybookmark = true
                         }
                     }
-
                 }
                 else{
                     th.css = 1
@@ -297,8 +296,7 @@ export default {
                 if (user){
                     th.user = user
                 }
-            })
-            
+            })   
         }
         else{
             firebase.auth().onAuthStateChanged(function(user) {
