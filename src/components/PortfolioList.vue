@@ -102,16 +102,15 @@ export default {
     components:{
     },
     created(){
-        this.cssAddr = "./PortfolioListCss"+this.cssmod+".css"
-        this.cssStyle = '<style lang="css" scoped :src="'+this.cssAddr+'"></style>'
-        console.log("this.cssmod: ",this.cssmod)
         if(this.cssmod==3){
             this.ismodal = true
             this.isok = true
+            this.cssArr[2] = true
         }
         else if(this.cssmod==1 || this.cssmod==2){
             this.ismodal = false
             this.isok = true
+            this.cssArr[this.cssmod-1] = true
         }
     },
     mounted(){
