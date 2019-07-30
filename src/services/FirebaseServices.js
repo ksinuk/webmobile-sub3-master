@@ -195,8 +195,8 @@ async currentUser() {
 */
   // 포트폴리오 목록 조회 리뉴얼
   getPortfolio(user_id){
-    const portfolios = db.collection(PORTFOLIOS)
-    const detailPort= portfolios
+    const portfolios = db.collection(MYPORT)
+    const detailPort = portfolios
       .get()
       .then((docSnapshots)=> {
       let results = docSnapshots.docs.map((doc) => {
@@ -231,17 +231,14 @@ async currentUser() {
 		}).then(console.log('done'))
   },
   // 나의 포트폴리오 가져오기
-  async getMyPort() {
-    var user = await firebase.auth().currentUser;
+  async getMyPort(user) {
     const portfolios = db.collection(MYPORT)
-    console.log(user);
-    const detailPort = portfolios
+    const detailPort = await portfolios
       .get()
       .then((docSnapshots)=> {
       let results = docSnapshots.docs.map((doc) => {
         let data = doc.data()
-        if(data.uid == user.uid) {
-          console.log(data);
+        if(data.uid == user) {
           return data;
         }
       })
@@ -283,11 +280,15 @@ async currentUser() {
   // 현재 로그인 user doc 가져오기
   async currentUser() {
     var user = firebase.auth().currentUser;
+    if(user==null){
+      console.log("fdasfasdfasdf");
+    }
     var docRef = db.collection(USERS);
     const detailedUser = docRef.get().then((docSnapshots) => {
       let results = docSnapshots.docs.map((doc) => {
       let data = doc.data()
       if (data.uid === user.uid) {
+        console.log("데이터베이스 테스트 :"+data.uid)
         return data
       }
       })
@@ -341,6 +342,7 @@ async currentUser() {
     if (_user) {
       store.commit('setUserName', _user.displayName)
       store.commit('setUserState', true)
+      store.commit('setUserId', _user.uid)
     } else {
       store.commit('setUserName', '')
       store.commit('setUserState', false)

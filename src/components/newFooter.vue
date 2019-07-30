@@ -40,7 +40,8 @@
             <ul>
               <a href="/portfolio"><li>플랫폼1</li></a>
               <a href="/portfolio2"><li>플랫폼2</li></a>
-              <a href="/writeport"><li>플랫폼3</li></a>
+              <a href="/portfolio3"><li>플랫폼3</li></a>
+              <a href="/writeport"><li>플랫폼4</li></a>
             </ul>
           </div>
           <div style="width:33%;">
@@ -64,6 +65,8 @@
 </template>
 
 <script>
+  import firebase from 'firebase/app'
+
   export default {
     name : 'newFooter',
     computed:{
@@ -71,21 +74,24 @@
         return this.$store.getters.searchItem;
       }
     },
-    data: () => ({
-      icons: [
-        'fab fa-facebook',
-        'fab fa-twitter',
-        'fab fa-google-plus',
-        'fab fa-linkedin',
-        'fab fa-instagram',
-      ],
-      location:[
-        'https://www.facebook.com/',
-        'https://www.twitter.com/',
-        'https://www.google.com/',
-        'https://www.Linkedin.com/',
-        'https://www.instagram.com/']
-    }),
+    data() {
+      return {
+        icons: [
+          'fab fa-facebook',
+          'fab fa-twitter',
+          'fab fa-google-plus',
+          'fab fa-linkedin',
+          'fab fa-instagram',
+        ],
+        location:[
+          'https://www.facebook.com/',
+          'https://www.twitter.com/',
+          'https://www.google.com/',
+          'https://www.Linkedin.com/',
+          'https://www.instagram.com/'],
+        user: null
+      }
+    }
   }
 </script>
 

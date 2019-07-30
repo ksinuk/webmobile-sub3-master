@@ -117,7 +117,7 @@ export default new Router({
             component: PortfolioWrite
         },
         {
-            path: '/test',
+            path: '/portfolio3',
             name: 'portfolio3',
             component: Portfolio3
         },

@@ -47,12 +47,13 @@ export default {
   },
   mounted(){
     this.doAjax();
-
+    
   },
   data() {
           return {
               isLoading: false,
-              fullPage: true
+              fullPage: true,
+              user: null
           }
       },
 
