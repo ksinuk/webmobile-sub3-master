@@ -16,6 +16,7 @@ import AdminUser from './components/AdminVues/AdminUser.vue'
 import AdminDb from './components/AdminVues/AdminDb.vue'
 import AdminStorage from './components/AdminVues/AdminStorage.vue'
 
+import PortfolioPage from './views/PortfolioPage.vue'
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
@@ -127,6 +128,11 @@ export default new Router({
             path: '/portfolio3',
             name: 'portfolio3',
             component: Portfolio3
+        },
+        {
+            path: '/portfoliopage',
+            name: 'portfoliopage',
+            component: PortfolioPage
         },
         {
             path: '/admin',
