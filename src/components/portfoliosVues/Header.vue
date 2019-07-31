@@ -31,10 +31,17 @@
                         <v-card>
                             <v-card-text>
                                 <v-select
-                                :items="templates"
+                                v-model="select"
+                                :items="items"
+                                item-text="theme"
+                                item-value="img"
                                 label="Standard"
                                 color="white"
+                                return-object
                             ></v-select>
+                            <div class="px-auto">
+                                <img :src="this.select.img" height="150rem;"/>
+                            </div>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
@@ -69,21 +76,22 @@ export default {
             state: 'header2',
             drawer: null,
             mini: false,
-            templates: {
-                dolphin: 'example4.jpg',
-                mountain: 'example5.jpg',
-                horizon: 'example6.jpg'
-            }
+            select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
+            items: [
+                { theme: 'Dolphin' , img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
+                { theme: 'Mountain', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample5.jpg?alt=media&token=4d683a8c-6543-4116-93eb-fa290493932f' },
+                { theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3' }
+            ]
         }
     },
     created() {
-        this.getBanner();
+        // this.getBanner();
     },
     methods: {
         getBanner: function() {
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            storageRef.child('banner/example4.jpg').getDownloadURL().then(function(url) {
+            storageRef.child('banner/' + this.select.img).getDownloadURL().then(function(url) {
                 var xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 xhr.onload = function(event) {
@@ -91,7 +99,8 @@ export default {
                 }
                 xhr.open('GET', url)
                 xhr.send();
-                console.log(url);
+                this.sample = url;
+                console.log(this.sample)
             }).catch(function(error) {
                 console.log(error);
             })
