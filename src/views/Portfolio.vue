@@ -277,19 +277,21 @@ export default {
                     if(data.visitNum) th.visitNum = data.visitNum+1
                     else th.visitNum = 1
 
-                    th.toBookMarkNum = data.bookmarks.length
-                    for(let i=0;i<data.bookmarks.length;i++){
-                        let bookmark = data.bookmarks[i]
-                        if(bookmark == th.user.uid) {
-                            th.mybookmark = true
+                    if(data.bookmarks){
+                        th.toBookMarkNum = data.bookmarks.length
+                        for(let i=0;i<data.bookmarks.length;i++){
+                            let bookmark = data.bookmarks[i]
+                            if(bookmark == th.user.uid) {
+                                th.mybookmark = true
+                            }
                         }
-                    }
+                    }   
                 }
                 else{
                     th.css = 1
                     th.visitNum = 0
                 }
-                FirebaseService.setUserData(uid,th.css,th.visitNum)
+                FirebaseService.updateUserData(uid,th.css,th.visitNum)
             })
 
             firebase.auth().onAuthStateChanged(function(user){

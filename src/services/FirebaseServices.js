@@ -54,6 +54,12 @@ export default {
             visitNum:visit
         })
     },
+    updateUserData(uid, css, visit) {
+        return db.collection('userData').doc(uid).update({
+            css:css,
+            visitNum:visit
+        })
+    },
     setBookMark(from,to,del){
         if(!del){
             return db.collection('userData').doc(to).update({
