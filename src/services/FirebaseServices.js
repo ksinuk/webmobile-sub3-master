@@ -74,6 +74,7 @@ export default {
                 for(let i=0;i<doc.size;i++){
                     let temp = doc.docs[i].data()
                     temp['uid'] = doc.docs[i].id
+                    temp['addr'] = '/portfolio/'+doc.docs[i].id
                     out.push(temp)
                 }
                 resolve(out)
