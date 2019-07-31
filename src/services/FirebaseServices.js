@@ -372,7 +372,7 @@ export default {
                 displayName: userName
             })
             console.log(user)
-        }
+        })
     },
     // store 에 있는 유저정보 업데이트
     updatedStoreUser() {
@@ -443,8 +443,7 @@ export default {
     },
     // login 3. logout
     logoutUser() {
-        firebase.auth().signOut().then(function() {
-        })
+        firebase.auth().signOut().then(function() {})
         // 로그아웃 후 세션삭제
         .then(sessionStorage.clear())
         // 홈페이지로 이동
