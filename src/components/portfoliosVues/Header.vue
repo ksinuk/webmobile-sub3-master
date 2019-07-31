@@ -31,17 +31,22 @@
                         <v-card>
                             <v-card-text>
                                 <v-select
-                                v-model="select"
-                                :items="items"
-                                item-text="theme"
-                                item-value="img"
-                                label="Standard"
-                                color="white"
-                                return-object
-                            ></v-select>
-                            <div class="px-auto">
-                                <img :src="this.select.img" height="150rem;"/>
-                            </div>
+                                    v-model="select"
+                                    :items="items"
+                                    item-text="theme"
+                                    item-value="img"
+                                    label="Sample"
+                                    color="white"
+                                    return-object
+                                ></v-select>
+                                <div class="filebox">
+                                    <input class="upload-name" v-model="fileName" placeholder="선택된 파일 없음">
+                                    <label style="background-color: white; color: #424242; padding-left: 1rem; padding: 0.3rem;" for="input_file">Submit</label>
+                                    <input type="file" id="input_file" class="upload-hidden" @change="userImage">
+                                </div>
+                                <div class="py-3">
+                                    <img :src="this.select.img" height="170rem;" width="265rem;"/>
+                                </div>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
@@ -104,6 +109,36 @@ export default {
             }).catch(function(error) {
                 console.log(error);
             })
+        },
+        userImage: function (file) {
+            this.isDragging1 = false
+            let loadFile = file.target.files || file.dataTransfer.files
+
+            if (loadFile.length == 0) {
+                return
+            }
+            this.addViewImage(loadFile)
+        },
+        addViewImage: function(files) {
+        let _this = this
+
+        for (let i=0; i < files.length; i++) {
+            let file = files[i]
+            let reader = new FileReader()
+            if (file.type.match(/image.*/)) {
+            reader.onload = function(e) {
+                for (let j=0; j < files.length; j++) {
+                }
+                _this.dumpList.push(e.target.result)
+            }
+            reader.readAsDataURL(file)
+            console.log(file)
+            _this.bannerImage.push(file.name)
+            _this.imageList.push(file)
+            } else {
+            alert('이미지 파일만 올려주세요.')
+            }
+        }
         }
     }
 }
@@ -167,5 +202,16 @@ export default {
         0%, 66.66% { left: -100%; opacity: 0; }
     74.96%, 91.62% { left: 25%; opacity: 1; }
     100% { left: 110%; opacity: 0; }
+    }
+
+    .filebox input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
     }
 </style>
