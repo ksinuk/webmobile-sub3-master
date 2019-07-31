@@ -1,4 +1,3 @@
-<!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
   <div class="portfolio">
     <ImageBanner/>
@@ -37,7 +36,6 @@
 </template>
 
 <script>
-import movie from '@/components/Movie.vue'
 import ImageBanner from '@/components/ImageBanner.vue'
 import FirebaseService from '@/services/FirebaseServices'
 import PortfolioList from '@/components/PortfolioList.vue'
@@ -283,15 +281,18 @@ export default {
                             let bookmark = data.bookmarks[i]
                             if(bookmark == th.user.uid) {
                                 th.mybookmark = true
+                                break
                             }
                         }
-                    }   
+                    }
+                    FirebaseService.updateUserData(uid,th.css,th.visitNum)
                 }
                 else{
                     th.css = 1
                     th.visitNum = 0
+                    FirebaseService.setUserData(uid,th.css,th.visitNum)
                 }
-                FirebaseService.updateUserData(uid,th.css,th.visitNum)
+                
             })
 
             firebase.auth().onAuthStateChanged(function(user){
