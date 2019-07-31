@@ -1,7 +1,6 @@
 <template lang="html">
 <div>
-    <ImageBanner/>
-    <Introduce :intro="intros[0]"></Introduce>
+    <div></div>
 </div>
 </template>
 
@@ -9,15 +8,12 @@
 import FirebaseService from '@/services/FirebaseServices'
 import firebase from 'firebase/app'
 
-import ImageBanner from '@/components/ImageBanner.vue'
 import Introduce from '@/components/Introduce.vue'
 
 export default {
 
     name: 'portfolioHeader',
     components: {
-        ImageBanner,
-        Introduce
     },
     props:{
         uid: {type: null},

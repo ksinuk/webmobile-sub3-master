@@ -135,6 +135,11 @@ export default new Router({
             component: PortfolioPage
         },
         {
+            path: '/portfoliopage/:uid',
+            name: 'portfoliopage',
+            component: PortfolioPage
+        },
+        {
             path: '/admin',
             name: 'adminpage',
             component: AdminPage,

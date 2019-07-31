@@ -1,11 +1,17 @@
 <template lang="html">
 <div>
     <section role="region" id="foliolist" class="l-section">
+        <h1>총 방문자 수 : {{visitNum}}</h1>
+        <h1>북마크한 유저의 수 : {{toBookMarkNum}}</h1>
+
+        <button v-if="user && uid && !mybookmark" class="bookMarkBtnIn" @click="doMybookmark(false)">북마크 하기</button>
+        <button v-if="user && uid && mybookmark" class="bookMarkBtnOut" @click="doMybookmark(true)">북마크 취소</button>
+
         <div class="l-section-holder">
-            <h2 class="section-heading is-init is-animated" data-animation="fade-up">
+            <h1 class="section-heading is-init is-animated" data-animation="fade-up">
                 <span class="secondary">Portfolio</span>
                 <span class="primary">My works</span>
-            </h2>
+            </h1>
             <div id="portfolio" class="section-content gallery alternate">
                 <v-flex v-for="portfolio in portfolios">
                     <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
@@ -16,6 +22,12 @@
             </div>
         </div>
     </section>
+
+    <div id="select-css" v-if="iscontrol">
+        <button id="css1" @click="changeCss(1)">1</button><br>
+        <button id="css2" @click="changeCss(2)">2</button><br>
+        <button id="css3" @click="changeCss(3)">3</button><br>
+    </div>
 </div>
 </template>
 
@@ -31,8 +43,6 @@ export default {
         PortfolioList
     },
     props:{
-        uid: {type: null},
-        css: {type: null},
     },
     data() {
         return {
@@ -232,37 +242,101 @@ export default {
             ],
 
             portfolios:[],
+            uid:'',
+            user:'',
+            mybookmark:false,
+            iscontrol:false,
+            css:0,
+            visitNum:0,
+            toBookMarkNum:0,
         }
     },
     created(){
         let th = this
-        th.getMyPortfolio(th.uid)
+        if(this.$route.params.uid){
+            let uid = this.$route.params.uid
+            th.uid = uid
+            th.getMyPortfolio(uid)
+            FirebaseService.getUserData(uid)
+            .then(function(data){
+                if(data){
+                    th.css = data.css
+                    if(data.visitNum) th.visitNum = data.visitNum+1
+                    else th.visitNum = 1
+
+                    if(data.bookmarks){
+                        th.toBookMarkNum = data.bookmarks.length
+                        for(let i=0;i<data.bookmarks.length;i++){
+                            let bookmark = data.bookmarks[i]
+                            if(bookmark == th.user.uid) {
+                                th.mybookmark = true
+                                break
+                            }
+                        }
+                    }
+                    FirebaseService.updateUserData(uid,th.css,th.visitNum)
+                }
+                else{
+                    th.css = 1
+                    th.visitNum = 0
+                    FirebaseService.setUserData(uid,th.css,th.visitNum)
+                }
+                
+            })
+
+            firebase.auth().onAuthStateChanged(function(user){
+                if (user){
+                    th.user = user
+                }
+            })   
+        }
+        else{
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    th.user = user
+                    th.iscontrol = true
+                    th.getMyPortfolio(user.uid)
+                    FirebaseService.getUserData(user.uid)
+                    .then(function(data){
+                        if(data){
+                            th.css = data.css
+                            th.visitNum = data.visitNum
+                        }
+                        else{
+                            th.css = 1
+                            th.visitNum = 0
+                        }
+                    })
+                    .catch(function(){
+                        th.css = 1
+                    })
+                }
+            })
+        }
     },
     methods:{
         async getMyPortfolio(uid){
-            this.portfolios = await FirebaseService.getUidPortfolios(this.uid)
+            this.portfolios = await FirebaseService.getUidPortfolios(uid)
         },
+        changeCss(num){
+            this.css = num
+            let th = this
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    FirebaseService.setUserData(user.uid,th.css,th.visitNum)
+                }
+            })
+        },
+        async getMyIntro(){
+            //  var user = FirebaseService.auth().currentUser;
+            this.intros = await FirebaseService.getIntroduce();
+        },
+        doMybookmark(del){
+            this.mybookmark = !del
+            this.toBookMarkNum += del ? -1:1
+            FirebaseService.setBookMark(this.user.uid,this.uid,del)
+        }
     },
-    // watch: {
-    //     css:function(){
-    //         let css = this.css
-    //         let body = document.querySelector('#foliolist')
-    //         console.log("body: ",body)
-
-    //         if(this.css==1){
-    //             body.style.backgroundColor = 'white'
-    //             body.style.color = 'black'
-    //         }
-    //         else if(this.css==2){
-    //             body.style.backgroundColor = 'rgb(40,40,40)'
-    //             body.style.color = 'rgb(255, 255, 255)'
-    //         }
-    //         else if(this.css=3){
-    //             body.style.backgroundColor = '#30b7e8'
-    //             body.style.color = 'rgb(255, 255, 255)'
-    //         }
-    //     }
-    // }
 }
 </script>
 
@@ -364,7 +438,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
 }
 
-h2 {
+h1 {
   color: black;
 }
 
