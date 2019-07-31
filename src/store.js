@@ -29,6 +29,9 @@ export default new Vuex.Store({
     },
     setUserState(state, bool) {
       state.firebaseUser.inUser = bool
+    },
+    setUserId(state, id) {
+      state.firebaseUser.uid = id
     }
   },
   actions: {

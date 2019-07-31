@@ -1,11 +1,5 @@
 <template>
   <v-container id="sideCtn">
-    <!-- sidebar에서 제공되는 검색 기능 -->
-
-    <v-flex>
-      <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem"></v-text-field>
-    </v-flex>
-
     <!-- vuex에서 유저 이름을 가져와서 router로 연결 -->
     <!-- 로그인 상태확인 해서 보여줌 -->
     <div v-show="this.$store.state.firebaseUser.inUser">
@@ -31,15 +25,10 @@ export default {
   name: "sideBarItems",
   data() {
     return {
-      searchItem: null
-    };
+
+    }
   },
   methods: {
-    findItem: function() {
-      console.log(this.searchItem)
-      this.$router.push("/search/" + this.searchItem)
-      window.location.reload()
-    },
     logoutUser() {
       FirebaseServices.logoutUser()
     },

@@ -20,6 +20,7 @@
    </div>
     <newFooter></newFooter>
   </div>
+  
 </template>
 
 <script>
@@ -30,10 +31,9 @@ import Intro from '@/components/Intro.vue'
 import SearchItems from '@/components/SearchItems'
 import newFooter from '@/components/newFooter.vue'
 
+
 import Loading from 'vue-loading-overlay';
    // Import stylesheet
-import 'vue-loading-overlay/dist/vue-loading.css';
-
 export default {
   name: 'home',
   components: {
@@ -46,11 +46,13 @@ export default {
   },
   mounted(){
     this.doAjax();
+    
   },
   data() {
           return {
               isLoading: false,
-              fullPage: true
+              fullPage: true,
+              user: null
           }
       },
 
