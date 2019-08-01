@@ -268,7 +268,7 @@ export default {
             aboutMe: aboutMe,
             skills: skills,
             portfolios: portfolios,
-            created_at: firebase.firestore.FieldValue.serverTimestamp()
+            created_at: firebase.firestore.FieldValue.serverTimestamp(),
             layout: layout,
             banner: banner,
         }).then(console.log('done'))
