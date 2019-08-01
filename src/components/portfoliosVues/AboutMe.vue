@@ -42,74 +42,128 @@
         ></v-img>
       </div>
 
-
     </div>
-    <!-- sidebar items -->
-    <!-- 동작 -->
-    <!-- <v-radio-group v-model="radioGroup">
-      <v-radio
-        v-for="n in 2" :key="n"
-        :label="`layout ${n}`" :value="n"
-        @change="switchCss(n)"
-      ></v-radio>
-    </v-radio-group> -->
-    <v-navigation-drawer v-model="Aboutdrawer" fixed left dark>
-      <v-list>
-        <!-- layout select -->
-        <v-list-group
-          v-for="item in layoutItems" :key="item.title" v-model="item.active"
-          :prepend-icon="item.action" no-action>
-          <template v-slot:activator>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
+    <!-- sidebar -->
+    <v-navigation-drawer v-model="Aboutdrawer" fixed dark temporary >
+      <v-list class="pt-0" dense>
+        <v-expansion-panel>
 
-          <v-list-tile
-            v-for="subItem in item.items"
-            :key="subItem.title"
-            @click="switchCss(item, subItem.value)"
-          >
-            <v-list-tile-content>
-              <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
-            </v-list-tile-content>
-            
-            <v-list-tile-action v-show="subItem.selected">
-              <v-icon small color="green darken-2">fas fa-check</v-icon>
-            </v-list-tile-action>
+          <!-- layout selector -->
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>Layout</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div v-for="items in this.layoutItems">
+                  <div v-for="subItem in items.items">
+                    <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn>
+                  </div>
+                </div>
+                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <div v-for="items in this.themeItems">
+                    <div v-for="subItem in items.items">
+                      <v-btn flat @click="switchTheme()">{{ subItem.title }}</v-btn>
+                    </div>
+                  </div>
+                  <ColorPicker/>
+                </div>
+                <div style="text-align: center;">
+                  <v-btn small color="primary" @click="">Apply</v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
 
-          </v-list-tile>
-        </v-list-group>
+          <!-- font selector -->
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-font pr-3"></i>Font</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Size</p>
+                  <div class="px-1">
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                    <v-slider
+                      v-model="titleS" class="px-2"
+                      step="1" max="20" min="1"
+                      thumb-label ticks
+                    ></v-slider>
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Subtitle</p>
+                    <v-slider
+                      v-model="subtitleS" class="px-2"
+                      step="1" max="10" min="1"
+                      thumb-label ticks
+                    ></v-slider>
+                  </div>
+                </div>
+                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <div class="px-1">
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                      
+                  </div>
+                </div>
+                <div style="text-align: center;">
+                  <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
 
-        <!-- theme select -->
-        <v-list-group
-          v-for="item in themeItems" :key="item.title" v-model="item.active"
-          :prepend-icon="item.action" no-action>
-          <template v-slot:activator>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
+          <!-- animation selector -->
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>Animation</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div>
+                  <div>
+                    <button>애니메이션 1</button>
+                  </div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
 
-          <v-list-tile
-            v-for="subItem in item.items"
-            :key="subItem.title"
-            @click="switchTheme(subItem.title)"
-          >
-            <v-list-tile-content>
-              <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
-            </v-list-tile-content>
-            
-            <v-list-tile-action v-show="subItem.selected">
-              <v-icon small color="green darken-2">fas fa-check</v-icon>
-            </v-list-tile-action>
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Modal',true)">Modal</v-btn>
+                  <div v-if="ifPortfolioModal" class="isok"></div>
+                </div>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Grid',true)">Grid</v-btn>
+                  <div v-if="ifPortfolioGrid" class="isok"></div>
+                </div>
+                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <div v-for="items in this.PortfolioListColors">
+                    <div v-for="subItem in items.items" style="position: relative;">
+                      <v-btn flat @click="switchPortfolio('Color',subItem.value)">{{ subItem.title }}</v-btn>
+                      <div v-if="subItem.selected" class="isok"></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="text-align: center;">
+                  <v-btn small color="primary" @click="">Apply</v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
 
-          </v-list-tile>
-        </v-list-group>
+        </v-expansion-panel>
       </v-list>
     </v-navigation-drawer>
       
@@ -118,10 +172,14 @@
 
 <script>
 // theme 설정을 위해서 store에 저장
+import ColorPicker from './ColorPicker'
 import store from '../../store'
 
 export default {
   name: '',
+  components: {
+    ColorPicker
+  },
   data() {
     return {
       Aboutdrawer: false,
@@ -150,6 +208,30 @@ export default {
           ]
         },
       ],
+      fontItems: [
+        {
+          action: '',
+          title: 'font',
+          items: [
+            { title: 'Title', value: 10},
+            { title: 'Subtitle', value: 10}
+          ]
+        }
+      ],
+      ifPortfolioModal:true,
+      ifPortfolioGrid:false,
+      nowPortfolioColor:1,
+      PortfolioListColors: [
+        {
+          action: 'fas fa-palette',
+          title: 'Color',
+          items: [
+            { title: 'White', value: 1, selected: true},
+            { title: 'Black', value: 2, selected: false},
+            { title: 'Blue' , value: 3, selected: false},
+          ]
+        },
+      ],
       // firebase insert
       userAbout: {
         url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
@@ -161,12 +243,37 @@ export default {
           html: ['html5'],
           js: ['vanilla']
         }
-      }
+      },
+      titleS: null,
+      subtitleS: null
+    }
+  },
+  watch: {
+    titleS: function() {
+      document.getElementsByClassName('aboutMe_subTitle').style.fontSize = this.titleS + 'rem';
+    },
+    subtitleS: function() {
+      document.getElementById('portSubtitle').style.fontSize = this.subtitleS + 'rem';
     }
   },
   methods: {
     switchTheme(theme) {
+      console.log(theme)
       store.commit('changeTheme', theme)
+    },
+    switchPortfolio(theme,out) {
+        if(theme == 'Modal'){
+            this.ifPortfolioModal = !this.ifPortfolioModal
+        }
+        else if(theme == 'Grid'){
+            this.ifPortfolioGrid = !this.ifPortfolioGrid
+        }
+        else if(theme == 'Color'){
+            let idx = this.nowPortfolioColor-1
+            this.PortfolioListColors[0].items[idx].selected = false
+            this.PortfolioListColors[0].items[out-1].selected = true
+            this.nowPortfolioColor = out
+        }
     },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
@@ -203,5 +310,17 @@ export default {
   display: fixed;
   left: 650px;
   top: 500px;
+}
+
+.isok{
+  position:absolute;
+  top:50%;
+  right:20%;
+  transform: translateY(-50%);
+  margin:auto 20px;
+  background-color: green;
+  border-radius: 10px;
+  height:20px;
+  width:20px;
 }
 </style>
