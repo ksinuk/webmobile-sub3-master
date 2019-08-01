@@ -13,15 +13,11 @@
                 <p class="item-2">You take the blue pill - the story ends, you wake up in your bed and believe whatever you want to believe.</p>
                 <p class="item-3">You take the red pill - you stay in Wonderland and I show you how deep the rabbit-hole goes.</p>
             </div>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
+            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;">
+                <i class="fas fa-palette pr-2"></i>EDIT
+            </v-btn>
         </v-layout>
-        <v-navigation-drawer
-            v-model="drawer"
-            :mini-variant="mini"
-            absolute
-            dark
-            temporary
-        >
+        <v-navigation-drawer v-model="drawer" :mini-variant="mini" absolute dark temporary>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>
@@ -30,15 +26,8 @@
                         </template>
                         <v-card>
                             <v-card-text>
-                                <v-select
-                                    v-model="select"
-                                    :items="items"
-                                    item-text="theme"
-                                    item-value="img"
-                                    label="Sample"
-                                    color="white"
-                                    return-object
-                                ></v-select>
+                                <v-select v-model="select" :items="items" item-text="theme" item-value="img" label="Sample" color="white" return-object>
+                                </v-select>
                                 <div class="filebox">
                                     <input class="upload-name" v-model="fileName" placeholder="선택된 파일 없음">
                                     <label style="background-color: white; color: #424242; padding-left: 1rem; padding: 0.3rem;" for="input_file">Submit</label>

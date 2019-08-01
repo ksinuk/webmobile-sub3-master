@@ -376,9 +376,6 @@ export default {
 
 .l-section {
     background: white;
-}
-
-.l-section {
     min-height: 100vh;
     padding: 15vh 100px;
     position: relative;
