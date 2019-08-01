@@ -262,20 +262,17 @@ export default {
       store.commit('changeTheme', theme)
     },
     switchPortfolio(theme,out) {
-      console.log("switchPortfolio: ",theme,',',out)
         if(theme == 'Modal'){
             this.ifPortfolioModal = !this.ifPortfolioModal
         }
         else if(theme == 'Grid'){
-           this.ifPortfolioGrid = !this.ifPortfolioGrid
+            this.ifPortfolioGrid = !this.ifPortfolioGrid
         }
         else if(theme == 'Color'){
-           let idx = this.nowPortfolioColor-1
-           this.PortfolioListColors[0].items[idx].selected = false
-           this.PortfolioListColors[0].items[out-1].selected = true
-           this.nowPortfolioColor = out
-           console.log("idx: ",this.PortfolioListColors[0].items[idx])
-           console.log("out: ",this.PortfolioListColors[0].items[out-1])
+            let idx = this.nowPortfolioColor-1
+            this.PortfolioListColors[0].items[idx].selected = false
+            this.PortfolioListColors[0].items[out-1].selected = true
+            this.nowPortfolioColor = out
         }
     },
     // CSS 변환시 배열 교체용
