@@ -2,21 +2,29 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import firebase from 'firebase'
-
+import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import Portfolio from './views/Portfolio.vue'
+import Portfolio2 from './views/Portfolio2.vue'
 
 import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
 import WritePort from './views/WritePort.vue'
 
+import AdminUser from './components/AdminVues/AdminUser.vue'
+import AdminDb from './components/AdminVues/AdminDb.vue'
+import AdminStorage from './components/AdminVues/AdminStorage.vue'
+
+import PortfolioPage from './views/PortfolioPage.vue'
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
 // 포트폴리오 입력 링크
 import PortfolioWrite from './views/PortfolioWrite.vue'
 
+// portfolio3 링크
+import Portfolio3 from './views/Portfolio3.vue'
 
 Vue.use(Router)
 
@@ -41,6 +49,23 @@ export default new Router({
         },
         {
             path: '/portfolio',
+            name: 'portfolio',
+            // route level code-splitting
+            // this generates a separate chunk (about.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: Portfolio
+        },
+
+        {
+            path: '/portfolio2',
+            name: 'portfolio2',
+            // route level code-splitting
+            // this generates a separate chunk (about.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: Portfolio2
+        },
+        {
+            path: '/portfolio/:uid',
             name: 'portfolio',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
@@ -91,6 +116,39 @@ export default new Router({
             path: '/write_portfolio',
             name: 'write_portfolio',
             component: PortfolioWrite
+        },
+        {
+            path: '/portfolio3',
+            name: 'portfolio3',
+            component: Portfolio3
+        },
+        {
+            path: '/portfoliopage',
+            name: 'portfoliopage',
+            component: PortfolioPage
+        },
+        {
+            path: '/admin',
+            name: 'adminpage',
+            component: AdminPage,
+            children: [
+                {
+                  path: 'user',
+                  name: 'adminuser',
+                  component: AdminUser
+                },
+                {
+                  path: 'data',
+                  name: 'admindb',
+                  component: AdminDb
+                },
+                {
+                    path: 'storage',
+                    name: 'adminstorage',
+                    component: AdminStorage
+                },
+
+            ]
         }
     ]
 })

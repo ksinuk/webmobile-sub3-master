@@ -1,0 +1,47 @@
+.aboutMeBody {
+  display: block;
+  height: 500px;
+  color: black;
+}
+.aboutContainer {
+  position: relative;
+}
+.aboutMe_about {
+  // background-color:  #1895c5;
+  text-align: center;
+}
+.aboutMe_skills {
+  // background: #1ca8dd;
+  text-align: center;
+}
+.aboutMe_title {
+  position: absolute;
+  top: 170px;
+  left: 65%;
+  color: #aaa;
+}
+.title_line {
+  margin: auto;
+  content: '';
+  width: 1px;
+  height: 5.5em;
+  background-color: #67ceeb;
+  transition: background-color 2s;
+}
+.aboutMe_subTitle {
+  color: #8cddeb;
+  display: block;
+  font-size: 64px;
+  position: relative;
+}
+.aboutMe_images {
+  .title_line, .aboutMe_title, .aboutMe_subTitle {
+    display: none;
+  }
+  .aboutMe_image {
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    left: 425px;
+  }
+}

@@ -17,7 +17,7 @@
                             <strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">&nbsp{{ports.ie_support}}</span>
                         </li>
                     </ul>
-                    <div id="work1Description" v-html="ports.content">    
+                    <div id="work1Description" class="vhtml" v-html="ports.content">    
                     </div>
                     <div class="ui-group">
                         <a role="button" class="ui-button" v-bind:href="ports.demo_url" target="_blank">Demo</a>
@@ -38,21 +38,21 @@
                             <tr>
                                 <td data-th="Category"><span class="categ html">HTML</span></td>
                                 <td data-th="Source"><a :href="html.url" target="_blank">{{html.file}}</a></td>
-                                <td data-th="Related Keywords" v-html="html.keyword"></td>
+                                <td data-th="Related Keywords" class="vhtml" v-html="html.keyword"></td>
                             </tr>
                         </template>
                         <template v-for="css in ports.category_css">
                             <tr>
                                 <td data-th="Category"><span class="categ css">CSS</span></td>
                                 <td data-th="Source"><a :href="css.url" target="_blank">{{css.file}}</a></td>
-                                <td data-th="Related Keywords" v-html="css.keyword"></td>
+                                <td data-th="Related Keywords" class="vhtml" v-html="css.keyword"></td>
                             </tr>
                         </template>
                         <template v-for="js in ports.category_js">
                             <tr>
                                 <td data-th="Category"><span class="categ js">JS</span></td>
                                 <td data-th="Source"><a :href="js.url" target="_blank">{{js.file}}</a></td>
-                                <td data-th="Related Keywords" v-html="js.keyword"></td>
+                                <td data-th="Related Keywords" class="vhtml" v-html="js.keyword"></td>
                             </tr>
                         </template>
 
@@ -78,15 +78,8 @@
 }
 </style>
 
-
-
 <script>
 import FirebaseService from '@/services/FirebaseServices'
-// import Css1 from "./PortfolioListCss1.css"
-// import Css2 from "./PortfolioListCss2.css"
-// import Css3 from "./PortfolioListCss3.css"
-
-
 
 export default {
     name :'PortfolioList',
@@ -121,13 +114,8 @@ export default {
             this.isok = true
         }
     },
-    beforeCreate(){
-
-
-    },
     mounted(){
-       
-
+        this.linkcss()
     },
     methods:{
         open:function(point){
@@ -136,6 +124,22 @@ export default {
                 this.out = !this.out
             }
         },
+        linkcss:function(){
+            let vhtmls = document.querySelectorAll('.vhtml')
+            for(let idx=0;idx<vhtmls.length;idx++){
+                let vhtml = vhtmls[idx]
+                let alist = vhtml.querySelectorAll('a')
+                for(let i=0;i<alist.length;i++){
+                    let aa =alist[i]
+                    if(this.cssmod == 1 || this.cssmod == 2){
+                        aa.style.color = '#30b7e8'
+                    }
+                    else if(this.cssmod == 3){
+                        aa.style.color = 'rgb(155, 34, 34)'
+                    }
+                }   
+            }
+        }
     },
     watch:{
         cssmod:function(){
@@ -158,8 +162,7 @@ export default {
             }
 
             this.cssArr[this.cssmod-1] = true
-            console.log("cssArr: ",this.cssArr)
-            console.log("cssmod: ",this.cssmod)
+            this.linkcss()
         },
     },
 }
