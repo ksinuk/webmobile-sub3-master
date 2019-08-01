@@ -218,15 +218,16 @@ async currentUser() {
   },
   // 파이어베이스에 포트폴리오를 입력하는 함수
   // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-  postPortfolios(user, title, subtitle, banner, aboutMe, skills, portfolios) {
+  postPortfolios(user, aboutMe, layout, banner, portfolios, skills, subtitle, title) {
     return db.collection(MYPORT).doc(user).set({
       uid: user,
-      title: title,
-      subtitle: subtitle,
-      bannerImg: banner,
       aboutMe: aboutMe,
-			skills: skills,
+      layout: layout,
+      banner: banner,
       portfolios: portfolios,
+      skills: skills,
+      subtitle: subtitle,
+      title: title,
 			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		}).then(console.log('done'))
   },
@@ -249,7 +250,6 @@ async currentUser() {
         }
       }
     })
-    console.log(detailPort);
     return detailPort;
   },
 
