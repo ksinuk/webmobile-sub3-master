@@ -108,6 +108,11 @@ section {
 
 
 /* table*/
+a {
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /* categ */
 .categ.html {
@@ -227,7 +232,7 @@ table {
     
     border-collapse: collapse;
     border-spacing: 0;
-    // margin: 1em;
+    border: 1px solid white;
     width: 100%;
 }
 

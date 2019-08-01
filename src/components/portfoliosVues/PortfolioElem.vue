@@ -1,5 +1,6 @@
 <template lang="html">
-<div :class="{cssBase:true, cssWhite:cssArr[0], cssBlack:cssArr[1], cssBlue:cssArr[2], cssModal:ismodal, cssGrid:isgrid}">
+<div :class="{cssBase:true, cssColor:true, cssModal:ismodal, cssGrid:isgrid}">
+<div :themeColor="cssColor">
     <article role="article" id="work1" class="is-init is-animated" data-animation="fade-left" v-if="isok">
         <div class="gallery-image" @click="open('open')">
             <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
@@ -66,11 +67,12 @@
         <hr>
     </article>
 </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
 .cssBase{
-    @import "./PortfolioElemBase.scss";
+    @import "./scss/PortfolioElemBase.scss";
 }
 .cssGrid{
     .gallery-item{
@@ -83,16 +85,10 @@
     }
 }
 .cssModal{
-    @import "./PortfolioElemModal.scss";
+    @import "./scss/PortfolioElemModal.scss";
 }
-.cssWhite{
-    @import "./PortfolioElemWhite.scss";
-}
-.cssBlack{
-    @import "./PortfolioElemBlack.scss";
-}
-.cssBlue{
-    @import "./PortfolioElemBlue.scss";
+.cssColor{
+    @import "./scss/PortfolioElemColor.scss";
 }
 </style>
 
@@ -111,7 +107,7 @@ export default {
             cssClass:'',
             cssStyle:'',
             cssAddr:'',
-            cssArr:[false,false,false]
+            cssColor:'',
         }
     },
     props:{
@@ -122,6 +118,7 @@ export default {
     components:{
     },
     created(){
+        console.log("start css : ",this.cssmod)
         this.changeCss()
     },
     mounted(){
@@ -141,10 +138,10 @@ export default {
                 let alist = vhtml.querySelectorAll('a')
                 for(let i=0;i<alist.length;i++){
                     let aa =alist[i]
-                    if(this.cssmod == 1 || this.cssmod == 2){
+                    if(this.cssmod.color == 1 || this.cssmod.color == 2){
                         aa.style.color = '#30b7e8'
                     }
-                    else if(this.cssmod == 3){
+                    else if(this.cssmod.color == 3){
                         aa.style.color = 'rgb(155, 34, 34)'
                     }
                 }   
@@ -153,14 +150,24 @@ export default {
         changeCss:function(){
             this.out = false
             this.isok = false
-            for(let i=0;i<3;i++){
-                this.cssArr[i] = false
-            }
+
             if(1<=this.cssmod.color && this.cssmod.color<=3){
-                this.cssArr[this.cssmod.color-1] = true
                 this.ismodal = this.cssmod.modal ? true:false
                 this.isgrid  = this.cssmod.grid  ? true:false
                 this.isok = true
+            }
+            switch(this.cssmod.color){
+                case 1:
+                    this.cssColor = 'White'
+                    break
+                case 2:
+                    this.cssColor = 'Black'
+                    break
+                case 3:
+                    this.cssColor = 'Blue'
+                    break
+                default:
+                    this.cssColor = 'default'
             }
         }
     },

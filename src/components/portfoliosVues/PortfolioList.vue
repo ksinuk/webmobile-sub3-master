@@ -298,7 +298,7 @@ export default {
                 else{
                     FirebaseService.setUserData(uid,th.css,th.visitNum)
                 }
-                
+                th.cssChange = th.cssChange+1
             })
 
             firebase.auth().onAuthStateChanged(function(user){
@@ -331,6 +331,7 @@ export default {
                         else{
                             th.visitNum = 0
                         }
+                        th.cssChange = th.cssChange+1
                     })
                     .catch(function(){
                     })

@@ -15,17 +15,26 @@
 /* table*/
 
 a {
-    background-color: transparent;
     color: rgb(155, 34, 34);
-    text-decoration: none;
-    cursor: pointer;
 }
 
 /* categ */
+.categ.html {
+    background: #8dca35;
+    color: white;
+}
+
 .categ.css {
     background: white;
     color: #00bfdd;
 }
+
+.categ.js {
+    background: #ff702a;
+    color: white;
+}
+
+
 
 
 /*ui button */

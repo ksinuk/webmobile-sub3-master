@@ -37,9 +37,7 @@
             <span class="aboutMe_subTitle">profile</span>
           </h4>
         </v-container>
-        <v-img
-          class="aboutMe_image"
-          :src="userAbout.url"
+        <v-img class="aboutMe_image" :src="userAbout.url"
           lazy-src="https://static.wixstatic.com/media/2a925f_a902eb9026754fc4911fb781ac5f885f~mv2.gif"
         ></v-img>
       </div>

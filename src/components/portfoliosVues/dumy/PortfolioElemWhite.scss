@@ -8,25 +8,8 @@
 
 
 /* table*/
-.vhtml >>> a{
-    background-color: transparent;
-    color: #30b7e8;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 a{
-    background-color: transparent;
     color: #30b7e8;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-td >>> a{
-    background-color: transparent;
-    color: #30b7e8;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 /* categ */
@@ -53,7 +36,7 @@ td >>> a{
 }
 
 table {
-    border: 0;
+    border: 1px solid white;
 }
 
 table thead th {
