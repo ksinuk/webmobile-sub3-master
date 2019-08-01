@@ -44,10 +44,7 @@
 
     </div>
     <!-- sidebar -->
-    <v-navigation-drawer
-      v-model="Aboutdrawer"
-      fixed dark temporary
-        >
+    <v-navigation-drawer v-model="Aboutdrawer" fixed dark temporary >
       <v-list class="pt-0" dense>
         <v-expansion-panel>
 
@@ -135,6 +132,37 @@
             </v-card>
           </v-expansion-panel-content>
 
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Modal',true)">Modal</v-btn>
+                  <div v-if="ifPortfolioModal" class="isok"></div>
+                </div>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Grid',true)">Grid</v-btn>
+                  <div v-if="ifPortfolioGrid" class="isok"></div>
+                </div>
+                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <div v-for="items in this.PortfolioListColors">
+                    <div v-for="subItem in items.items" style="position: relative;">
+                      <v-btn flat @click="switchPortfolio('Color',subItem.value)">{{ subItem.title }}</v-btn>
+                      <div v-if="subItem.selected" class="isok"></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="text-align: center;">
+                  <v-btn small color="primary" @click="">Apply</v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+
         </v-expansion-panel>
       </v-list>
     </v-navigation-drawer>
@@ -190,6 +218,20 @@ export default {
           ]
         }
       ],
+      ifPortfolioModal:true,
+      ifPortfolioGrid:false,
+      nowPortfolioColor:1,
+      PortfolioListColors: [
+        {
+          action: 'fas fa-palette',
+          title: 'Color',
+          items: [
+            { title: 'White', value: 1, selected: true},
+            { title: 'Black', value: 2, selected: false},
+            { title: 'Blue' , value: 3, selected: false},
+          ]
+        },
+      ],
       // firebase insert
       userAbout: {
         url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
@@ -218,6 +260,23 @@ export default {
     switchTheme(theme) {
       console.log(theme)
       store.commit('changeTheme', theme)
+    },
+    switchPortfolio(theme,out) {
+      console.log("switchPortfolio: ",theme,',',out)
+        if(theme == 'Modal'){
+            this.ifPortfolioModal = !this.ifPortfolioModal
+        }
+        else if(theme == 'Grid'){
+           this.ifPortfolioGrid = !this.ifPortfolioGrid
+        }
+        else if(theme == 'Color'){
+           let idx = this.nowPortfolioColor-1
+           this.PortfolioListColors[0].items[idx].selected = false
+           this.PortfolioListColors[0].items[out-1].selected = true
+           this.nowPortfolioColor = out
+           console.log("idx: ",this.PortfolioListColors[0].items[idx])
+           console.log("out: ",this.PortfolioListColors[0].items[out-1])
+        }
     },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
@@ -254,5 +313,17 @@ export default {
   display: fixed;
   left: 650px;
   top: 500px;
+}
+
+.isok{
+  position:absolute;
+  top:50%;
+  right:20%;
+  transform: translateY(-50%);
+  margin:auto 20px;
+  background-color: green;
+  border-radius: 10px;
+  height:20px;
+  width:20px;
 }
 </style>

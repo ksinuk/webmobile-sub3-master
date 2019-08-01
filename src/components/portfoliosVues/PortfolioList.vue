@@ -377,7 +377,7 @@ export default {
     z-index:20;
     position:fixed;
     top:10%;
-    left:10px;
+    right:10px;
     padding:10px;
     border:3px solid black;
     font-family: monospace;
