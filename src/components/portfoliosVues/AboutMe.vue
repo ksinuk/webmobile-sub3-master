@@ -48,7 +48,7 @@
     <!-- sidebar -->
     <v-navigation-drawer
       v-model="Aboutdrawer"
-      absolute dark temporary
+      fixed dark temporary
         >
       <v-list class="pt-0" dense>
         <v-expansion-panel>
@@ -62,7 +62,7 @@
               <v-card-text>
                 <div v-for="items in this.layoutItems">
                   <div v-for="subItem in items.items">
-                    <v-btn flat @click="">{{ subItem.title }}</v-btn>
+                    <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn>
                   </div>
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
@@ -70,7 +70,7 @@
                   <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
                   <div v-for="items in this.themeItems">
                     <div v-for="subItem in items.items">
-                      <v-btn flat @click="">{{ subItem.title }}</v-btn>
+                      <v-btn flat @click="switchTheme()">{{ subItem.title }}</v-btn>
                     </div>
                   </div>
                   <ColorPicker/>
@@ -218,6 +218,7 @@ export default {
   },
   methods: {
     switchTheme(theme) {
+      console.log(theme)
       store.commit('changeTheme', theme)
     },
     // CSS 변환시 배열 교체용
