@@ -174,14 +174,12 @@ export default {
         return new Promise(function(resolve,reject){
             db.collection(PORTFOLIO).where('uid', '==', uid).get()
             .then(function(snapshot) {
-                console.log("snapshot: ",snapshot)
                 if (snapshot.empty) {
                     resolve(null)
                 }
                 let out = new Array()
                 snapshot.forEach(doc => {
                     out.push(doc.data())
-                    console.log(doc.id, '=>', doc.data());
                 })
                 resolve(out)
             })
