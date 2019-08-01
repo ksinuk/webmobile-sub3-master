@@ -234,20 +234,6 @@ export default {
         })
         return detailPort;
     },
-    // 파이어베이스에 포트폴리오를 입력하는 함수
-    // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-    postPortfolios(user, title, subtitle, banner, aboutMe, skills, portfolios) {
-        return db.collection(MYPORT).doc(user).set({
-            uid: user,
-            title: title,
-            subtitle: subtitle,
-            bannerImg: banner,
-            aboutMe: aboutMe,
-            skills: skills,
-            portfolios: portfolios,
-             created_at: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(console.log('done'))
-    },
 
     // 나의 포트폴리오 가져오기
     async getMyPort(user) {
@@ -272,6 +258,22 @@ export default {
         return detailPort;
     },
 
+    // 파이어베이스에 포트폴리오를 입력하는 함수
+    // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
+    postPortfolios(user, aboutMe, layout, banner, portfolios, skills, subtitle, title) {
+        return db.collection(MYPORT).doc(user).set({
+            uid: user,
+            title: title,
+            subtitle: subtitle,
+            aboutMe: aboutMe,
+            skills: skills,
+            portfolios: portfolios,
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+            layout: layout,
+            banner: banner,
+        }).then(console.log('done'))
+    },
+
     getIntroduce(){
         const intro = db.collection('introduce')
         return intro
@@ -289,11 +291,11 @@ export default {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 console.log('user is signed in')
-                return true
+                return true;
             } 
             else {
                 console.log('No user is signed in')
-                return false
+                return false;
             }
         })
     },
@@ -350,7 +352,7 @@ export default {
             displayName: display_name,
             photoURL: photo_url
         })
-        console.log(user)
+        console.log(user) 
     },
     // store 에 있는 유저정보 업데이트
     updatedStoreUser() {
@@ -465,45 +467,48 @@ export default {
         })
         .then('done')
     },
+
     updateUser() {
         // 이미지 올리면 유저 변경
     },
-  // 이미지 업로더
+    // 이미지 업로더
     uploadfile(user, loadFile) {
         let filename = loadFile.name
 
         let storageRef = firebase.storage().ref('/' + user + '/' + filename)
         let uploadTask = storageRef.put(loadFile)
 
-        uploadTask.on('state_changed', function(snapshot) {
-            // progressbar
-            // 진행정도를 보여줌
-            let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done')
-            switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED:
-                console.log('Upload is paused')
-                break
-                case firebase.storage.TaskState.RUNNING: 
-                console.log('Upload is running')
-                break
+        uploadTask.on('state_changed', 
+            function(snapshot) {
+                // progressbar
+                // 진행정도를 보여줌
+                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done')
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                    console.log('Upload is paused')
+                    break
+                    case firebase.storage.TaskState.RUNNING: 
+                    console.log('Upload is running')
+                    break
+                }
+            }, 
+            function(error) {
+                console.log(error)
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                    break
+                    case 'storage/canceled':
+                    break
+                    case 'storage/unknown':
+                    break
+                }
+            }, 
+            function() {
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    console.log('File available at', downloadURL)
+                })
             }
-        }, 
-        function(error) {
-            console.log(error)
-            switch (error.code) {
-                case 'storage/unauthorized':
-                break
-                case 'storage/canceled':
-                break
-                case 'storage/unknown':
-                break
-            }
-        }, 
-        function() {
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL)
-            })
-        })
+        )
     }
 }

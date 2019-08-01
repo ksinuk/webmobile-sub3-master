@@ -1,58 +1,121 @@
 <template>
     <div class="header">
-        <v-layout v-if="state == 'header1'" row justify-center align-center style="min-height: 100vh; position: relative; background-image: linear-gradient(-39deg, #ff6b6b 0%, #2b90d9 100%)">
-            <v-flex>
-                <h1 style="color: black; font-size: 3rem; font-weight: 300; letter-spacing: 0.08rem;">Hi! I'm Yeojin :)</h1>
-                <p style="color: black;">I'm web developer based on Daejeon.</p>
-            </v-flex>
+        <v-layout v-if="layout === null" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
         </v-layout>
-        <v-layout v-if="state == 'header2'" class="visual topArea">
-            <div class="visual_elem visual_fog02" style="display:none"></div>
-            <div class="inner">
-                <p class="item-1">This is your last chance. After this, there is no turning back.</p>
-                <p class="item-2">You take the blue pill - the story ends, you wake up in your bed and believe whatever you want to believe.</p>
-                <p class="item-3">You take the red pill - you stay in Wonderland and I show you how deep the rabbit-hole goes.</p>
-            </div>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;">
-                <i class="fas fa-palette pr-2"></i>EDIT
-            </v-btn>
+        <v-layout v-else-if="layout === 'template1'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+            <v-flex>
+                <h1 id="portTitle" style="color: black; font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" style="color: black;">{{portfolio.subtitle.content}}</p>
+            </v-flex>
+            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
+        </v-layout>
+        <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+            <v-flex>
+                <h1 id="portTitle" style="color: white; font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" style="color: white;">{{portfolio.subtitle.content}}</p>
+            </v-flex>
+            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <v-navigation-drawer v-model="drawer" :mini-variant="mini" absolute dark temporary>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div>background</div>
+                            <div><i class="fas fa-image pr-3"></i>Background</div>
                         </template>
                         <v-card>
                             <v-card-text>
                                 <v-select v-model="select" :items="items" item-text="theme" item-value="img" label="Sample" color="white" return-object>
                                 </v-select>
                                 <div class="filebox">
-                                    <input class="upload-name" v-model="fileName" placeholder="선택된 파일 없음">
-                                    <label style="background-color: white; color: #424242; padding-left: 1rem; padding: 0.3rem;" for="input_file">Submit</label>
+                                    <v-text-field v-model="fileName" readonly color="white" label="User Image" placeholder="선택된 파일 없음"></v-text-field>
+                                    <label for="input_file">파일찾기</label>
                                     <input type="file" id="input_file" class="upload-hidden" @change="userImage">
                                 </div>
                                 <div class="py-3">
                                     <img :src="this.select.img" height="170rem;" width="265rem;"/>
                                 </div>
+                                <div style="text-align: center;">
+                                    <v-btn small color="primary" @click="saveImg()">Apply</v-btn>
+                                    <!--<v-btn small color="error">Init</v-btn>-->
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-indent pr-3"></i>Layout</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-radio-group v-model="tmplayout">
+                                    <v-radio label="Option 1" value="template1" color="primary"></v-radio>
+                                    <img src="../../assets/array1.jpg" style="padding-bottom: 1rem;" height="170rem;" width="265rem;"/>
+                                    <v-radio label="Option 2" value="template2" color="primary"></v-radio>
+                                    <!-- 이미지 넣기 -->
+                                </v-radio-group>
+                                <div style="text-align: center;">
+                                    <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-font pr-3"></i>Font</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <div class="px-1">
+                                    <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Size</p>
+                                    <div class="px-1">
+                                        <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                                        <v-slider
+                                            v-model="titleS"
+                                            step="1"
+                                            max="20"
+                                            min="1"
+                                            thumb-label
+                                            ticks
+                                            class="px-2"
+                                        ></v-slider>
+                                        <p style="color: lightgrey; letter-spacing: 0.05rem;">Subtitle</p>
+                                        <v-slider
+                                            v-model="subtitleS"
+                                            step="1"
+                                            max="10"
+                                            min="1"
+                                            thumb-label
+                                            ticks
+                                            class="px-2"
+                                        ></v-slider>
+                                    </div>
+                                </div>
+                                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                                <div class="px-1">
+                                    <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                                    <div class="px-1">
+                                        <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                                        
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-play-circle pr-3"></i>Animation</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <p></p>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
-                <!--<v-list-tile
-                v-for="item in items"
-                :key="item.title"
-                @click=""
-                >
-                <v-list-tile-action>
-                    <v-icon>{{ item.icon }}</v-icon>
-                </v-list-tile-action>
-
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                </v-list-tile-content>
-                </v-list-tile>-->
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -67,21 +130,53 @@ export default {
     name: 'header',
     data() {
         return {
-            state: 'header2',
+            user: null,
+            portfolio: [],
             drawer: null,
             mini: false,
             select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
+            fileName: null,
             items: [
                 { theme: 'Dolphin' , img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
                 { theme: 'Mountain', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample5.jpg?alt=media&token=4d683a8c-6543-4116-93eb-fa290493932f' },
                 { theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3' }
-            ]
+            ],
+            layout: null,
+            tmplayout: null,
+            titleS: null,
+            subtitleS: null
         }
     },
     created() {
-        // this.getBanner();
+        this.getPortfolio();
+    },
+    watch: {
+        titleS: function() {
+            document.getElementById('portTitle').style.fontSize = this.titleS + 'rem';
+        },
+        subtitleS: function() {
+            document.getElementById('portSubtitle').style.fontSize = this.subtitleS + 'rem';
+        }
     },
     methods: {
+        getPortfolio() {
+            let __this = this;
+            const tmp = firebase.auth().onAuthStateChanged(function(user) {
+                __this.user = user.uid;
+                FirebaseServices.getMyPort(user.uid).then(function(res) {
+                    __this.portfolio = res;
+                    __this.select = __this.portfolio.banner;
+                    __this.layout = __this.portfolio.layout;
+                    __this.tmplayout = __this.layout;
+                    __this.titleS = __this.portfolio.title.size;
+                    __this.subtitleS = __this.portfolio.subtitle.size;
+                    console.log(__this.portfolio);
+                    document.getElementById('banner').style.backgroundImage = "url('" + __this.select.img + "')";
+                    document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
+                    document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
+                })
+            })
+        },
         getBanner: function() {
             var storage = firebase.storage();
             var storageRef = storage.ref();
@@ -94,13 +189,11 @@ export default {
                 xhr.open('GET', url)
                 xhr.send();
                 this.sample = url;
-                console.log(this.sample)
             }).catch(function(error) {
                 console.log(error);
             })
         },
         userImage: function (file) {
-            this.isDragging1 = false
             let loadFile = file.target.files || file.dataTransfer.files
 
             if (loadFile.length == 0) {
@@ -109,25 +202,39 @@ export default {
             this.addViewImage(loadFile)
         },
         addViewImage: function(files) {
-        let _this = this
-
-        for (let i=0; i < files.length; i++) {
-            let file = files[i]
-            let reader = new FileReader()
-            if (file.type.match(/image.*/)) {
-            reader.onload = function(e) {
-                for (let j=0; j < files.length; j++) {
+            let _this = this;
+        
+            for (let i=0; i < files.length; i++) {
+                let file = files[i]
+                _this.fileName = file.name;
+                let reader = new FileReader()
+                if (file.type.match(/image.*/)) {
+                reader.onload = function(e) {
+                    for (let j=0; j < files.length; j++) {
+                    }
+                    console.log(e.target.result);
+                    _this.select.img = e.target.result;
                 }
-                _this.dumpList.push(e.target.result)
+                reader.readAsDataURL(file)
+                _this.bannerImage.push(file.name)
+                _this.imageList.push(file)
+                } else {
+                alert('이미지 파일만 올려주세요.')
+                }
             }
-            reader.readAsDataURL(file)
-            console.log(file)
-            _this.bannerImage.push(file.name)
-            _this.imageList.push(file)
-            } else {
-            alert('이미지 파일만 올려주세요.')
-            }
-        }
+        },
+        async saveImg() {
+            this.portfolio.banner = this.select;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+            document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
+        },
+        async saveLayout() {
+            this.layout = this.tmplayout;
+            this.portfolio.layout = this.layout;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+        },
+        async saveSize() {
+            
         }
     }
 }
@@ -163,9 +270,9 @@ export default {
     animation-iteration-count: infinite;
 }
 
-.item-1{
-    animation-name: anim-1;
-}
+    /*.item-1{
+        animation-name: anim-1;
+    }
 
 .item-2{
     animation-name: anim-2;
@@ -191,16 +298,16 @@ export default {
     0%, 66.66% { left: -100%; opacity: 0; }
     74.96%, 91.62% { left: 25%; opacity: 1; }
     100% { left: 110%; opacity: 0; }
-}
-
-.filebox input[type="file"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
+    }
+    */
+    .filebox input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
 </style>
