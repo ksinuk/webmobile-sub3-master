@@ -2,21 +2,21 @@
     <div class="header">
         <v-layout v-if="layout === null" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="display: hidden; color: white; font-weight: 300; letter-spacing: 0.08rem;"></h1>
-                <p id="portSubtitle" style="display: hidden; color: white;"></p>
+                <h1 id="portTitle" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
+                <p id="portSubtitle" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
         <v-layout v-else-if="layout === 'template1'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="color: black; font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="color: black;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
             </v-flex>
             <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="color: white; font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="color: white;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
             </v-flex>
             <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
@@ -365,15 +365,14 @@ export default {
                     __this.tRed = __this.portfolio.title.color.red;
                     __this.tBlue = __this.portfolio.title.color.blue;
                     __this.tGreen = __this.portfolio.title.color.green;
-                    __this.sRed = __this.portfolio.title.color.red;
-                    __this.sBlue = __this.portfolio.title.color.blue;
-                    __this.sGreen = __this.portfolio.title.color.green;
+                    __this.sRed = __this.portfolio.subtitle.color.red;
+                    __this.sBlue = __this.portfolio.subtitle.color.blue;
+                    __this.sGreen = __this.portfolio.subtitle.color.green;
                     document.getElementById('banner').style.backgroundImage = "url('" + __this.select.img + "')";
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
                     document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
                     document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
-                    console.log(document.getElementById('portTitle').style.color);
                 })
             })
         },
@@ -436,8 +435,12 @@ export default {
         async saveFont() {
             this.portfolio.title.size = this.titleS;
             this.portfolio.subtitle.size = this.subtitleS;
-            this.portfolio.title.color = document.getElementById('portTitle').style.color;
-            this.portfolio.subtitle.color = document.getElementById('portSubtitle').style.color;
+            this.portfolio.title.color.red = this.tRed;
+            this.portfolio.title.color.blue = this.tBlue;
+            this.portfolio.title.color.green = this.tGreen;
+            this.portfolio.subtitle.color.red = this.sRed;
+            this.portfolio.subtitle.color.blue = this.sBlue;
+            this.portfolio.subtitle.color.green = this.sGreen;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
         }
     }
