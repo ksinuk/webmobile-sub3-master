@@ -29,7 +29,6 @@ import RankList from '@/components/RankList.vue'
 import MainBanner from '@/components/MainBanner.vue'
 import Intro from '@/components/Intro.vue'
 import SearchItems from '@/components/SearchItems'
-import Footer from '@/components/Footer.vue'
 import newFooter from '@/components/newFooter.vue'
 
 
