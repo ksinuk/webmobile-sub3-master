@@ -16,6 +16,7 @@ export default new Vuex.Store({
       email: null,
       photoURL: null,
     },
+    theme: 'default',
     imgSrc: {
       noImgSrc: 'http://dy.gnch.or.kr/img/no-image.jpg',
     }
@@ -23,6 +24,9 @@ export default new Vuex.Store({
   mutations: {
     changeItem : function(state, payload){
       state.searchItem=payload;
+    },
+    changeTheme(state, color) {
+      state.theme = color
     },
     setUserName(state, rename) {
       state.firebaseUser.name = rename
