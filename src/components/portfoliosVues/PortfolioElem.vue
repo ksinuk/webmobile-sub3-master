@@ -1,5 +1,5 @@
 <template lang="html">
-<div :class="{css1:cssArr[0],css2:cssArr[1],css3:cssArr[2]}">
+<div :class="{cssBase:true, cssWhite:cssArr[0], cssBlack:cssArr[1], cssBlue:cssArr[2], cssModal:ismodal, cssGrid:isgrid}">
     <article role="article" id="work1" class="is-init is-animated" data-animation="fade-left" v-if="isok">
         <div class="gallery-image" @click="open('open')">
             <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
@@ -25,6 +25,7 @@
                     </div>
                 </figcaption>
 
+                <div style="margin:1em;">
                 <table class="gallery-table">
                     <thead>
                         <tr>
@@ -55,9 +56,9 @@
                                 <td data-th="Related Keywords" class="vhtml" v-html="js.keyword"></td>
                             </tr>
                         </template>
-
                     </tbody>
                 </table>
+                </div>
 
                 <div class="btn-end" v-if="ismodal" @click="open('end')">end</div>
             </div>
@@ -68,14 +69,30 @@
 </template>
 
 <style lang="scss" scoped>
-.css1{
-    @import "./PortfolioListCss1.scss";
+.cssBase{
+    @import "./PortfolioElemBase.scss";
 }
-.css2{
-    @import "./PortfolioListCss2.scss";
+.cssGrid{
+    .gallery-item{
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .gallery-caption{
+        padding:10px;
+    }
 }
-.css3{
-    @import "./PortfolioListCss3.scss";
+.cssModal{
+    @import "./PortfolioElemModal.scss";
+}
+.cssWhite{
+    @import "./PortfolioElemWhite.scss";
+}
+.cssBlack{
+    @import "./PortfolioElemBlack.scss";
+}
+.cssBlue{
+    @import "./PortfolioElemBlue.scss";
 }
 </style>
 
@@ -90,6 +107,7 @@ export default {
             isok:false,
             out:false,
             ismodal:false,
+            isgrid:false,
             cssClass:'',
             cssStyle:'',
             cssAddr:'',
@@ -99,20 +117,12 @@ export default {
     props:{
         ports: {type: null},
         cssmod:{type: null},
+        change:{type: null},
     },
     components:{
     },
     created(){
-        if(this.cssmod==3){
-            this.ismodal = true
-            this.isok = true
-            this.cssArr[2] = true
-        }
-        else if(this.cssmod==1 || this.cssmod==2){
-            this.ismodal = false
-            this.isok = true
-            this.cssArr[this.cssmod-1] = true
-        }
+        this.changeCss()
     },
     mounted(){
         this.linkcss()
@@ -139,29 +149,24 @@ export default {
                     }
                 }   
             }
-        }
-    },
-    watch:{
-        cssmod:function(){
+        },
+        changeCss:function(){
             this.out = false
             this.isok = false
-            if(this.cssmod==3){
-                this.ismodal = true
-                this.isok = true
-            }
-            else if(this.cssmod==1 || this.cssmod==2){
-                this.ismodal = false
-                this.isok = true
-            }
-            else{
-                this.isok = false
-            }
-
             for(let i=0;i<3;i++){
                 this.cssArr[i] = false
             }
-
-            this.cssArr[this.cssmod-1] = true
+            if(1<=this.cssmod.color && this.cssmod.color<=3){
+                this.cssArr[this.cssmod.color-1] = true
+                this.ismodal = this.cssmod.modal ? true:false
+                this.isgrid  = this.cssmod.grid  ? true:false
+                this.isok = true
+            }
+        }
+    },
+    watch:{
+        change:function(){
+            this.changeCss()
             this.linkcss()
         },
     },

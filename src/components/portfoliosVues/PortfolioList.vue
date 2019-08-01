@@ -14,19 +14,22 @@
             </h1>
             <div id="portfolio" class="section-content gallery alternate">
                 <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
+                    <PortfolioList :ports="portfolio" :cssmod="css" :change="cssChange"></PortfolioList>
                 </v-flex>
                 <v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css"></PortfolioList>
+                    <PortfolioList :ports="ex" :cssmod="css" :change="cssChange"></PortfolioList>
                 </v-flex>
             </div>
         </div>
     </section>
 
     <div id="select-css" v-if="iscontrol">
-        <button id="css1" @click="changeCss(1)">1</button><br>
-        <button id="css2" @click="changeCss(2)">2</button><br>
-        <button id="css3" @click="changeCss(3)">3</button><br>
+        <button id="css1" @click="changeCss(0,1)">white</button><br>
+        <button id="css2" @click="changeCss(0,2)">black</button><br>
+        <button id="css3" @click="changeCss(0,3)">blue&nbsp</button><br>
+
+        <button id="css3" @click="changeCss(1,true)">modal</button><br>
+        <button id="css3" @click="changeCss(2,true)">grid&nbsp</button><br>
     </div>
 </div>
 </template>
@@ -246,9 +249,15 @@ export default {
             user:'',
             mybookmark:false,
             iscontrol:false,
-            css:0,
+            css:{
+                color:1,
+                modal:false,
+                grid:false,
+                version:'2.0.0',
+            },
             visitNum:0,
             toBookMarkNum:0,
+            cssChange:0,
         }
     },
     created(){
@@ -260,7 +269,17 @@ export default {
             FirebaseService.getUserData(uid)
             .then(function(data){
                 if(data){
-                    th.css = data.css
+                    if(data.css.version) th.css = data.css
+                    else{
+                        th.css.color = data.css
+                        if(data.css == 3){
+                            th.css.modal = true
+                        }
+                        else if(data.css == 2){
+                            th.css.grid = true
+                        }
+                    }
+
                     if(data.visitNum) th.visitNum = data.visitNum+1
                     else th.visitNum = 1
 
@@ -277,8 +296,6 @@ export default {
                     FirebaseService.updateUserData(uid,th.css,th.visitNum)
                 }
                 else{
-                    th.css = 1
-                    th.visitNum = 0
                     FirebaseService.setUserData(uid,th.css,th.visitNum)
                 }
                 
@@ -299,16 +316,23 @@ export default {
                     FirebaseService.getUserData(user.uid)
                     .then(function(data){
                         if(data){
-                            th.css = data.css
+                            if(data.css.version) th.css = data.css
+                            else{
+                                th.css.color = data.css
+                                if(data.css == 3){
+                                    th.css.modal = true
+                                }
+                                else if(data.css == 2){
+                                    th.css.grid = true
+                                }
+                            }
                             th.visitNum = data.visitNum
                         }
                         else{
-                            th.css = 1
                             th.visitNum = 0
                         }
                     })
                     .catch(function(){
-                        th.css = 1
                     })
                 }
             })
@@ -318,18 +342,19 @@ export default {
         async getMyPortfolio(uid){
             this.portfolios = await FirebaseService.getUidPortfolios(uid)
         },
-        changeCss(num){
-            this.css = num
+        changeCss(num,write){
+            if(num == 0) this.css.color = write
+            else if(num == 1) this.css.modal = !this.css.modal
+            else if(num == 2) this.css.grid = !this.css.grid
+
             let th = this
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                    FirebaseService.setUserData(user.uid,th.css,th.visitNum)
+                    FirebaseService.updateUserData(user.uid,th.css,th.visitNum)
                 }
             })
-        },
-        async getMyIntro(){
-            //  var user = FirebaseService.auth().currentUser;
-            this.intros = await FirebaseService.getIntroduce();
+
+            this.cssChange = this.cssChange+1
         },
         doMybookmark(del){
             this.mybookmark = !del
@@ -354,6 +379,7 @@ export default {
     left:10px;
     padding:10px;
     border:3px solid black;
+    font-family: monospace;
 }
 #select-css button{
     padding:5px 10px;
@@ -524,116 +550,8 @@ a {
     cursor: pointer;
 }
 
-/* categ */
-.categ.html {
-    background: #8dca35;
-    color: white;
-}
-
-.categ.css {
-    background: #00bfdd;
-    color: white;
-}
-
-.categ {
-    border-radius: .25em;
-    display: inline-block;
-    min-width: 2em;
-    padding: .35em .65em;
-    line-height: 1;
-    font-family: "Quicksand",sans-serif;
-    font-size: .92rem;
-    text-align: center;
-}
-
-.categ.js {
-    background: #ff702a;
-    color: white;
-}
-
-/*ui button */
-
-ul {
-    display: block;
-    list-style-type: disc;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 40px;
-}
-
-.ui-button {
-    background: #30b7e8;
-    border-radius: 44px;
-    color: white;
-    display: inline-block;
-    min-width: 7em;
-    height: 44px;
-    margin: 0;
-    overflow: hidden;
-    padding: 12px 16px 14px;
-    vertical-align: middle;
-    letter-spacing: -.03em;
-    line-height: 18px;
-    font-family: "Quicksand",sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-    text-align: center;
-    box-sizing: border-box;
-    -moz-user-select: -moz-none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    position: relative;
-}
-.ui-group {
-    margin: 1rem 0;
-    padding: 0;
-    text-align: center;
-}
-
 p, dl, ol, ul {
     word-break: keep-all;
-}
-
-.ui-dropdown {
-    background: #30b7e8;
-    border-radius: 0 0 22px 22px;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    visibility: hidden;
-    z-index: 10000;
-    opacity: 0;
-    transition: visibility 0s linear .2s, opacity .2s;
-}
-
-.ui-button::after {
-    background-color: rgba(0,0,0,0.08);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: height .3s;
-}
-
-.ui-dropdown.is-expanded {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0s linear 0s, opacity .2s;
-}
-
-
-.ui-dropdown-trigger.is-triggered {
-    border-radius: 22px 22px 0 0;
 }
 
 .bookMarkBtnIn , .bookMarkBtnOut{
@@ -662,8 +580,5 @@ p, dl, ol, ul {
     background-color: pink;
     color:white;
 }
-
-
-
 
 </style>

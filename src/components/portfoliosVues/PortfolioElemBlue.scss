@@ -1,0 +1,46 @@
+#work1{
+    background-color: #30b7e8;
+    color:white;
+}
+
+.gallery-title::before {
+    color: white;
+}
+
+#modal-out{
+    background-color: #30b7e8;
+}
+
+
+/* table*/
+
+a {
+    background-color: transparent;
+    color: rgb(155, 34, 34);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* categ */
+.categ.css {
+    background: white;
+    color: #00bfdd;
+}
+
+
+/*ui button */
+.ui-button, .ui-button a:link, .ui-button a:visited{
+    background-color: white;
+    color: #30b7e8;
+}
+
+
+table {
+    border: 1px solid white;
+}
+
+
+table thead th {
+    background-color: rgba(128, 136, 139, 0.5);
+    color: white;
+}

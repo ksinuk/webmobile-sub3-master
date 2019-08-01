@@ -1,0 +1,62 @@
+.gallery-title::before {
+    color: #30b7e8;
+}
+
+#modal-out{
+    background-color: white;
+}
+
+
+/* table*/
+.vhtml >>> a{
+    background-color: transparent;
+    color: #30b7e8;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a{
+    background-color: transparent;
+    color: #30b7e8;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+td >>> a{
+    background-color: transparent;
+    color: #30b7e8;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* categ */
+.categ.html {
+    background: #8dca35;
+    color: white;
+}
+
+.categ.css {
+    background: #00bfdd;
+    color: white;
+}
+
+.categ.js {
+    background: #ff702a;
+    color: white;
+}
+
+/*ui button */
+
+.ui-button, .ui-button a:link, .ui-button a:visited{
+    background: #30b7e8;
+    color: white;
+}
+
+table {
+    border: 0;
+}
+
+table thead th {
+    background-color: rgba(77,128,153,0.05);
+    color: #94979c;
+}
