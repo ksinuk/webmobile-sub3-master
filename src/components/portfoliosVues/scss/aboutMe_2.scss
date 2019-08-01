@@ -34,3 +34,14 @@
   font-size: 64px;
   position: relative;
 }
+.aboutMe_images {
+  .title_line, .aboutMe_title, .aboutMe_subTitle {
+    display: none;
+  }
+  .aboutMe_image {
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    left: 425px;
+  }
+}

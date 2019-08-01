@@ -113,7 +113,7 @@ export default {
           _this.users.splice(index, 1)
         )
     }
-  }
+  } 
 }
 </script>
 
