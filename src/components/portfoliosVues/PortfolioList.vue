@@ -519,12 +519,7 @@ section {
     content: "";
 }
 
-
-
-
-
 /* table*/
-
 a {
     background-color: transparent;
     color: #30b7e8;
