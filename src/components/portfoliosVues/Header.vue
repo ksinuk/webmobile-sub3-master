@@ -25,6 +25,7 @@
         <v-navigation-drawer
             v-model="drawer"
             :mini-variant="mini"
+            stateless=true
             fixed
             dark
         >
