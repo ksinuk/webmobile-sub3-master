@@ -22,7 +22,7 @@
 <script>
 import ImageBanner from '@/components/ImageBanner.vue'
 import FirebaseService from '@/services/FirebaseServices'
-import PortfolioList from '@/components/PortfolioList.vue'
+import PortfolioList from '@/components/portfoliosVues/PortfolioList.vue'
 import Introduce from '@/components/Introduce.vue'
 
 import firebase from 'firebase/app'

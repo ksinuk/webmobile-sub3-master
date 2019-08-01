@@ -5,7 +5,7 @@ import firebase from 'firebase'
 import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
-import Portfolio from './views/Portfolio.vue'
+// import Portfolio from './views/Portfolio.vue'
 import Portfolio2 from './views/Portfolio2.vue'
 
 import Board from "./views/BoardPage.vue"
@@ -49,31 +49,31 @@ export default new Router({
             name: 'home',
             component: Home
         },
-        {
-            path: '/portfolio',
-            name: 'portfolio',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: Portfolio
-        },
+        // {
+        //     path: '/portfolio',
+        //     name: 'portfolio',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: Portfolio
+        // },
 
-        {
-            path: '/portfolio2',
-            name: 'portfolio2',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: Portfolio2
-        },
-        {
-            path: '/portfolio/:uid',
-            name: 'portfolio',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: Portfolio
-        },
+        // {
+        //     path: '/portfolio2',
+        //     name: 'portfolio2',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: Portfolio2
+        // },
+        // {
+        //     path: '/portfolio/:uid',
+        //     name: 'portfolio',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: Portfolio
+        // },
         {
             path: '/about',
             name: 'about',
@@ -124,11 +124,11 @@ export default new Router({
             name: 'test',
             component: TestPage
         },
-        {
-            path: '/portfolio3',
-            name: 'portfolio3',
-            component: Portfolio3
-        },
+        // {
+        //     path: '/portfolio3',
+        //     name: 'portfolio3',
+        //     component: Portfolio3
+        // },
         {
             path: '/portfoliopage',
             name: 'portfoliopage',

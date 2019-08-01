@@ -134,73 +134,73 @@ export default {
 
 </script>
 <style>
-    .visual {
-        overflow: hidden;
-        position: relative;
-        width: 100%;
+.visual {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
 
-        height: 100vh;
+    height: 100vh;
 
-        margin: 0 auto;
-        background-image: url(../../assets/example6.jpg);
-        background-position: 50% 80%;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .item-1,
-    .item-2,
-    .item-3 {
-        position: absolute;
+    margin: 0 auto;
+    background-image: url(../../assets/example6.jpg);
+    background-position: 50% 80%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.item-1,
+.item-2,
+.item-3 {
+    position: absolute;
     display: block;
-        top: 10em;
+    top: 10em;
 
     width: 60%;
 
     font-size: 2em;
 
-        animation-duration: 20s;
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
-    }
+    animation-duration: 20s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
 
-    .item-1{
-        animation-name: anim-1;
-    }
+.item-1{
+    animation-name: anim-1;
+}
 
-    .item-2{
-        animation-name: anim-2;
-    }
+.item-2{
+    animation-name: anim-2;
+}
 
-    .item-3{
-        animation-name: anim-3;
-    }
+.item-3{
+    animation-name: anim-3;
+}
 
-    @keyframes anim-1 {
-        0%, 8.3% { left: -100%; opacity: 0; }
+@keyframes anim-1 {
+    0%, 8.3% { left: -100%; opacity: 0; }
     8.3%,25% { left: 25%; opacity: 1; }
     33.33%, 100% { left: 110%; opacity: 0; }
-    }
+}
 
-    @keyframes anim-2 {
-        0%, 33.33% { left: -100%; opacity: 0; }
+@keyframes anim-2 {
+    0%, 33.33% { left: -100%; opacity: 0; }
     41.63%, 58.29% { left: 25%; opacity: 1; }
     66.66%, 100% { left: 110%; opacity: 0; }
-    }
+}
 
-    @keyframes anim-3 {
-        0%, 66.66% { left: -100%; opacity: 0; }
+@keyframes anim-3 {
+    0%, 66.66% { left: -100%; opacity: 0; }
     74.96%, 91.62% { left: 25%; opacity: 1; }
     100% { left: 110%; opacity: 0; }
-    }
+}
 
-    .filebox input[type="file"] {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;
-    }
+.filebox input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
 </style>
