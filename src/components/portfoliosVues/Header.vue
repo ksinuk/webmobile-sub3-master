@@ -21,16 +21,12 @@
             <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
 
-
-
-
         <!-- sidebar -->
         <v-navigation-drawer
             v-model="drawer"
             :mini-variant="mini"
-            absolute
+            fixed
             dark
-            temporary
         >
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
