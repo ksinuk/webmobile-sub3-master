@@ -10,7 +10,9 @@
             <span class="aboutMe_title">Intro</span>
             <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
-          <p id="aboutSubtitle1" v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          <div id="aboutSubtitle1">
+            <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          </div>
         </v-container>
       </div>
 
@@ -61,22 +63,20 @@
             <v-card>
               <v-card-text>
                 <div v-for="items in this.layoutItems">
-
-                  <v-radio-group row v-model="aboutLayout" v-for="subItem in items.items">
-                    <v-radio :label="subItem.title" :value="subItem.value" color="primary"></v-radio>
-                    <!-- <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn> -->
+                  <!-- swtich btn -->
+                  <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                    <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
                   </v-radio-group>
 
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Theme</p>
                   <div v-for="items in this.themeItems">
-                    <div v-for="subItem in items.items">
-                      <v-btn flat @click="switchTheme()">{{ subItem.title }}</v-btn>
-                    </div>
+                    <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                      <v-radio :label="subItem.title" :value="subItem.value" @change="switchTheme(items, subItem.value)"></v-radio>
+                    </v-radio-group>
                   </div>
-                  <ColorPicker/>
                 </div>
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="">Apply</v-btn>
@@ -113,14 +113,12 @@
                     ></v-slider>
                   </div>
                 </div>
+
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
-                <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
-                  <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
-                      
-                  </div>
-                </div>
+
+                <!-- color picker -->
+                <ColorPicker v-bind:aboutChoice="aboutChoice"/>
+
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
                 </div>
@@ -153,7 +151,7 @@
 
 <script>
 // theme 설정을 위해서 store에 저장
-import ColorPicker from './ColorPicker'
+import ColorPicker from './AboutColorPicker'
 import store from '../../store'
 
 export default {
@@ -165,6 +163,7 @@ export default {
     return {
       aboutLayout: 'css1',
       Aboutdrawer: false,
+      // css
       cssArr: [true, false],
       themeArr: [true, false, false],
       // modal
@@ -214,7 +213,7 @@ export default {
       // font
       aboutChoice: 'title',
       aboutTitleS: '1',
-      aboutSubtitleS: '1'
+      aboutSubtitleS: '1',
     }
   },
   watch: {
@@ -229,9 +228,16 @@ export default {
     }
   },
   methods: {
-    switchTheme(theme) {
-      console.log(theme)
-      store.commit('changeTheme', theme)
+    switchTheme(item, num) {
+      for (let i=0; i < this.themeArr.length; i++) {
+        if (num == (i+1)) {
+          console.log(item.items[i])
+          item.items[i].selected = true
+          store.commit('changeTheme', item.items[i].title)
+        } else {
+          item.items[i].selected = false
+        }
+      }
     },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
@@ -248,7 +254,6 @@ export default {
       this.cssArr = boolArr
     },
     checkLog(n, m) {
-      n.selected = true
       console.log(n, m)
     }
   }
