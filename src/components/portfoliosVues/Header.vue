@@ -6,17 +6,27 @@
                 <p id="portSubtitle" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
-        <v-layout v-else-if="layout === 'template1'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <!-- template1 -->
+        <v-layout v-else-if="layout === 'template1'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
+            <v-flex style="padding-left: 7rem;">
+                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" style="text-align: left;">{{portfolio.subtitle.content}}</p>
+            </v-flex>
+            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
+        </v-layout>
+        <!-- template2 -->
+        <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
             </v-flex>
             <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
-        <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <!-- template3 -->
+        <v-layout v-else-if="layout === 'template3'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
             <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
@@ -51,8 +61,15 @@
                                     <label for="input_file">파일찾기</label>
                                     <input type="file" id="input_file" class="upload-hidden" @change="userImage">
                                 </div>
-                                <div class="py-3">
+                                <v-radio-group v-model="select.opacity">
+                                    <v-radio label="선명하게" value="opacity1" color="primary"></v-radio>
+                                    <v-radio label="흐리게" value="opacity2" color="primary"></v-radio>
+                                </v-radio-group>
+                                <div class="py-3" v-if="select.opacity === 'opacity1'">
                                     <img :src="this.select.img" height="170rem;" width="265rem;"/>
+                                </div>
+                                <div class="my-3" v-else-if="select.opacity === 'opacity2'" style="margin-right: 0.3rem; height: 12.1rem; background-color: white;">
+                                    <img :src="this.select.img" height="170rem;" style="opacity: 0.5; filter: alpha(opacity=50);" width="265rem;"/>
                                 </div>
                                 <div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveImg()">Apply</v-btn>
@@ -68,10 +85,9 @@
                         <v-card>
                             <v-card-text>
                                 <v-radio-group v-model="tmplayout">
-                                    <v-radio label="Option 1" value="template1" color="primary"></v-radio>
-                                    <img src="../../assets/array1.jpg" style="padding-bottom: 1rem;" height="170rem;" width="265rem;"/>
-                                    <v-radio label="Option 2" value="template2" color="primary"></v-radio>
-                                    <!-- 이미지 넣기 -->
+                                    <v-radio label="left" value="template1" color="primary"></v-radio>
+                                    <v-radio label="center" value="template2" color="primary"></v-radio>
+                                    <v-radio label="right" value="template3" color="primary"></v-radio>
                                 </v-radio-group>
                                 <div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
@@ -280,12 +296,12 @@ export default {
             portfolio: [],
             drawer: null,
             mini: false,
-            select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
+            select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
             fileName: null,
             items: [
-                { theme: 'Dolphin' , img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac' },
-                { theme: 'Mountain', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample5.jpg?alt=media&token=4d683a8c-6543-4116-93eb-fa290493932f' },
-                { theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3' }
+                { theme: 'Dolphin' , img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
+                { theme: 'Mountain', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample5.jpg?alt=media&token=4d683a8c-6543-4116-93eb-fa290493932f', opacity: 'opacity1' },
+                { theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1' }
             ],
             layout: null,
             tmplayout: null,
@@ -299,7 +315,8 @@ export default {
             tGreen: "255",
             sRed: "255",
             sBlue: "255",
-            sGreen: "255"
+            sGreen: "255",
+            
         }
     },
     created() {
@@ -366,8 +383,12 @@ export default {
                     __this.sBlue = __this.portfolio.subtitle.color.blue;
                     __this.sGreen = __this.portfolio.subtitle.color.green;
                     document.getElementById('banner').style.backgroundImage = "url('" + __this.select.img + "')";
+                    if (__this.select.opacity === 'opacity2') {
+                        document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                    }
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
+                    console.log(document.getElementById('portTitle').style);
                     document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
                     document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
                 })
@@ -376,7 +397,7 @@ export default {
         getBanner: function() {
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            storageRef.child('banner/' + this.select.img).getDownloadURL().then(function(url) {
+            storageRef.child('users/' + this.user + '/' + this.select.theme).getDownloadURL().then(function(url) {
                 var xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 xhr.onload = function(event) {
@@ -384,7 +405,7 @@ export default {
                 }
                 xhr.open('GET', url)
                 xhr.send();
-                this.sample = url;
+                this.select.img = url;
             }).catch(function(error) {
                 console.log(error);
             })
@@ -408,21 +429,29 @@ export default {
                 reader.onload = function(e) {
                     for (let j=0; j < files.length; j++) {
                     }
-                    console.log(e.target.result);
                     _this.select.img = e.target.result;
                 }
                 reader.readAsDataURL(file)
-                _this.bannerImage.push(file.name)
-                _this.imageList.push(file)
+                _this.select.theme = file.name;
+                _this.select.img = file;
                 } else {
                 alert('이미지 파일만 올려주세요.')
                 }
             }
         },
         async saveImg() {
+            if (typeof(this.select.img) == 'object') {
+                FirebaseServices.uploadfile(user, this.select.img);
+                // download url 가져오기
+                this.getBanner();
+            }
             this.portfolio.banner = this.select;
+            console.log(this.portfolio.banner);
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
             document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
+            if (this.select.opacity === 'opacity2') {
+                document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
+            }
         },
         async saveLayout() {
             this.layout = this.tmplayout;

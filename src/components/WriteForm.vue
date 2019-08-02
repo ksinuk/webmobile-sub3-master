@@ -588,7 +588,7 @@ export default {
     async savePort() {
       const user = await FirebaseServices.currentUser();
       // default banner
-      let banner = {theme: 'Gradient', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fgradient.jpg?alt=media&token=575ef5d1-fd4d-4a3f-90ce-87c7b572648a'}
+      let banner = {theme: 'Gradient', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fgradient.jpg?alt=media&token=575ef5d1-fd4d-4a3f-90ce-87c7b572648a', opacity: 'opacity1'}
       // firebase storage에 저장
       this.upload(user.uid);
       const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template1', banner, this.portfolios, this.skills, this.greeting, this.pageTitle);

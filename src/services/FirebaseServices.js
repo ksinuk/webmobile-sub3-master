@@ -430,7 +430,7 @@ async currentUser() {
   uploadfile(user, loadFile) {
     let filename = loadFile.name
 
-    let storageRef = firebase.storage().ref('/' + user + '/' + filename)
+    let storageRef = firebase.storage().ref('/users/' + user + '/' + filename)
     let uploadTask = storageRef.put(loadFile)
 
     uploadTask.on('state_changed', function(snapshot) {
