@@ -1,5 +1,5 @@
 #work1{
-    width:70%;
+    width:80%;
     margin:auto;
 }
 
@@ -8,10 +8,6 @@
 // .l-section {
 //     padding: 100px 5vw;
 // }
-
-.l-section {
-    background: white;
-}
 
 .l-section {
     min-height: 100vh;
@@ -30,7 +26,7 @@
     line-height: 1;
     font-size: 64px;
     font-weight: 400;
-
+    content: counter(article,decimal-leading-zero);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -49,6 +45,8 @@ h3 {
     margin-inline-end: 0px;
     font-weight: bold;
 }
+
+
 
 .gallery-title {
     position: relative;
@@ -111,12 +109,22 @@ section {
 }
 
 
-
-
-
 /* table*/
+.vhtml >>> a{
+    background-color: transparent;
+    color: #30b7e8;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-a {
+a{
+    background-color: transparent;
+    color: #30b7e8;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+td >>> a{
     background-color: transparent;
     color: #30b7e8;
     text-decoration: none;
@@ -162,7 +170,7 @@ ul {
     padding-inline-start: 40px;
 }
 
-.ui-button {
+.ui-button, .ui-button a:link, .ui-button a:visited{
     background: #30b7e8;
     border-radius: 44px;
     color: white;
@@ -176,7 +184,7 @@ ul {
     letter-spacing: -.03em;
     line-height: 18px;
     font-family: "Quicksand",sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     text-align: center;
     box-sizing: border-box;

@@ -1,53 +1,75 @@
-<!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
-  <div class="portfolio">
-    <ImageBanner/>
-    <div id="select-css" v-if="isuser">
-        <button id="css1" @click="changeCss(1)">1</button><br>
-        <button id="css2" @click="changeCss(2)">2</button><br>
-        <button id="css3" @click="changeCss(3)">3</button><br>
-    </div>
+<div>
+    <section role="region" id="foliolist" class="l-section">
+        <h1>총 방문자 수 : {{visitNum}}</h1>
+        <h1>북마크한 유저의 수 : {{toBookMarkNum}}</h1>
 
-    <section role="region" id="works" class="l-section">
-        <Introduce :intro="intros[0]"></Introduce>
+        <button v-if="user && uid && !mybookmark" class="bookMarkBtnIn" @click="doMybookmark(false)">북마크 하기</button>
+        <button v-if="user && uid && mybookmark" class="bookMarkBtnOut" @click="doMybookmark(true)">북마크 취소</button>
+
         <div class="l-section-holder">
-            <h2 class="section-heading is-init is-animated" data-animation="fade-up">
+            <h1 class="section-heading is-init is-animated" data-animation="fade-up">
                 <span class="secondary">Portfolio</span>
                 <span class="primary">My works</span>
-            </h2>
+            </h1>
             <div id="portfolio" class="section-content gallery alternate">
                 <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css"></PortfolioList>
-                    <hr>
+                    <PortfolioList :ports="portfolio" :cssmod="css" :change="cssChange"></PortfolioList>
                 </v-flex>
                 <v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css"></PortfolioList>
-                    <hr>
+                    <PortfolioList :ports="ex" :cssmod="css" :change="cssChange"></PortfolioList>
                 </v-flex>
             </div>
         </div>
     </section>
-  </div>
+
+    <div id="select-css" v-if="iscontrol">
+        <div>
+            <button class="sidebar-open" @click="issidebar = true" v-if="!issidebar">사이드바 열기</button>
+            <button class="sidebar-open" @click="issidebar = false" v-if="issidebar">사이드바 닫기</button>
+        </div>
+        <hr>
+        <div v-if="issidebar">
+            <div class="select-div">
+                <button id="css1" @click="changeCss(0,1)">white</button>
+                <div class="isok" v-if="css.color == 1"></div>
+            </div>
+            <div class="select-div">
+                <button id="css2" @click="changeCss(0,2)">black</button>
+                <div class="isok" v-if="css.color == 2"></div>
+            </div>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(0,3)">blue&nbsp</button>
+                <div class="isok" v-if="css.color == 3"></div>
+            </div>
+            <hr>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(1,true)">modal</button>
+                <div class="isok" v-if="css.modal"></div>
+            </div>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(2,true)">grid&nbsp</button>
+                <div class="isok" v-if="css.grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
-import movie from '@/components/Movie.vue'
-import ImageBanner from '@/components/ImageBanner.vue'
 import FirebaseService from '@/services/FirebaseServices'
-import PortfolioList from '@/components/PortfolioList.vue'
-import Introduce from '@/components/Introduce.vue'
-
+import PortfolioList from './PortfolioElem.vue'
 import firebase from 'firebase/app'
 
 export default {
 
-    name: 'portfolio',
+    name: 'portfoliolist',
     components: {
-        ImageBanner,
-        PortfolioList,
-        Introduce
+        PortfolioList
     },
-    data(){
+    props:{
+    },
+    data() {
         return {
             examples:[
                 {
@@ -243,94 +265,127 @@ export default {
                     ],
                 }
             ],
-            
-            intros:[],
+
             portfolios:[],
-            isuser:false,
-            css:0,
+            uid:'',
+            user:'',
+            mybookmark:false,
+            iscontrol:false,
+            issidebar:false,
+            css:{
+                color:1,
+                modal:false,
+                grid:false,
+                version:'2.0.0',
+            },
+            visitNum:0,
+            toBookMarkNum:0,
+            cssChange:0,
         }
     },
-
     created(){
         let th = this
-
-        this.getMyIntro()
-        console.log("intros: ",this.intros)
-
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
+            th.uid = uid
             th.getMyPortfolio(uid)
             FirebaseService.getUserData(uid)
             .then(function(data){
                 if(data){
-                    th.css = data.css
+                    if(data.css.version) th.css = data.css
+                    else{
+                        th.css.color = data.css
+                        if(data.css == 3){
+                            th.css.modal = true
+                        }
+                        else if(data.css == 2){
+                            th.css.grid = true
+                        }
+                    }
+
+                    if(data.visitNum) th.visitNum = data.visitNum+1
+                    else th.visitNum = 1
+
+                    if(data.bookmarks){
+                        th.toBookMarkNum = data.bookmarks.length
+                        for(let i=0;i<data.bookmarks.length;i++){
+                            let bookmark = data.bookmarks[i]
+                            if(bookmark == th.user.uid) {
+                                th.mybookmark = true
+                                break
+                            }
+                        }
+                    }
+                    FirebaseService.updateUserData(uid,th.css,th.visitNum)
                 }
                 else{
-                    th.css = 1
+                    FirebaseService.setUserData(uid,th.css,th.visitNum)
                 }
+                th.cssChange = th.cssChange+1
             })
+
+            firebase.auth().onAuthStateChanged(function(user){
+                if (user){
+                    th.user = user
+                }
+            })   
         }
         else{
             firebase.auth().onAuthStateChanged(function(user) {
-                console.log("user: ",user)
                 if (user) {
-                    th.isuser = true
+                    th.user = user
+                    th.iscontrol = true
                     th.getMyPortfolio(user.uid)
                     FirebaseService.getUserData(user.uid)
                     .then(function(data){
                         if(data){
-                            th.css = data.css
+                            if(data.css.version) th.css = data.css
+                            else{
+                                th.css.color = data.css
+                                if(data.css == 3){
+                                    th.css.modal = true
+                                }
+                                else if(data.css == 2){
+                                    th.css.grid = true
+                                }
+                            }
+                            th.visitNum = data.visitNum
                         }
                         else{
-                            th.css = 1
+                            th.visitNum = 0
                         }
-                        console.log("th.css: ",th.css)
+                        th.cssChange = th.cssChange+1
                     })
                     .catch(function(){
-                        th.css = 1
                     })
                 }
             })
         }
     },
-    methods :{
+    methods:{
         async getMyPortfolio(uid){
             this.portfolios = await FirebaseService.getUidPortfolios(uid)
         },
-        changeCss(num){
-            this.css = num
+        changeCss(num,write){
+            if(num == 0) this.css.color = write
+            else if(num == 1) this.css.modal = !this.css.modal
+            else if(num == 2) this.css.grid = !this.css.grid
+
             let th = this
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                    FirebaseService.setUserData(user.uid,th.css)
+                    FirebaseService.updateUserData(user.uid,th.css,th.visitNum)
                 }
             })
-        },
-        async getMyIntro(){
-            //  var user = FirebaseService.auth().currentUser;
-            this.intros = await FirebaseService.getIntroduce();
-        }
 
-    },
-    watch: {
-        css:function(){
-            let css = this.css
-            let body = document.querySelector('.l-section')
-            console.log("css: ",this.css)
-            if(this.css==1){
-                body.style.backgroundColor = 'white'
-                body.style.color = 'black'
-            }
-            else if(this.css==2){
-                body.style.backgroundColor = 'rgb(40,40,40)'
-                body.style.color = 'rgb(255, 255, 255)'
-            }
-            else if(this.css=3){
-                body.style.backgroundColor = '#30b7e8'
-                body.style.color = 'rgb(255, 255, 255)'
-            }
+            this.cssChange = this.cssChange+1
+        },
+        doMybookmark(del){
+            this.mybookmark = !del
+            this.toBookMarkNum += del ? -1:1
+            FirebaseService.setBookMark(this.user.uid,this.uid,del)
         }
-    }
+    },
 }
 </script>
 
@@ -344,35 +399,43 @@ export default {
 #select-css{
     z-index:20;
     position:fixed;
-    top:10%;
-    left:10px;
+    bottom:0;
+    left:0;
     padding:10px;
-    border:3px solid black;
+    width:300px;
+    background-color: rgb(66,66,66);
+    font-family: monospace;
+    color:white;
+    font-size:20px;
 }
-#select-css button{
+.select-div{
+    position: relative;
+    height:50px;
+}
+.sidebar-open{
+    margin:10px;
+}
+.select-div button{
+    position:absolute;
+    top:50%;
+    left:10%;
+    transform: translateY(-50%);
     padding:5px 10px;
-    margin:5px;
-    font-size:15px;
-    border:1px solid gray;
 }
-#select-css #css1{
-    color:black;
-    background-color: white;
-}
-#select-css #css2{
-    color:white;
-    background-color: black;
-}
-#select-css #css3{
-    color:white;
-    background-color:royalblue;
+.isok{
+  position:absolute;
+  top:50%;
+  right:20%;
+  transform: translateY(-50%);
+  margin:auto 20px;
+  background-color: green;
+  border-radius: 10px;
+  height:20px;
+  width:20px;
 }
 
 .l-section {
     background: white;
-}
-
-.l-section {
     min-height: 100vh;
     padding: 15vh 100px;
     position: relative;
@@ -432,7 +495,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
 }
 
-h2 {
+h1 {
   color: black;
 }
 
@@ -513,12 +576,7 @@ section {
     content: "";
 }
 
-
-
-
-
 /* table*/
-
 a {
     background-color: transparent;
     color: #30b7e8;
@@ -526,161 +584,35 @@ a {
     cursor: pointer;
 }
 
-/* categ */
-.categ.html {
-    background: #8dca35;
-    color: white;
-}
-
-.categ.css {
-    background: #00bfdd;
-    color: white;
-}
-
-.categ {
-    border-radius: .25em;
-    display: inline-block;
-    min-width: 2em;
-    padding: .35em .65em;
-    line-height: 1;
-    font-family: "Quicksand",sans-serif;
-    font-size: .92rem;
-    text-align: center;
-}
-
-.categ.js {
-    background: #ff702a;
-    color: white;
-}
-
-/*ui button */
-
-ul {
-    display: block;
-    list-style-type: disc;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 40px;
-}
-
-.ui-button {
-    background: #30b7e8;
-    border-radius: 44px;
-    color: white;
-    display: inline-block;
-    min-width: 7em;
-    height: 44px;
-    margin: 0;
-    overflow: hidden;
-    padding: 12px 16px 14px;
-    vertical-align: middle;
-    letter-spacing: -.03em;
-    line-height: 18px;
-    font-family: "Quicksand",sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-    text-align: center;
-    box-sizing: border-box;
-    -moz-user-select: -moz-none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    position: relative;
-}
-.ui-group {
-    margin: 1rem 0;
-    padding: 0;
-    text-align: center;
-}
-
 p, dl, ol, ul {
     word-break: keep-all;
 }
 
-.ui-dropdown {
-    background: #30b7e8;
-    border-radius: 0 0 22px 22px;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    visibility: hidden;
-    z-index: 10000;
-    opacity: 0;
-    transition: visibility 0s linear .2s, opacity .2s;
+.bookMarkBtnIn , .bookMarkBtnOut{
+    display:inline-block;
+    margin:5px 10px;
+    padding:10px;
+    font-size:20px;
 }
-
-.ui-button::after {
-    background-color: rgba(0,0,0,0.08);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: height .3s;
+.bookMarkBtnIn{
+    border:6px solid skyblue;
+    background-color: blue;
+    color:white;
 }
-
-.ui-dropdown.is-expanded {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0s linear 0s, opacity .2s;
+.bookMarkBtnOut{
+    border:6px solid pink;
+    background-color: red;
+    color:white;
 }
-
-
-.ui-dropdown-trigger.is-triggered {
-    border-radius: 22px 22px 0 0;
+.bookMarkBtnIn:hover{
+    border:6px solid blue;
+    background-color: skyblue;
+    color:white;
 }
-
-
-
-table {
-    border: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin: 1em 0;
-    width: 100%;
+.bookMarkBtnOut:hover{
+    border:6px solid red;
+    background-color: pink;
+    color:white;
 }
-
-table th, table td {
-    border-bottom: 1px solid #e6e9ea;
-    padding: .3em 1em;
-    text-align: left;
-}
-
-td {
-    display: table-cell;
-    vertical-align: inherit;
-}
-
-table thead th {
-    background-color: rgba(77,128,153,0.05);
-    border-top-width: 1px;
-    color: #94979c;
-    padding: 1.2em 1em;
-}
-
-table caption, table th {
-    font-weight: 500;
-    text-align: left;
-}
-
-th {
-    display: table-cell;
-    vertical-align: inherit;
-    font-weight: bold;
-    text-align: -internal-center;
-}
-
-table thead {
-    font-family: "Quicksand",sans-serif;
-}
-
 
 </style>

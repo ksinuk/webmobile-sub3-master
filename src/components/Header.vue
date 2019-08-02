@@ -14,7 +14,7 @@
       </v-flex>
       </v-toolbar>
       <!-- sidebar -->
-      <v-navigation-drawer v-model="drawer" fixed right class="grey lighten-3">
+      <v-navigation-drawer v-model="drawer" fixed stateless=true right class="grey lighten-3">
         <!-- sidebar list -->
         <SideBarItems/>
       </v-navigation-drawer>

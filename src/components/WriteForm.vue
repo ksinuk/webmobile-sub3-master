@@ -9,9 +9,17 @@
     <v-stepper-content step="1" class="px-5">
       <v-card class="mb-3 px-3">
         <v-card-text>
+          <v-text-field
+            v-model="pageTitle"
+            label="Page Title"
+          ></v-text-field>
+          <v-text-field
+            v-model="greeting"
+            label="Greeting"
+          ></v-text-field>
           <v-textarea
             name="input-7-1"
-            label="about my self"
+            label="About My Self"
             v-model="aboutMe"
             hint="자기 자신을 소개하는 텍스트를 상세히 작성해주세요."
             rows=15
@@ -97,9 +105,7 @@
           <v-form ref="form">
             <v-text-field
               v-model="portItem.title"
-              :counter="20"
               label="Title"
-              required
             ></v-text-field>
             <v-textarea
               label="Description"
@@ -202,7 +208,7 @@
                   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
                     <p class="my-auto mx-auto">Drag and Drop image files</p>
                   </div>
-                  <input type="file" @change="onChange4" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                  <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -214,10 +220,6 @@
             <v-layout>
               <v-flex>
                 <v-btn color="grey" @click="portItem.dumpList=[];">Reset</v-btn>
-                <!-- dumplist를 확인하기 위한 view -->
-                <!-- <v-btn color="primary" @click="viewList()">View</v-btn> -->
-                <!-- upload는 최종 저장에서 함께 되도록 함 -->
-                <!--<v-btn color="success" @click="upload()">Upload</v-btn>-->
               </v-flex>
             </v-layout>
           </v-form>
@@ -229,9 +231,7 @@
           <v-form ref="form">
             <v-text-field
               v-model="portfolio.title"
-              :counter="20"
               label="Title"
-              required
             ></v-text-field>
             <v-textarea
               label="Description"
@@ -372,7 +372,7 @@
                   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
                     <p class="my-auto mx-auto">Drag and Drop image files</p>
                   </div>
-                  <input type="file" @change="onChange4" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                  <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -398,27 +398,10 @@
           <v-icon>add</v-icon>
         </v-btn>
       </div>
-      <v-btn color="primary" @click="e6 = 3; addPortfolio();">Continue</v-btn>
+      <v-btn color="primary" @click="addPortfolio(); savePort()">Save</v-btn>
       <v-btn flat @click="e6 = 1">Cancel</v-btn>
     </v-stepper-content>
 
-    <v-stepper-step editable step="3">
-      TEMPLATE
-      <small>적용할 디자인을 선택하세요.</small>
-    </v-stepper-step>
-
-    <v-stepper-content step="3">
-      <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-      <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-      <v-btn flat @click="e6 = 2">Cancel</v-btn>
-    </v-stepper-content>
-
-    <v-stepper-step editable step="4">PREVIEW</v-stepper-step>
-    <v-stepper-content step="4">
-      <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-      <v-btn color="primary" @click="savePort()">Save</v-btn>
-      <v-btn flat @click="e6 = 3">Cancel</v-btn>
-    </v-stepper-content>
   </v-stepper>
 </template>
 
@@ -431,6 +414,8 @@ export default {
   data() {
     return {
       e6: 1,
+      pageTitle: null,
+      greeting: null,
       aboutMe: null,
       skill: {
         name: null,
@@ -460,7 +445,7 @@ export default {
       },
       imageList: [],
       items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
-      isDragging: false
+      isDragging: false,
     }
   },
   created() {
@@ -501,7 +486,7 @@ export default {
       this.portfolio.sources.splice(idx, 1)
     },
     // drag and drop
-    onChange4: function (file) {
+    onChange: function (file) {
       this.isDragging = false
       let loadFile = file.target.files || file.dataTransfer.files
 
@@ -510,7 +495,6 @@ export default {
       }
       this.addViewImage(loadFile)
     },
-
     addViewImage: function(files) {
       let _this = this
 
@@ -573,12 +557,16 @@ export default {
     // firebase에 최종 저장하기
     async savePort() {
       const user = await FirebaseServices.currentUser();
-      console.log(user)
+      console.log(user);
+      // default banner
+      let banner = {theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1'}
+      // default title
+      let title = {content: this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6}
+      // default subtitle
+      let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6}
+      // firebase storage에 저장
       this.upload(user.uid);
-      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, this.skills, this.portfolios);
-      setTimeout(function() {
-        alert('done')
-      }, 4000)
+      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title);
     }
   }
 }
