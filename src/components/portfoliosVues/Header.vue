@@ -39,6 +39,7 @@
             fixed
             dark
         >
+        <v-navigation-drawer v-model="drawer" :mini-variant="mini" absolute dark temporary>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>
@@ -47,15 +48,8 @@
                         </template>
                         <v-card>
                             <v-card-text>
-                                <v-select
-                                    v-model="select"
-                                    :items="items"
-                                    item-text="theme"
-                                    item-value="img"
-                                    label="Sample"
-                                    color="white"
-                                    return-object
-                                ></v-select>
+                                <v-select v-model="select" :items="items" item-text="theme" item-value="img" label="Sample" color="white" return-object>
+                                </v-select>
                                 <div class="filebox">
                                     <v-text-field v-model="fileName" readonly color="white" label="User Image" placeholder="선택된 파일 없음"></v-text-field>
                                     <label for="input_file">파일찾기</label>
@@ -474,61 +468,61 @@ export default {
 
 </script>
 <style>
-    .visual {
-        overflow: hidden;
-        position: relative;
-        width: 100%;
+.visual {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
 
-        height: 100vh;
+    height: 100vh;
 
-        margin: 0 auto;
-        background-image: url(../../assets/example6.jpg);
-        background-position: 50% 80%;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .item-1,
-    .item-2,
-    .item-3 {
-        position: absolute;
+    margin: 0 auto;
+    background-image: url(../../assets/example6.jpg);
+    background-position: 50% 80%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.item-1,
+.item-2,
+.item-3 {
+    position: absolute;
     display: block;
-        top: 10em;
+    top: 10em;
 
     width: 60%;
 
     font-size: 2em;
 
-        animation-duration: 20s;
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
-    }
+    animation-duration: 20s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
 
     /*.item-1{
         animation-name: anim-1;
     }
 
-    .item-2{
-        animation-name: anim-2;
-    }
+.item-2{
+    animation-name: anim-2;
+}
 
-    .item-3{
-        animation-name: anim-3;
-    }
+.item-3{
+    animation-name: anim-3;
+}
 
-    @keyframes anim-1 {
-        0%, 8.3% { left: -100%; opacity: 0; }
+@keyframes anim-1 {
+    0%, 8.3% { left: -100%; opacity: 0; }
     8.3%,25% { left: 25%; opacity: 1; }
     33.33%, 100% { left: 110%; opacity: 0; }
-    }
+}
 
-    @keyframes anim-2 {
-        0%, 33.33% { left: -100%; opacity: 0; }
+@keyframes anim-2 {
+    0%, 33.33% { left: -100%; opacity: 0; }
     41.63%, 58.29% { left: 25%; opacity: 1; }
     66.66%, 100% { left: 110%; opacity: 0; }
-    }
+}
 
-    @keyframes anim-3 {
-        0%, 66.66% { left: -100%; opacity: 0; }
+@keyframes anim-3 {
+    0%, 66.66% { left: -100%; opacity: 0; }
     74.96%, 91.62% { left: 25%; opacity: 1; }
     100% { left: 110%; opacity: 0; }
     }

@@ -8,9 +8,11 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">Intro</span>
-            <span class="aboutMe_subTitle">About myself.</span>
+            <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
-          <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          <div id="aboutSubtitle1">
+            <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          </div>
         </v-container>
       </div>
 
@@ -20,9 +22,9 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">skills</span>
-            <span class="aboutMe_subTitle">What I can do.</span>
+            <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <ul>
+          <ul id="aboutSubtitle2">
             <li v-for="item in userAbout.mySkill">{{ item }}</li>
           </ul>
         </v-container>
@@ -37,19 +39,14 @@
             <span class="aboutMe_subTitle">profile</span>
           </h4>
         </v-container>
-        <v-img
-          class="aboutMe_image"
-          :src="userAbout.url"
+        <v-img class="aboutMe_image" :src="userAbout.url"
           lazy-src="https://static.wixstatic.com/media/2a925f_a902eb9026754fc4911fb781ac5f885f~mv2.gif"
         ></v-img>
       </div>
 
     </div>
     <!-- sidebar -->
-    <v-navigation-drawer
-      v-model="Aboutdrawer"
-      fixed dark temporary
-        >
+    <v-navigation-drawer v-model="Aboutdrawer" fixed dark temporary >
       <v-list class="pt-0" dense>
         <v-expansion-panel>
 
@@ -61,19 +58,20 @@
             <v-card>
               <v-card-text>
                 <div v-for="items in this.layoutItems">
-                  <div v-for="subItem in items.items">
-                    <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn>
-                  </div>
+                  <!-- swtich btn -->
+                  <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                    <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
+                  </v-radio-group>
+
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Theme</p>
                   <div v-for="items in this.themeItems">
-                    <div v-for="subItem in items.items">
-                      <v-btn flat @click="switchTheme()">{{ subItem.title }}</v-btn>
-                    </div>
+                    <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                      <v-radio :label="subItem.title" :value="subItem.value" @change="switchTheme(items, subItem.value)"></v-radio>
+                    </v-radio-group>
                   </div>
-                  <ColorPicker/>
                 </div>
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="">Apply</v-btn>
@@ -90,30 +88,32 @@
             <v-card>
               <v-card-text>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Size</p>
+                  <v-radio-group v-model="aboutChoice" row>
+                    <v-radio label="Title" value="title" color="primary"></v-radio>
+                    <v-radio label="Subtitle" value="subtitle" color="primary"></v-radio>
+                  </v-radio-group>
                   <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Size</p>
+                    <!-- title 선택했을 때 -->
                     <v-slider
-                      v-model="titleS" class="px-2"
-                      step="1" max="20" min="1"
-                      thumb-label ticks
+                      v-if="aboutChoice === 'title'" v-model="aboutTitleS"
+                      step="1" max="20" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Subtitle</p>
+                    <!-- subtitle 선택했을 때 -->
                     <v-slider
-                      v-model="subtitleS" class="px-2"
-                      step="1" max="10" min="1"
-                      thumb-label ticks
+                      v-else-if="aboutChoice === 'subtitle'" v-model="aboutSubtitleS"
+                      step="1" max="10" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
                   </div>
                 </div>
+
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
-                <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
-                  <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
-                      
-                  </div>
-                </div>
+
+                <!-- color picker -->
+                <ColorPicker v-bind:aboutChoice="aboutChoice"/>
+
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
                 </div>
@@ -137,6 +137,37 @@
             </v-card>
           </v-expansion-panel-content>
 
+          <!-- <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Modal',true)">Modal</v-btn>
+                  <div v-if="ifPortfolioModal" class="isok"></div>
+                </div>
+                <div style="position: relative;">
+                  <v-btn flat @click="switchPortfolio('Grid',true)">Grid</v-btn>
+                  <div v-if="ifPortfolioGrid" class="isok"></div>
+                </div>
+                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+                <div class="px-1">
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <div v-for="items in this.PortfolioListColors">
+                    <div v-for="subItem in items.items" style="position: relative;">
+                      <v-btn flat @click="switchPortfolio('Color',subItem.value)">{{ subItem.title }}</v-btn>
+                      <div v-if="subItem.selected" class="isok"></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="text-align: center;">
+                  <v-btn small color="primary" @click="">Apply</v-btn>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content> -->
+
         </v-expansion-panel>
       </v-list>
     </v-navigation-drawer>
@@ -146,7 +177,7 @@
 
 <script>
 // theme 설정을 위해서 store에 저장
-import ColorPicker from './ColorPicker'
+import ColorPicker from './AboutColorPicker'
 import store from '../../store'
 
 export default {
@@ -156,10 +187,11 @@ export default {
   },
   data() {
     return {
+      aboutLayout: 'css1',
       Aboutdrawer: false,
+      // css
       cssArr: [true, false],
       themeArr: [true, false, false],
-      radioGroup: 1,
       // modal
       layoutItems: [
         {
@@ -192,6 +224,20 @@ export default {
           ]
         }
       ],
+      // ifPortfolioModal:true,
+      // ifPortfolioGrid:false,
+      // nowPortfolioColor:1,
+      // PortfolioListColors: [
+      //   {
+      //     action: 'fas fa-palette',
+      //     title: 'Color',
+      //     items: [
+      //       { title: 'White', value: 1, selected: true},
+      //       { title: 'Black', value: 2, selected: false},
+      //       { title: 'Blue' , value: 3, selected: false},
+      //     ]
+      //   },
+      // ],
       // firebase insert
       userAbout: {
         url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
@@ -204,23 +250,49 @@ export default {
           js: ['vanilla']
         }
       },
-      titleS: null,
-      subtitleS: null
+      // font
+      aboutChoice: 'title',
+      aboutTitleS: '1',
+      aboutSubtitleS: '1',
     }
   },
   watch: {
-    titleS: function() {
-      document.getElementsByClassName('aboutMe_subTitle').style.fontSize = this.titleS + 'rem';
+    // fontSize watch
+    aboutTitleS: function() {
+      document.getElementById('aboutTitle1').style.fontSize = this.aboutTitleS + 'rem';
+      document.getElementById('aboutTitle2').style.fontSize = this.aboutTitleS + 'rem';
     },
-    subtitleS: function() {
-      document.getElementById('portSubtitle').style.fontSize = this.subtitleS + 'rem';
+    aboutSubtitleS: function() {
+      document.getElementById('aboutSubtitle1').style.fontSize = this.aboutSubtitleS + 'rem';
+      document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
     }
   },
   methods: {
-    switchTheme(theme) {
-      console.log(theme)
-      store.commit('changeTheme', theme)
+    switchTheme(item, num) {
+      for (let i=0; i < this.themeArr.length; i++) {
+        if (num == (i+1)) {
+          console.log(item.items[i])
+          item.items[i].selected = true
+          store.commit('changeTheme', item.items[i].title)
+        } else {
+          item.items[i].selected = false
+        }
+      }
     },
+    // switchPortfolio(theme,out) {
+    //     if(theme == 'Modal'){
+    //         this.ifPortfolioModal = !this.ifPortfolioModal
+    //     }
+    //     else if(theme == 'Grid'){
+    //         this.ifPortfolioGrid = !this.ifPortfolioGrid
+    //     }
+    //     else if(theme == 'Color'){
+    //         let idx = this.nowPortfolioColor-1
+    //         this.PortfolioListColors[0].items[idx].selected = false
+    //         this.PortfolioListColors[0].items[out-1].selected = true
+    //         this.nowPortfolioColor = out
+    //     }
+    // },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
       let boolArr = []
@@ -236,7 +308,6 @@ export default {
       this.cssArr = boolArr
     },
     checkLog(n, m) {
-      n.selected = true
       console.log(n, m)
     }
   }
@@ -256,5 +327,17 @@ export default {
   display: fixed;
   left: 650px;
   top: 500px;
+}
+
+.isok{
+  position:absolute;
+  top:50%;
+  right:20%;
+  transform: translateY(-50%);
+  margin:auto 20px;
+  background-color: green;
+  border-radius: 10px;
+  height:20px;
+  width:20px;
 }
 </style>
