@@ -21,31 +21,6 @@
             label="Greeting"
             required
           ></v-text-field>
-          <v-layout wrap justify-center>
-            <v-flex xs6 md6 lg6 d-flex>
-              <v-sheet
-                class="d-flex my-3"
-                color="teal lighten-3"
-                height="150"
-                :elevation="6"
-                id="drop-zone"
-                v-bind:class="[isDragging?'drag-over':'']"
-                v-on:dragover="isDragging=true"
-                v-on:dragenter="isDragging=true"
-                v-on:dragleave="isDragging=false"
-              >
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
-                  <p class="my-auto mx-auto">Drag and Drop image files</p>
-                </div>
-                <input type="file" @change="onChange3" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
-              </v-sheet>
-            </v-flex>
-          </v-layout>
-          <v-layout v-if="dumpList.length > 0">
-            <v-flex v-for="item in dumpList" lg6 md6 xs6 class="px-3 py-3" style="height: 20rem;">
-              <img v-bind:src="item" width="100%" height="100%">
-            </v-flex>
-          </v-layout>
           <v-textarea
             name="input-7-1"
             label="about my self"
@@ -239,7 +214,7 @@
                   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
                     <p class="my-auto mx-auto">Drag and Drop image files</p>
                   </div>
-                  <input type="file" @change="onChange4" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                  <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -470,7 +445,6 @@ export default {
       e6: 1,
       pageTitle: null,
       greeting: null,
-      bannerImage: [],
       aboutMe: null,
       skill: {
         name: null,
@@ -502,7 +476,6 @@ export default {
       imageList: [],
       items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
       isDragging: false,
-      isDragging1: false
     }
   },
   created() {
@@ -543,7 +516,7 @@ export default {
       this.portfolio.sources.splice(idx, 1)
     },
     // drag and drop
-    onChange4: function (file) {
+    onChange: function (file) {
       this.isDragging = false
       let loadFile = file.target.files || file.dataTransfer.files
 
@@ -551,36 +524,6 @@ export default {
         return
       }
       this.addViewImage(loadFile)
-    },
-    onChange3: function (file) {
-      this.isDragging1 = false
-      let loadFile = file.target.files || file.dataTransfer.files
-
-      if (loadFile.length == 0) {
-        return
-      }
-      this.addViewImage2(loadFile)
-    },
-    addViewImage2: function(files) {
-      let _this = this
-
-      for (let i=0; i < files.length; i++) {
-        let file = files[i]
-        let reader = new FileReader()
-        if (file.type.match(/image.*/)) {
-          reader.onload = function(e) {
-            for (let j=0; j < files.length; j++) {
-            }
-            _this.dumpList.push(e.target.result)
-          }
-          reader.readAsDataURL(file)
-          console.log(file)
-          _this.bannerImage.push(file.name)
-          _this.imageList.push(file)
-        } else {
-          alert('이미지 파일만 올려주세요.')
-        }
-      }
     },
     addViewImage: function(files) {
       let _this = this
@@ -644,11 +587,11 @@ export default {
     // firebase에 최종 저장하기
     async savePort() {
       const user = await FirebaseServices.currentUser();
-      // this.upload(user.uid);
-      const result = await FirebaseServices.postPortfolios(user.uid, this.pageTitle, this.greeting, this.bannerImage, this.aboutMe, this.skills, this.portfolios);
-      setTimeout(function() {
-        alert('done')
-      }, 4000)
+      // default banner
+      let banner = {theme: 'Gradient', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fgradient.jpg?alt=media&token=575ef5d1-fd4d-4a3f-90ce-87c7b572648a', opacity: 'opacity1'}
+      // firebase storage에 저장
+      this.upload(user.uid);
+      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template1', banner, this.portfolios, this.skills, this.greeting, this.pageTitle);
     }
   }
 }

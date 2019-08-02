@@ -466,6 +466,7 @@ export default {
         .then('done')
     },
 
+
     updateUser() {
         // 이미지 올리면 유저 변경
     },
