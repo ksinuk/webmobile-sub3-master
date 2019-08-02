@@ -9,6 +9,7 @@ import VueTinySlider from 'vue-tiny-slider'
 import axios from 'axios'
 
 Vue.prototype.$http = axios
+Vue.prototype.$EventBus = new Vue();
 
 Vue.use(Vuetify, {
   iconfont : 'fa'
