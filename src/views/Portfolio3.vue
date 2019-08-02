@@ -1,12 +1,12 @@
 <!-- css 종류를 유저 디비에 저장-->
 <template lang="html">
   <div class="portfolio">
-    <v-layout row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover; background-image: linear-gradient(to top, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), url('');">
+    <!-- <v-layout row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover; background-image: linear-gradient(to top, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), url('');">
         <v-flex>
             <h1 style="color: black; font-size: 3rem; font-weight: 300; letter-spacing: 0.08rem;">{{item.title}}</h1>
             <p style="color: black;">{{item.subtitle}}</p>
         </v-flex>
-    </v-layout>
+    </v-layout> -->
     <AboutMe/>
     <PortfolioList/>
     {{item.bannerImg}}

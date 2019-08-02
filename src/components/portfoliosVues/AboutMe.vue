@@ -8,9 +8,9 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">Intro</span>
-            <span class="aboutMe_subTitle">About myself.</span>
+            <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
-          <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          <p id="aboutSubtitle1" v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
         </v-container>
       </div>
 
@@ -20,9 +20,9 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">skills</span>
-            <span class="aboutMe_subTitle">What I can do.</span>
+            <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <ul>
+          <ul id="aboutSubtitle2">
             <li v-for="item in userAbout.mySkill">{{ item }}</li>
           </ul>
         </v-container>
@@ -61,9 +61,12 @@
             <v-card>
               <v-card-text>
                 <div v-for="items in this.layoutItems">
-                  <div v-for="subItem in items.items">
-                    <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn>
-                  </div>
+
+                  <v-radio-group row v-model="aboutLayout" v-for="subItem in items.items">
+                    <v-radio :label="subItem.title" :value="subItem.value" color="primary"></v-radio>
+                    <!-- <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn> -->
+                  </v-radio-group>
+
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
@@ -90,19 +93,23 @@
             <v-card>
               <v-card-text>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Size</p>
+                  <v-radio-group v-model="aboutChoice" row>
+                    <v-radio label="Title" value="title" color="primary"></v-radio>
+                    <v-radio label="Subtitle" value="subtitle" color="primary"></v-radio>
+                  </v-radio-group>
                   <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Size</p>
+                    <!-- title 선택했을 때 -->
                     <v-slider
-                      v-model="titleS" class="px-2"
-                      step="1" max="20" min="1"
-                      thumb-label ticks
+                      v-if="aboutChoice === 'title'" v-model="aboutTitleS"
+                      step="1" max="20" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Subtitle</p>
+                    <!-- subtitle 선택했을 때 -->
                     <v-slider
-                      v-model="subtitleS" class="px-2"
-                      step="1" max="10" min="1"
-                      thumb-label ticks
+                      v-else-if="aboutChoice === 'subtitle'" v-model="aboutSubtitleS"
+                      step="1" max="10" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
                   </div>
                 </div>
@@ -156,10 +163,10 @@ export default {
   },
   data() {
     return {
+      aboutLayout: 'css1',
       Aboutdrawer: false,
       cssArr: [true, false],
       themeArr: [true, false, false],
-      radioGroup: 1,
       // modal
       layoutItems: [
         {
@@ -204,16 +211,21 @@ export default {
           js: ['vanilla']
         }
       },
-      titleS: null,
-      subtitleS: null
+      // font
+      aboutChoice: 'title',
+      aboutTitleS: '1',
+      aboutSubtitleS: '1'
     }
   },
   watch: {
-    titleS: function() {
-      document.getElementsByClassName('aboutMe_subTitle').style.fontSize = this.titleS + 'rem';
+    // fontSize watch
+    aboutTitleS: function() {
+      document.getElementById('aboutTitle1').style.fontSize = this.aboutTitleS + 'rem';
+      document.getElementById('aboutTitle2').style.fontSize = this.aboutTitleS + 'rem';
     },
-    subtitleS: function() {
-      document.getElementById('portSubtitle').style.fontSize = this.subtitleS + 'rem';
+    aboutSubtitleS: function() {
+      document.getElementById('aboutSubtitle1').style.fontSize = this.aboutSubtitleS + 'rem';
+      document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
     }
   },
   methods: {
