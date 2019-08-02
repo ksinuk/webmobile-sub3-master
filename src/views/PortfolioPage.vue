@@ -5,7 +5,7 @@
     <AboutMe :uid="uid"/>
     <PortfolioList :uid="uid" :css="css"/>
 
-    
+
 </div>
 
 </template>
@@ -29,14 +29,21 @@ export default {
 
     created() {
       this.getUserID();
+      let th = this;
     },
     data() {
         return {
-<<<<<<< src/views/PortfolioPage.vue
           item: [],
           banner: null,
           user: null,
-          image: null
+          image: null,
+          uid:'',
+          user:'',
+          mybookmark:false,
+          iscontrol:false,
+          css:0,
+          visitNum:0,
+          toBookMarkNum:0,
         }
     },
 
@@ -49,7 +56,7 @@ export default {
           alert('로그인이 필요합니다!');
 
           return __this.$router.push('/login');
-        } 
+        }
         const tmp = firebase.auth().onAuthStateChanged(function(user) {
             __this.user = user.uid;
 
@@ -79,23 +86,3 @@ export default {
     }
 }
 </script>
-=======
-            uid:'',
-            user:'',
-            mybookmark:false,
-            iscontrol:false,
-            css:0,
-            visitNum:0,
-            toBookMarkNum:0,
-        }
-    },
-    created(){
-        let th = this
-    },
-    methods :{
-
-    },
-}
-</script>
-
->>>>>>> src/views/PortfolioPage.vue

@@ -291,7 +291,7 @@ export default {
             if (user) {
                 console.log('user is signed in')
                 return true;
-            } 
+            }
             else {
                 console.log('No user is signed in')
                 return false;
@@ -351,7 +351,7 @@ export default {
             displayName: display_name,
             photoURL: photo_url
         })
-        console.log(user) 
+        console.log(user)
     },
     // store 에 있는 유저정보 업데이트
     updatedStoreUser() {
@@ -360,7 +360,7 @@ export default {
             store.commit('setUserName', _user.displayName)
             store.commit('setUserState', true)
             store.commit('setUserId', _user.uid)
-        } 
+        }
         else {
             store.commit('setUserName', '')
             store.commit('setUserState', false)
@@ -387,7 +387,7 @@ export default {
         if (_user) {
             store.commit('setUserName', _user.displayName)
             store.commit('setUserState', true)
-        } 
+        }
         else {
             store.commit('setUserName', '')
             store.commit('setUserState', false)
@@ -472,74 +472,36 @@ export default {
     },
     // 이미지 업로더
     uploadfile(user, loadFile) {
-        let filename = loadFile.name
-
-<<<<<<< src/services/FirebaseServices.js
-    uploadTask.on('state_changed', function(snapshot) {
-      // progressbar
-      // 진행정도를 보여줌
-      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done')
-      switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED:
-          console.log('Upload is paused')
-          break
-        case firebase.storage.TaskState.RUNNING:
-          console.log('Upload is running')
-          break
-      }
-    }, function(error) {
-      console.log(error)
-      switch (error.code) {
-        case 'storage/unauthorized':
-          break
-        case 'storage/canceled':
-          break
-        case 'storage/unknown':
-          break
-      }
-    }, function() {
-        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log('File available at', downloadURL)
-      })
-    })
-  }
-=======
-        let storageRef = firebase.storage().ref('/' + user + '/' + filename)
-        let uploadTask = storageRef.put(loadFile)
-
-        uploadTask.on('state_changed', 
-            function(snapshot) {
-                // progressbar
-                // 진행정도를 보여줌
-                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done')
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                    console.log('Upload is paused')
-                    break
-                    case firebase.storage.TaskState.RUNNING: 
-                    console.log('Upload is running')
-                    break
-                }
-            }, 
-            function(error) {
-                console.log(error)
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                    break
-                    case 'storage/canceled':
-                    break
-                    case 'storage/unknown':
-                    break
-                }
-            }, 
-            function() {
-                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                    console.log('File available at', downloadURL)
-                })
-            }
-        )
+       let filename = loadFile.name
+       let storageRef = firebase.storage().ref('/users/' + user + '/' + filename)
+       let uploadTask = storageRef.put(loadFile)
+       uploadTask.on('state_changed', function(snapshot) {
+         // progressbar
+         // 진행정도를 보여줌
+         let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+         console.log('Upload is ' + progress + '% done')
+         switch (snapshot.state) {
+           case firebase.storage.TaskState.PAUSED:
+             console.log('Upload is paused')
+             break
+           case firebase.storage.TaskState.RUNNING:
+             console.log('Upload is running')
+             break
+         }
+       }, function(error) {
+         console.log(error)
+         switch (error.code) {
+           case 'storage/unauthorized':
+             break
+           case 'storage/canceled':
+             break
+           case 'storage/unknown':
+             break
+         }
+       }, function() {
+           uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+           console.log('File available at', downloadURL)
+         })
+       })
+     }
     }
->>>>>>> src/services/FirebaseServices.js
-}
