@@ -7,6 +7,7 @@ import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import Portfolio from './views/Portfolio.vue'
 import Portfolio2 from './views/Portfolio2.vue'
+import CheckPort from './views/CheckPort.vue'
 
 import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
@@ -63,6 +64,11 @@ export default new Router({
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             component: Portfolio2
+        },
+        {
+            path: '/checkport',
+            name: 'checkport',
+            component: CheckPort
         },
         {
             path: '/portfolio/:uid',

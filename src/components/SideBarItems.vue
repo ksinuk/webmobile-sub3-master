@@ -11,9 +11,10 @@
     <div>
       <!-- 로그인 되어 있으면 가림 -->
       <v-btn v-show="!this.$store.state.firebaseUser.inUser" flat to="/login">loginpage</v-btn>
-      
+
       <v-btn flat to="/board">board</v-btn>
       <v-btn flat to="/write_portfolio">write_portfolio</v-btn>
+      <v-btn flat to="/portfoliopage">my_portfolio</v-btn>
     </div>
   </v-container>
 </template>

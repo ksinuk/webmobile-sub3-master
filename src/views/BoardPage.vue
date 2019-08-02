@@ -34,6 +34,10 @@ export default {
         state: 'view'
       }
     },
+
+    created() {
+
+    },
     methods: {
       getChildState: function(text) {
         this.state = text
@@ -41,4 +45,3 @@ export default {
     }
 }
 </script>
-

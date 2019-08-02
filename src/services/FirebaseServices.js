@@ -280,17 +280,12 @@ async currentUser() {
   // 현재 로그인 user doc 가져오기
   async currentUser() {
     var user = firebase.auth().currentUser;
-    if(user==null){
-      console.log("fdasfasdfasdf");
-    }
+
     var docRef = db.collection(USERS);
     const detailedUser = docRef.get().then((docSnapshots) => {
       let results = docSnapshots.docs.map((doc) => {
       let data = doc.data()
-      if (data.uid === user.uid) {
-        console.log("데이터베이스 테스트 :"+data.uid)
-        return data
-      }
+    
       })
       for (var res in results) {
         if (results[res] !== undefined) {
@@ -442,7 +437,7 @@ async currentUser() {
         case firebase.storage.TaskState.PAUSED:
           console.log('Upload is paused')
           break
-        case firebase.storage.TaskState.RUNNING: 
+        case firebase.storage.TaskState.RUNNING:
           console.log('Upload is running')
           break
       }
