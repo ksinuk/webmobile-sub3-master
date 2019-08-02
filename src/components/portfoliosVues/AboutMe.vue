@@ -132,7 +132,7 @@
             </v-card>
           </v-expansion-panel-content>
 
-          <v-expansion-panel-content>
+          <!-- <v-expansion-panel-content>
             <template v-slot:header>
               <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
             </template>
@@ -161,7 +161,7 @@
                 </div>
               </v-card-text>
             </v-card>
-          </v-expansion-panel-content>
+          </v-expansion-panel-content> -->
 
         </v-expansion-panel>
       </v-list>
@@ -218,20 +218,20 @@ export default {
           ]
         }
       ],
-      ifPortfolioModal:true,
-      ifPortfolioGrid:false,
-      nowPortfolioColor:1,
-      PortfolioListColors: [
-        {
-          action: 'fas fa-palette',
-          title: 'Color',
-          items: [
-            { title: 'White', value: 1, selected: true},
-            { title: 'Black', value: 2, selected: false},
-            { title: 'Blue' , value: 3, selected: false},
-          ]
-        },
-      ],
+      // ifPortfolioModal:true,
+      // ifPortfolioGrid:false,
+      // nowPortfolioColor:1,
+      // PortfolioListColors: [
+      //   {
+      //     action: 'fas fa-palette',
+      //     title: 'Color',
+      //     items: [
+      //       { title: 'White', value: 1, selected: true},
+      //       { title: 'Black', value: 2, selected: false},
+      //       { title: 'Blue' , value: 3, selected: false},
+      //     ]
+      //   },
+      // ],
       // firebase insert
       userAbout: {
         url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
@@ -261,20 +261,20 @@ export default {
       console.log(theme)
       store.commit('changeTheme', theme)
     },
-    switchPortfolio(theme,out) {
-        if(theme == 'Modal'){
-            this.ifPortfolioModal = !this.ifPortfolioModal
-        }
-        else if(theme == 'Grid'){
-            this.ifPortfolioGrid = !this.ifPortfolioGrid
-        }
-        else if(theme == 'Color'){
-            let idx = this.nowPortfolioColor-1
-            this.PortfolioListColors[0].items[idx].selected = false
-            this.PortfolioListColors[0].items[out-1].selected = true
-            this.nowPortfolioColor = out
-        }
-    },
+    // switchPortfolio(theme,out) {
+    //     if(theme == 'Modal'){
+    //         this.ifPortfolioModal = !this.ifPortfolioModal
+    //     }
+    //     else if(theme == 'Grid'){
+    //         this.ifPortfolioGrid = !this.ifPortfolioGrid
+    //     }
+    //     else if(theme == 'Color'){
+    //         let idx = this.nowPortfolioColor-1
+    //         this.PortfolioListColors[0].items[idx].selected = false
+    //         this.PortfolioListColors[0].items[out-1].selected = true
+    //         this.nowPortfolioColor = out
+    //     }
+    // },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
       let boolArr = []

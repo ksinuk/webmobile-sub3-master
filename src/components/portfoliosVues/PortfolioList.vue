@@ -24,12 +24,34 @@
     </section>
 
     <div id="select-css" v-if="iscontrol">
-        <button id="css1" @click="changeCss(0,1)">white</button><br>
-        <button id="css2" @click="changeCss(0,2)">black</button><br>
-        <button id="css3" @click="changeCss(0,3)">blue&nbsp</button><br>
-
-        <button id="css3" @click="changeCss(1,true)">modal</button><br>
-        <button id="css3" @click="changeCss(2,true)">grid&nbsp</button><br>
+        <div>
+            <button class="sidebar-open" @click="issidebar = true" v-if="!issidebar">사이드바 열기</button>
+            <button class="sidebar-open" @click="issidebar = false" v-if="issidebar">사이드바 닫기</button>
+        </div>
+        <hr>
+        <div v-if="issidebar">
+            <div class="select-div">
+                <button id="css1" @click="changeCss(0,1)">white</button>
+                <div class="isok" v-if="css.color == 1"></div>
+            </div>
+            <div class="select-div">
+                <button id="css2" @click="changeCss(0,2)">black</button>
+                <div class="isok" v-if="css.color == 2"></div>
+            </div>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(0,3)">blue&nbsp</button>
+                <div class="isok" v-if="css.color == 3"></div>
+            </div>
+            <hr>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(1,true)">modal</button>
+                <div class="isok" v-if="css.modal"></div>
+            </div>
+            <div class="select-div">
+                <button id="css3" @click="changeCss(2,true)">grid&nbsp</button>
+                <div class="isok" v-if="css.grid"></div>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -249,6 +271,7 @@ export default {
             user:'',
             mybookmark:false,
             iscontrol:false,
+            issidebar:false,
             css:{
                 color:1,
                 modal:false,
@@ -376,29 +399,39 @@ export default {
 #select-css{
     z-index:20;
     position:fixed;
-    top:10%;
-    right:10px;
+    bottom:0;
+    left:0;
     padding:10px;
-    border:3px solid black;
+    width:300px;
+    background-color: rgb(66,66,66);
     font-family: monospace;
+    color:white;
+    font-size:20px;
 }
-#select-css button{
+.select-div{
+    position: relative;
+    height:50px;
+}
+.sidebar-open{
+    margin:10px;
+}
+.select-div button{
+    position:absolute;
+    top:50%;
+    left:10%;
+    transform: translateY(-50%);
     padding:5px 10px;
-    margin:5px;
-    font-size:15px;
-    border:1px solid gray;
 }
-#select-css #css1{
-    color:black;
-    background-color: white;
-}
-#select-css #css2{
-    color:white;
-    background-color: black;
-}
-#select-css #css3{
-    color:white;
-    background-color:royalblue;
+.isok{
+  position:absolute;
+  top:50%;
+  right:20%;
+  transform: translateY(-50%);
+  margin:auto 20px;
+  background-color: green;
+  border-radius: 10px;
+  height:20px;
+  width:20px;
 }
 
 .l-section {
