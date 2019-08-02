@@ -5,7 +5,7 @@ import firebase from 'firebase'
 import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
-import Portfolio from './views/Portfolio.vue'
+// import Portfolio from './views/Portfolio.vue'
 import Portfolio2 from './views/Portfolio2.vue'
 import CheckPort from './views/CheckPort.vue'
 
@@ -23,6 +23,8 @@ import SearchResult from './views/SearchResult.vue'
 
 // 포트폴리오 입력 링크
 import PortfolioWrite from './views/PortfolioWrite.vue'
+
+import TestPage from './views/TestPage.vue'
 
 // portfolio3 링크
 import Portfolio3 from './views/Portfolio3.vue'
@@ -48,14 +50,15 @@ export default new Router({
             name: 'home',
             component: Home
         },
-        {
-            path: '/portfolio',
-            name: 'portfolio',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: Portfolio
-        },
+        // {
+        //     path: '/portfolio',
+        //     name: 'portfolio',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: Portfolio
+        // },
+
 
         {
             path: '/portfolio2',
@@ -78,6 +81,7 @@ export default new Router({
             // which is lazy-loaded when the route is visited.
             component: Portfolio
         },
+
         {
             path: '/about',
             name: 'about',
@@ -124,12 +128,22 @@ export default new Router({
             component: PortfolioWrite
         },
         {
-            path: '/portfolio3',
-            name: 'portfolio3',
-            component: Portfolio3
+            path: '/test',
+            name: 'test',
+            component: TestPage
         },
+        // {
+        //     path: '/portfolio3',
+        //     name: 'portfolio3',
+        //     component: Portfolio3
+        // },
         {
             path: '/portfoliopage',
+            name: 'portfoliopage',
+            component: PortfolioPage
+        },
+        {
+            path: '/portfoliopage/:uid',
             name: 'portfoliopage',
             component: PortfolioPage
         },

@@ -1,6 +1,7 @@
 <template lang="html">
-    <!-- 포트폴리오 엔트리: 예술의 전당 -->
-    <article role="article" id="work1" class="is-init is-animated" :class="{css1:cssArr[0],css2:cssArr[1],css3:cssArr[2]}" data-animation="fade-left" v-if="isok">
+<div :class="{cssBase:true, cssColor:true, cssModal:ismodal, cssGrid:isgrid}">
+<div :themeColor="cssColor">
+    <article role="article" id="work1" class="is-init is-animated" data-animation="fade-left" v-if="isok">
         <div class="gallery-image" @click="open('open')">
             <img class="gallery-image-thumb" :src=ports.img :alt="ports.img" aria-describedby="work1Description">
         </div><br>
@@ -25,6 +26,7 @@
                     </div>
                 </figcaption>
 
+                <div style="margin:1em;">
                 <table class="gallery-table">
                     <thead>
                         <tr>
@@ -55,26 +57,38 @@
                                 <td data-th="Related Keywords" class="vhtml" v-html="js.keyword"></td>
                             </tr>
                         </template>
-
                     </tbody>
                 </table>
+                </div>
 
                 <div class="btn-end" v-if="ismodal" @click="open('end')">end</div>
             </div>
         </div>
+        <hr>
     </article>
-
+</div>
+</div>
 </template>
 
 <style lang="scss" scoped>
-.css1{
-    @import "./PortfolioListCss1.scss";
+.cssBase{
+    @import "./scss/PortfolioElemBase.scss";
 }
-.css2{
-    @import "./PortfolioListCss2.scss";
+.cssGrid{
+    .gallery-item{
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .gallery-caption{
+        padding:10px;
+    }
 }
-.css3{
-    @import "./PortfolioListCss3.scss";
+.cssModal{
+    @import "./scss/PortfolioElemModal.scss";
+}
+.cssColor{
+    @import "./scss/PortfolioElemColor.scss";
 }
 </style>
 
@@ -89,30 +103,23 @@ export default {
             isok:false,
             out:false,
             ismodal:false,
+            isgrid:false,
             cssClass:'',
             cssStyle:'',
             cssAddr:'',
-            cssArr:[false,false,false]
+            cssColor:'',
         }
     },
     props:{
         ports: {type: null},
         cssmod:{type: null},
+        change:{type: null},
     },
     components:{
     },
     created(){
-        this.cssAddr = "./PortfolioListCss"+this.cssmod+".css"
-        this.cssStyle = '<style lang="css" scoped :src="'+this.cssAddr+'"></style>'
-        console.log("this.cssmod: ",this.cssmod)
-        if(this.cssmod==3){
-            this.ismodal = true
-            this.isok = true
-        }
-        else if(this.cssmod==1 || this.cssmod==2){
-            this.ismodal = false
-            this.isok = true
-        }
+        console.log("start css : ",this.cssmod)
+        this.changeCss()
     },
     mounted(){
         this.linkcss()
@@ -131,37 +138,42 @@ export default {
                 let alist = vhtml.querySelectorAll('a')
                 for(let i=0;i<alist.length;i++){
                     let aa =alist[i]
-                    if(this.cssmod == 1 || this.cssmod == 2){
+                    if(this.cssmod.color == 1 || this.cssmod.color == 2){
                         aa.style.color = '#30b7e8'
                     }
-                    else if(this.cssmod == 3){
+                    else if(this.cssmod.color == 3){
                         aa.style.color = 'rgb(155, 34, 34)'
                     }
                 }   
             }
+        },
+        changeCss:function(){
+            this.out = false
+            this.isok = false
+
+            if(1<=this.cssmod.color && this.cssmod.color<=3){
+                this.ismodal = this.cssmod.modal ? true:false
+                this.isgrid  = this.cssmod.grid  ? true:false
+                this.isok = true
+            }
+            switch(this.cssmod.color){
+                case 1:
+                    this.cssColor = 'White'
+                    break
+                case 2:
+                    this.cssColor = 'Black'
+                    break
+                case 3:
+                    this.cssColor = 'Blue'
+                    break
+                default:
+                    this.cssColor = 'default'
+            }
         }
     },
     watch:{
-        cssmod:function(){
-            this.out = false
-            this.isok = false
-            if(this.cssmod==3){
-                this.ismodal = true
-                this.isok = true
-            }
-            else if(this.cssmod==1 || this.cssmod==2){
-                this.ismodal = false
-                this.isok = true
-            }
-            else{
-                this.isok = false
-            }
-
-            for(let i=0;i<3;i++){
-                this.cssArr[i] = false
-            }
-
-            this.cssArr[this.cssmod-1] = true
+        change:function(){
+            this.changeCss()
             this.linkcss()
         },
     },

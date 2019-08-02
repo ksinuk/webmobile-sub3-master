@@ -39,6 +39,8 @@
             <v-flex>
                 <carousel per-page="3">
                     <slide v-for="bookmark in bookmarkList" class="px-2">
+                        <hr>
+                        <p><a :href="bookmark.addr" class="bookmark-link">{{bookmark.uid}}</a></p>
                         <v-card>
                             <v-img :src="bookmark.img" height="200px">
                             </v-img>
@@ -108,15 +110,19 @@ export default {
         viewProfile: function() {
             this.photoURL = this.$store.state.firebaseUser.photoURL
         },
-        async viewBookmark() {
-            var bookmarks = await FirebaseServices.getPortfolios();
-            var user = await FirebaseServices.currentUser();
-            for (let book in bookmarks) {
-                if (user.bookmark.includes(bookmarks[book].pk)) {
-                    this.bookmarkList.push(bookmarks[book])
-                }
-            }
-            console.log(this.bookmarkList)
+        viewBookmark:function() {
+            // var bookmarks = await FirebaseServices.getPortfolios();
+            // var user = await FirebaseServices.currentUser();
+            // for (let book in bookmarks) {
+            //     if (user.bookmark.includes(bookmarks[book].pk)) {
+            //         this.bookmarkList.push(bookmarks[book])
+            //     }
+            // }
+            let th = this
+            firebase.auth().onAuthStateChanged(async function(user){
+                th.bookmarkList = await FirebaseServices.getBookMarkFromUid(user.uid) 
+                console.log("UserProfile th.bookmarkList: ",th.bookmarkList)           
+            })
         },
         makeChart: function(){
             var cc = document.querySelector('.front-circle')
@@ -233,4 +239,8 @@ export default {
         width:300px;
         border-radius: 75px;
     }
+
+.bookmark-link, .bookmark-link:visited, .bookmark-link:link{
+    color:purple;
+}
 </style>

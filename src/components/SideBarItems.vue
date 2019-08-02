@@ -14,7 +14,8 @@
 
       <v-btn flat to="/board">board</v-btn>
       <v-btn flat to="/write_portfolio">write_portfolio</v-btn>
-      <v-btn flat to="/portfoliopage">my_portfolio</v-btn>
+      <v-btn flat to="/portfoliopage">portfolio</v-btn>
+
     </div>
   </v-container>
 </template>
