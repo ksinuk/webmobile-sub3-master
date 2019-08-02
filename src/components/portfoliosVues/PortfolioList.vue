@@ -407,13 +407,14 @@ export default {
     font-family: monospace;
     color:white;
     font-size:20px;
+    font-weight: bold;
 }
 .select-div{
     position: relative;
     height:50px;
 }
 .sidebar-open{
-    margin:10px;
+    margin:0 0 10px 0;
 }
 .select-div button{
     position:absolute;
