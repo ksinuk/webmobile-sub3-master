@@ -1,5 +1,4 @@
 <template lang="html">
-
 <div class="portfolio">
     <Header :uid="uid"/>
     <AboutMe :uid="uid"/>
@@ -7,7 +6,6 @@
 
 
 </div>
-
 </template>
 
 <script>
@@ -26,6 +24,7 @@ export default {
         AboutMe,
         PortfolioList
     },
+
 
     created() {
       this.getUserID();

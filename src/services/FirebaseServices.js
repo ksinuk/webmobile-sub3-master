@@ -272,7 +272,6 @@ export default {
         }).then(console.log('done'))
     },
 
-
     getIntroduce(){
         const intro = db.collection('introduce')
         return intro
@@ -472,6 +471,7 @@ export default {
     },
     // 이미지 업로더
     uploadfile(user, loadFile) {
+
        let filename = loadFile.name
        let storageRef = firebase.storage().ref('/users/' + user + '/' + filename)
        let uploadTask = storageRef.put(loadFile)
