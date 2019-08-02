@@ -398,7 +398,7 @@
           <v-icon>add</v-icon>
         </v-btn>
       </div>
-      <v-btn color="primary" @click="e6 = 3; addPortfolio(); savePort()">Save</v-btn>
+      <v-btn color="primary" @click="addPortfolio(); savePort()">Save</v-btn>
       <v-btn flat @click="e6 = 1">Cancel</v-btn>
     </v-stepper-content>
 
