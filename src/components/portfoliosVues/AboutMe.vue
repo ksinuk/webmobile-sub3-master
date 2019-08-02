@@ -24,9 +24,10 @@
             <span class="aboutMe_title">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <ul id="aboutSubtitle2">
-            <li v-for="item in userAbout.mySkill">{{ item }}</li>
-          </ul>
+          <div id="aboutSubtitle2" v-for="item in userAbout.mySkill">
+              <p style="display: inline;">{{ item.name }}</p>
+              <div :id="item.name" class="bar back" :data-skill="item.degree"></div>
+          </div>
         </v-container>
       </div>
 
@@ -176,6 +177,9 @@
 </template>
 
 <script>
+import FirebaseServices from '../../services/FirebaseServices'
+import firebase from 'firebase/app'
+
 // theme 설정을 위해서 store에 저장
 import ColorPicker from './AboutColorPicker'
 import store from '../../store'
@@ -187,6 +191,7 @@ export default {
   },
   data() {
     return {
+      user: null,
       aboutLayout: 'css1',
       Aboutdrawer: false,
       // css
@@ -267,7 +272,28 @@ export default {
       document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
     }
   },
+  created() {
+    this.getAbout();
+  },
   methods: {
+    // firebase db 가져오기
+    getAbout: function() {
+      let __this = this;
+      const tmp = firebase.auth().onAuthStateChanged(function(user) {
+        __this.user = user.uid;
+        FirebaseServices.getMyPort(__this.user).then(function(res) {
+          __this.userAbout.mySelf = res.aboutMe;
+          __this.userAbout.mySkill = res.skills;
+          console.log(res.skills);
+          res.skills.forEach(function(skill) {
+            let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
+            console.log(document.getElementById(skill.name));
+            document.getElementById(skill.name).style.width = calc(tmp);
+            console.log(document.getElementById(skill.name).style);
+          })
+        })
+      })
+    },
     switchTheme(item, num) {
       for (let i=0; i < this.themeArr.length; i++) {
         if (num == (i+1)) {
@@ -340,4 +366,55 @@ export default {
   height:20px;
   width:20px;
 }
+
+// skill graph code
+@keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-webkit-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-moz-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-o-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+
+  .bar{
+  background-color: #EEE;
+  padding: 2px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #FFF;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+  }
+  .bar::before{
+  content:  attr(data-skill);
+  background-color: #f3b0ff;
+  display: inline-block;
+  padding: 5px 0 5px 10px;
+  border-radius: inherit;
+  animation: load 2s 0s;
+  -webkit-animation: load 2s 0s;
+  -moz-animation: load 2s 0s;
+  -o-animation: load 2s 0s;
+  }
+
+  .bar.front::before{
+  background-color: #ffcc33;
+  }
+  .bar.back::before{
+  background-color: #a6cfe3;
+  }
 </style>
