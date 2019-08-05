@@ -12,7 +12,6 @@
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" style="text-align: left;">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <!-- template2 -->
         <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
@@ -20,7 +19,6 @@
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <!-- template3 -->
         <v-layout v-else-if="layout === 'template3'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
@@ -28,11 +26,10 @@
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
 
         <!-- sidebar -->
-        <v-navigation-drawer v-model="drawer" :mini-variant="mini" absolute dark temporary>
+        <v-navigation-drawer v-model="headerDrawer" :mini-variant="mini" fixed dark temporary>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>
@@ -281,7 +278,7 @@ export default {
         return {
             user: null,
             portfolio: [],
-            drawer: null,
+            headerDrawer: null,
             mini: false,
             select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
             fileName: null,
@@ -308,6 +305,9 @@ export default {
     },
     created() {
         this.getPortfolio();
+        this.$EventBus.$on('Header', () => {
+            this.headerDrawer = !this.headerDrawer
+            })
     },
     watch: {
         titleS: function() {

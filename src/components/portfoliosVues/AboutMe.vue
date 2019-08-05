@@ -1,6 +1,5 @@
 <template>
   <v-container :class="{css1:cssArr[0], xs6:cssArr[0], css2:cssArr[1], xs12:cssArr[1]}">
-    <v-btn large flat color="grey" @click="Aboutdrawer = !Aboutdrawer" id="AboutBtn">사이드바</v-btn>
     <div :themeColor="this.$store.state.theme" class="aboutMeBody">
       <!-- about my self -->
       <div class="contentSize aboutMe_about">
@@ -47,7 +46,7 @@
 
     </div>
     <!-- sidebar -->
-    <v-navigation-drawer v-model="Aboutdrawer" fixed dark temporary >
+    <v-navigation-drawer v-model="aboutDrawer" fixed dark temporary >
       <v-list class="pt-0" dense>
         <v-expansion-panel>
 
@@ -193,7 +192,7 @@ export default {
     return {
       user: null,
       aboutLayout: 'css1',
-      Aboutdrawer: false,
+      aboutDrawer: false,
       // css
       cssArr: [true, false],
       themeArr: [true, false, false],
@@ -274,6 +273,9 @@ export default {
   },
   created() {
     this.getAbout();
+    this.$EventBus.$on('About', () => {
+      this.aboutDrawer = !this.aboutDrawer
+    })
   },
   methods: {
     // firebase db 가져오기
@@ -348,13 +350,6 @@ export default {
 .css2{
   @import "./scss/aboutMe_2.scss";
 }
-// sidebar button
-#AboutBtn {
-  display: fixed;
-  left: 650px;
-  top: 500px;
-}
-
 .isok{
   position:absolute;
   top:50%;

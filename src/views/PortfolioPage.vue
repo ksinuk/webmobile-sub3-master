@@ -1,10 +1,9 @@
 <template lang="html">
 <div class="portfolio">
-    <Header :uid="uid"/>
-    <AboutMe :uid="uid"/>
-    <PortfolioList :uid="uid" :css="css"/>
-
-
+  <NavPortfolio/>
+  <Header :uid="uid"/>
+  <AboutMe :uid="uid"/>
+  <PortfolioList :uid="uid" :css="css"/>
 </div>
 </template>
 
@@ -12,7 +11,7 @@
 import Header from '@/components/portfoliosVues/Header.vue'
 import AboutMe from '@/components/portfoliosVues/AboutMe.vue'
 import PortfolioList from '@/components/portfoliosVues/PortfolioList.vue'
-
+import NavPortfolio from '@/components/portfoliosVues/navPortfolio.vue'
 import FirebaseService from '../services/FirebaseServices'
 import firebase from 'firebase/app'
 
@@ -22,7 +21,8 @@ export default {
     components: {
         Header,
         AboutMe,
-        PortfolioList
+        PortfolioList,
+        NavPortfolio
     },
 
 
