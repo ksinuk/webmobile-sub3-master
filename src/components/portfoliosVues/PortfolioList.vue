@@ -1,12 +1,6 @@
 <template lang="html">
 <div>
     <section role="region" id="foliolist" class="l-section">
-        <h1>총 방문자 수 : {{visitNum}}</h1>
-        <h1>북마크한 유저의 수 : {{toBookMarkNum}}</h1>
-
-        <button v-if="user && uid && !mybookmark" class="bookMarkBtnIn" @click="doMybookmark(false)">북마크 하기</button>
-        <button v-if="user && uid && mybookmark" class="bookMarkBtnOut" @click="doMybookmark(true)">북마크 취소</button>
-
         <div class="l-section-holder">
             <h1 class="section-heading is-init is-animated" data-animation="fade-up">
                 <span class="secondary">Portfolio</span>
@@ -23,36 +17,62 @@
         </div>
     </section>
     
-    <div id="select-css" v-if="iscontrol">
-        <div>
-            <button class="sidebar-open" @click="issidebar = true" v-if="!issidebar">사이드바 열기</button>
-            <button class="sidebar-open" @click="issidebar = false" v-if="issidebar">사이드바 닫기</button>
-        </div>
-        <hr>
-        <div v-if="issidebar">
-            <div class="select-div">
-                <button id="css1" @click="changeCss(0,1)">white</button>
-                <div class="isok" v-if="css.color == 1"></div>
-            </div>
-            <div class="select-div">
-                <button id="css2" @click="changeCss(0,2)">black</button>
-                <div class="isok" v-if="css.color == 2"></div>
-            </div>
-            <div class="select-div">
-                <button id="css3" @click="changeCss(0,3)">blue&nbsp</button>
-                <div class="isok" v-if="css.color == 3"></div>
-            </div>
-            <hr>
-            <div class="select-div">
-                <button id="css3" @click="changeCss(1,true)">modal</button>
-                <div class="isok" v-if="css.modal"></div>
-            </div>
-            <div class="select-div">
-                <button id="css3" @click="changeCss(2,true)">grid&nbsp</button>
-                <div class="isok" v-if="css.grid"></div>
-            </div>
-        </div>
-    </div>
+    <v-navigation-drawer v-model="portfolioDrawer" fixed dark temporary >
+      <v-list class="pt-0" dense>
+        <v-expansion-panel>
+
+            <!-- layout selector -->
+            <v-expansion-panel-content>
+                <template v-slot:header>
+                <div><i class="fas fa-image pr-3"></i>Layout</div>
+                </template>
+                <v-card>
+                <v-card-text>
+                    <div>
+
+                        <div style="display: flex;">
+                            <v-checkbox label="modal" @change="changeCss(1,true)"></v-checkbox>
+                            <v-checkbox label="grid" @change="changeCss(2,true)"></v-checkbox>
+                        </div>
+
+                    </div>
+                    <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
+
+                    <div class="px-1">
+                    <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                    <div>
+                        <v-radio-group v-model="tmp.color">
+                            <v-radio label="white" value="portColor1" @change="changeCss(0,1)"></v-radio>
+                            <v-radio label="black" value="portColor2" @change="changeCss(0,2)"></v-radio>
+                            <v-radio label="blue" value="portColor3" @change="changeCss(0,3)"></v-radio>
+                        </v-radio-group>
+                    </div>
+                    </div>
+                    <div style="text-align: center;">
+                    <v-btn small color="primary" @click="">Apply</v-btn>
+                    </div>
+                </v-card-text>
+                </v-card>
+            </v-expansion-panel-content>
+            
+          <!-- animation selector -->
+          <v-expansion-panel-content>
+            <template v-slot:header>
+              <div><i class="fas fa-image pr-3"></i>Animation</div>
+            </template>
+            <v-card>
+              <v-card-text>
+                <div>
+                  <div>
+                    <button>애니메이션 1</button>
+                  </div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-list>
+    </v-navigation-drawer>
 </div>
 </template>
 
@@ -265,13 +285,17 @@ export default {
                     ],
                 }
             ],
-
             portfolios:[],
             uid:'',
             user:'',
             mybookmark:false,
             iscontrol:false,
-            issidebar:false,
+            portfolioDrawer:false,
+            tmplayout: null,
+            tmp: {
+                layout: null,
+                color: null,
+            },
             css:{
                 color:1,
                 modal:false,
@@ -284,6 +308,10 @@ export default {
         }
     },
     created(){
+        this.$EventBus.$on('Portfolio', () => {
+            this.portfolioDrawer = !this.portfolioDrawer
+            })
+
         let th = this
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
@@ -370,13 +398,12 @@ export default {
             if(num == 0) this.css.color = write
             else if(num == 1) this.css.modal = !this.css.modal
             else if(num == 2) this.css.grid = !this.css.grid
-
-            let th = this
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    FirebaseService.updateUserData(user.uid,th.css,th.visitNum)
-                }
-            })
+            // let th = this
+            // firebase.auth().onAuthStateChanged(function(user) {
+            //     if (user) {
+            //         FirebaseService.updateUserData(user.uid,th.css,th.visitNum)
+            //     }
+            // })
 
             this.cssChange = this.cssChange+1
         },
@@ -391,11 +418,11 @@ export default {
 
 <style lang="css" scoped>
 /* section */
-@media screen and (max-width: 1499px)
-.l-section {
+@media screen and (max-width: 1499px) {
+    .l-section {
     padding: 100px 5vw;
+    }
 }
-
 #select-css{
     z-index:20;
     position:fixed;

@@ -35,6 +35,7 @@ export default {
       items: [
         { title: 'Header', icon: 'dashboard' },
         { title: 'About', icon: 'question_answer' },
+        { title: 'Portfolio', icon: 'question_answer' },
       ],
       drawer: true,
       mini: true,
