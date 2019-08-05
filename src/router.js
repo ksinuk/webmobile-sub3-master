@@ -5,8 +5,6 @@ import firebase from 'firebase'
 import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
-// import Portfolio from './views/Portfolio.vue'
-import Portfolio2 from './views/Portfolio2.vue'
 
 import Board from "./views/BoardPage.vue"
 import BoardEdit from './views/BoardEdit.vue'
@@ -17,6 +15,7 @@ import AdminDb from './components/AdminVues/AdminDb.vue'
 import AdminStorage from './components/AdminVues/AdminStorage.vue'
 
 import PortfolioPage from './views/PortfolioPage.vue'
+import mainPortfolioPage from './views/MainPortfolioPage'
 // 검색 결과 페이지 링크
 import SearchResult from './views/SearchResult.vue'
 
@@ -24,9 +23,6 @@ import SearchResult from './views/SearchResult.vue'
 import PortfolioWrite from './views/PortfolioWrite.vue'
 
 import TestPage from './views/TestPage.vue'
-
-// portfolio3 링크
-import Portfolio3 from './views/Portfolio3.vue'
 
 Vue.use(Router)
 
@@ -49,31 +45,6 @@ export default new Router({
             name: 'home',
             component: Home
         },
-        // {
-        //     path: '/portfolio',
-        //     name: 'portfolio',
-        //     // route level code-splitting
-        //     // this generates a separate chunk (about.[hash].js) for this route
-        //     // which is lazy-loaded when the route is visited.
-        //     component: Portfolio
-        // },
-
-        // {
-        //     path: '/portfolio2',
-        //     name: 'portfolio2',
-        //     // route level code-splitting
-        //     // this generates a separate chunk (about.[hash].js) for this route
-        //     // which is lazy-loaded when the route is visited.
-        //     component: Portfolio2
-        // },
-        // {
-        //     path: '/portfolio/:uid',
-        //     name: 'portfolio',
-        //     // route level code-splitting
-        //     // this generates a separate chunk (about.[hash].js) for this route
-        //     // which is lazy-loaded when the route is visited.
-        //     component: Portfolio
-        // },
         {
             path: '/about',
             name: 'about',
@@ -124,11 +95,6 @@ export default new Router({
             name: 'test',
             component: TestPage
         },
-        // {
-        //     path: '/portfolio3',
-        //     name: 'portfolio3',
-        //     component: Portfolio3
-        // },
         {
             path: '/portfoliopage',
             name: 'portfoliopage',
@@ -138,6 +104,11 @@ export default new Router({
             path: '/portfoliopage/:uid',
             name: 'portfoliopage',
             component: PortfolioPage
+        },
+        {
+            path: '/mainPortfoliopage',
+            name: 'mainportfoliopage',
+            component: mainPortfolioPage
         },
         {
             path: '/admin',

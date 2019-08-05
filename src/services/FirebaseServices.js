@@ -47,6 +47,50 @@ export default {
             })
         })
     },
+    getUserDataAll() {
+        return new Promise(function(resolve,reject){
+            db.collection('userData').get()
+            .then(function(doc) {
+                if (!doc.empty){
+                    let out = []
+                    for(let i=0;i<doc.size;i++){
+                        let data = doc.docs[i]
+                        let elem = data.data()
+                        elem['id'] = data.id
+                        elem['addr'] = '/portfoliopage/'+data.id
+                        out.push(elem)
+                    }
+
+                    resolve(out)
+                }
+                else{
+                    resolve(null)
+                }
+            })
+        })
+    },
+    getTagAll(){
+        return new Promise(function(resolve,reject){
+            db.collection('portfolio').get()
+            .then(function(doc) {
+                // console.log("getTagAll(): ",doc)
+                if (!doc.empty){
+                    let out = []
+                    for(let i=0;i<doc.size;i++){
+                        let data = doc.docs[i]
+                        let elem = data.data().hashtags
+                        elem['id'] = data.id
+                        out.push(elem)
+                    }
+
+                    resolve(out)
+                }
+                else{
+                    resolve(null)
+                }
+            })
+        })
+    },
     //write user data
     setUserData(uid, css, visit) {
         return db.collection('userData').doc(uid).set({
