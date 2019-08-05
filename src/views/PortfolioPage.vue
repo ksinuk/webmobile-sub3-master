@@ -24,11 +24,11 @@ export default {
         AboutMe,
         PortfolioList
     },
-
-
-    created() {
-      this.getUserID();
-      let th = this;
+    created(){
+        let th = this
+        if(!this.$route.params.uid){
+            this.getUserID();
+        }
     },
     data() {
         return {
