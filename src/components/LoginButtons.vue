@@ -180,6 +180,7 @@
 
 <script>
 import FirebaseServices from '../services/FirebaseServices'
+import firebase from 'firebase'
 import router from '../router'
 
 export default {
@@ -246,11 +247,21 @@ export default {
     emailLogin(){
       FirebaseServices.loginUserWithEmail(this.email, this.password)
     },
-    googleLogin() {
-      FirebaseServices.loginUserWithGoogle()
+    async googleLogin() {
+      await FirebaseServices.loginUserWithGoogle()
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          router.push('/')
+        }
+      })
     },
-    facebookLogin() {
-      FirebaseServices.loginUserWithFacebook()
+    async facebookLogin() {
+      await FirebaseServices.loginUserWithFacebook()
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          router.push('/')
+        }
+      })
     },
     goHome() {
       this.$router.push('/')

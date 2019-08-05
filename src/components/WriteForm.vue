@@ -11,44 +11,15 @@
         <v-card-text>
           <v-text-field
             v-model="pageTitle"
-            :counter="20"
             label="Page Title"
-            required
           ></v-text-field>
           <v-text-field
             v-model="greeting"
-            :counter="20"
             label="Greeting"
-            required
           ></v-text-field>
-          <v-layout wrap justify-center>
-            <v-flex xs6 md6 lg6 d-flex>
-              <v-sheet
-                class="d-flex my-3"
-                color="teal lighten-3"
-                height="150"
-                :elevation="6"
-                id="drop-zone"
-                v-bind:class="[isDragging?'drag-over':'']"
-                v-on:dragover="isDragging=true"
-                v-on:dragenter="isDragging=true"
-                v-on:dragleave="isDragging=false"
-              >
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
-                  <p class="my-auto mx-auto">Drag and Drop image files</p>
-                </div>
-                <input type="file" @change="onChange3" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
-              </v-sheet>
-            </v-flex>
-          </v-layout>
-          <v-layout v-if="dumpList.length > 0">
-            <v-flex v-for="item in dumpList" lg6 md6 xs6 class="px-3 py-3" style="height: 20rem;">
-              <img v-bind:src="item" width="100%" height="100%">
-            </v-flex>
-          </v-layout>
           <v-textarea
             name="input-7-1"
-            label="about my self"
+            label="About My Self"
             v-model="aboutMe"
             hint="자기 자신을 소개하는 텍스트를 상세히 작성해주세요."
             rows=15
@@ -134,9 +105,7 @@
           <v-form ref="form">
             <v-text-field
               v-model="portItem.title"
-              :counter="20"
               label="Title"
-              required
             ></v-text-field>
             <v-textarea
               label="Description"
@@ -239,7 +208,7 @@
                   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
                     <p class="my-auto mx-auto">Drag and Drop image files</p>
                   </div>
-                  <input type="file" @change="onChange4" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                  <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -251,10 +220,6 @@
             <v-layout>
               <v-flex>
                 <v-btn color="grey" @click="portItem.dumpList=[];">Reset</v-btn>
-                <!-- dumplist를 확인하기 위한 view -->
-                <!-- <v-btn color="primary" @click="viewList()">View</v-btn> -->
-                <!-- upload는 최종 저장에서 함께 되도록 함 -->
-                <!--<v-btn color="success" @click="upload()">Upload</v-btn>-->
               </v-flex>
             </v-layout>
           </v-form>
@@ -266,9 +231,7 @@
           <v-form ref="form">
             <v-text-field
               v-model="portfolio.title"
-              :counter="20"
               label="Title"
-              required
             ></v-text-field>
             <v-textarea
               label="Description"
@@ -409,7 +372,7 @@
                   <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
                     <p class="my-auto mx-auto">Drag and Drop image files</p>
                   </div>
-                  <input type="file" @change="onChange4" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                  <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -435,27 +398,10 @@
           <v-icon>add</v-icon>
         </v-btn>
       </div>
-      <v-btn color="primary" @click="e6 = 3; addPortfolio();">Continue</v-btn>
+      <v-btn color="primary" @click="addPortfolio(); savePort()">Save</v-btn>
       <v-btn flat @click="e6 = 1">Cancel</v-btn>
     </v-stepper-content>
 
-    <v-stepper-step editable step="3">
-      TEMPLATE
-      <small>적용할 디자인을 선택하세요.</small>
-    </v-stepper-step>
-
-    <v-stepper-content step="3">
-      <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-      <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-      <v-btn flat @click="e6 = 2">Cancel</v-btn>
-    </v-stepper-content>
-
-    <v-stepper-step editable step="4">PREVIEW</v-stepper-step>
-    <v-stepper-content step="4">
-      <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-      <v-btn color="primary" @click="savePort()">Save</v-btn>
-      <v-btn flat @click="e6 = 3">Cancel</v-btn>
-    </v-stepper-content>
   </v-stepper>
 </template>
 
@@ -470,7 +416,6 @@ export default {
       e6: 1,
       pageTitle: null,
       greeting: null,
-      bannerImage: [],
       aboutMe: null,
       skill: {
         name: null,
@@ -498,11 +443,9 @@ export default {
         imageNames: [],
         dumpList: []
       },
-      dumpList: [],
       imageList: [],
       items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
       isDragging: false,
-      isDragging1: false
     }
   },
   created() {
@@ -543,7 +486,7 @@ export default {
       this.portfolio.sources.splice(idx, 1)
     },
     // drag and drop
-    onChange4: function (file) {
+    onChange: function (file) {
       this.isDragging = false
       let loadFile = file.target.files || file.dataTransfer.files
 
@@ -551,36 +494,6 @@ export default {
         return
       }
       this.addViewImage(loadFile)
-    },
-    onChange3: function (file) {
-      this.isDragging1 = false
-      let loadFile = file.target.files || file.dataTransfer.files
-
-      if (loadFile.length == 0) {
-        return
-      }
-      this.addViewImage2(loadFile)
-    },
-    addViewImage2: function(files) {
-      let _this = this
-
-      for (let i=0; i < files.length; i++) {
-        let file = files[i]
-        let reader = new FileReader()
-        if (file.type.match(/image.*/)) {
-          reader.onload = function(e) {
-            for (let j=0; j < files.length; j++) {
-            }
-            _this.dumpList.push(e.target.result)
-          }
-          reader.readAsDataURL(file)
-          console.log(file)
-          _this.bannerImage.push(file.name)
-          _this.imageList.push(file)
-        } else {
-          alert('이미지 파일만 올려주세요.')
-        }
-      }
     },
     addViewImage: function(files) {
       let _this = this
@@ -644,11 +557,16 @@ export default {
     // firebase에 최종 저장하기
     async savePort() {
       const user = await FirebaseServices.currentUser();
-      // this.upload(user.uid);
-      const result = await FirebaseServices.postPortfolios(user.uid, this.pageTitle, this.greeting, this.bannerImage, this.aboutMe, this.skills, this.portfolios);
-      setTimeout(function() {
-        alert('done')
-      }, 4000)
+      console.log(user);
+      // default banner
+      let banner = {theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1'}
+      // default title
+      let title = {content: this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6}
+      // default subtitle
+      let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6}
+      // firebase storage에 저장
+      this.upload(user.uid);
+      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title);
     }
   }
 }

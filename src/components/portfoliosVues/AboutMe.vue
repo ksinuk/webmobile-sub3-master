@@ -8,9 +8,11 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">Intro</span>
-            <span class="aboutMe_subTitle">About myself.</span>
+            <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
-          <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          <div id="aboutSubtitle1">
+            <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+          </div>
         </v-container>
       </div>
 
@@ -20,11 +22,12 @@
           <div class="title_line"></div>
           <h4>
             <span class="aboutMe_title">skills</span>
-            <span class="aboutMe_subTitle">What I can do.</span>
+            <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <ul>
-            <li v-for="item in userAbout.mySkill">{{ item }}</li>
-          </ul>
+          <div id="aboutSubtitle2" v-for="item in userAbout.mySkill">
+              <p style="display: inline;">{{ item.name }}</p>
+              <div :id="item.name" class="bar back" :data-skill="item.degree"></div>
+          </div>
         </v-container>
       </div>
 
@@ -56,19 +59,20 @@
             <v-card>
               <v-card-text>
                 <div v-for="items in this.layoutItems">
-                  <div v-for="subItem in items.items">
-                    <v-btn flat @click="switchCss(items, subItem.value)">{{ subItem.title }}</v-btn>
-                  </div>
+                  <!-- swtich btn -->
+                  <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                    <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
+                  </v-radio-group>
+
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
+                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Theme</p>
                   <div v-for="items in this.themeItems">
-                    <div v-for="subItem in items.items">
-                      <v-btn flat @click="switchTheme()">{{ subItem.title }}</v-btn>
-                    </div>
+                    <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
+                      <v-radio :label="subItem.title" :value="subItem.value" @change="switchTheme(items, subItem.value)"></v-radio>
+                    </v-radio-group>
                   </div>
-                  <ColorPicker/>
                 </div>
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="">Apply</v-btn>
@@ -85,30 +89,32 @@
             <v-card>
               <v-card-text>
                 <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Size</p>
+                  <v-radio-group v-model="aboutChoice" row>
+                    <v-radio label="Title" value="title" color="primary"></v-radio>
+                    <v-radio label="Subtitle" value="subtitle" color="primary"></v-radio>
+                  </v-radio-group>
                   <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Size</p>
+                    <!-- title 선택했을 때 -->
                     <v-slider
-                      v-model="titleS" class="px-2"
-                      step="1" max="20" min="1"
-                      thumb-label ticks
+                      v-if="aboutChoice === 'title'" v-model="aboutTitleS"
+                      step="1" max="20" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Subtitle</p>
+                    <!-- subtitle 선택했을 때 -->
                     <v-slider
-                      v-model="subtitleS" class="px-2"
-                      step="1" max="10" min="1"
-                      thumb-label ticks
+                      v-else-if="aboutChoice === 'subtitle'" v-model="aboutSubtitleS"
+                      step="1" max="10" min="1" thumb-label ticks
+                      class="px-2"
                     ></v-slider>
                   </div>
                 </div>
+
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
-                <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
-                  <div class="px-1">
-                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Title</p>
-                      
-                  </div>
-                </div>
+
+                <!-- color picker -->
+                <ColorPicker v-bind:aboutChoice="aboutChoice"/>
+
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
                 </div>
@@ -171,8 +177,11 @@
 </template>
 
 <script>
+import FirebaseServices from '../../services/FirebaseServices'
+import firebase from 'firebase/app'
+
 // theme 설정을 위해서 store에 저장
-import ColorPicker from './ColorPicker'
+import ColorPicker from './AboutColorPicker'
 import store from '../../store'
 
 export default {
@@ -182,10 +191,12 @@ export default {
   },
   data() {
     return {
+      user: null,
+      aboutLayout: 'css1',
       Aboutdrawer: false,
+      // css
       cssArr: [true, false],
       themeArr: [true, false, false],
-      radioGroup: 1,
       // modal
       layoutItems: [
         {
@@ -244,22 +255,55 @@ export default {
           js: ['vanilla']
         }
       },
-      titleS: null,
-      subtitleS: null
+      // font
+      aboutChoice: 'title',
+      aboutTitleS: '1',
+      aboutSubtitleS: '1',
     }
   },
   watch: {
-    titleS: function() {
-      document.getElementsByClassName('aboutMe_subTitle').style.fontSize = this.titleS + 'rem';
+    // fontSize watch
+    aboutTitleS: function() {
+      document.getElementById('aboutTitle1').style.fontSize = this.aboutTitleS + 'rem';
+      document.getElementById('aboutTitle2').style.fontSize = this.aboutTitleS + 'rem';
     },
-    subtitleS: function() {
-      document.getElementById('portSubtitle').style.fontSize = this.subtitleS + 'rem';
+    aboutSubtitleS: function() {
+      document.getElementById('aboutSubtitle1').style.fontSize = this.aboutSubtitleS + 'rem';
+      document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
     }
   },
+  created() {
+    this.getAbout();
+  },
   methods: {
-    switchTheme(theme) {
-      console.log(theme)
-      store.commit('changeTheme', theme)
+    // firebase db 가져오기
+    getAbout: function() {
+      let __this = this;
+      const tmp = firebase.auth().onAuthStateChanged(function(user) {
+        __this.user = user.uid;
+        FirebaseServices.getMyPort(__this.user).then(function(res) {
+          __this.userAbout.mySelf = res.aboutMe;
+          __this.userAbout.mySkill = res.skills;
+          console.log(res.skills);
+          res.skills.forEach(function(skill) {
+            let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
+            console.log(document.getElementById(skill.name));
+            document.getElementById(skill.name).style.width = calc(tmp);
+            console.log(document.getElementById(skill.name).style);
+          })
+        })
+      })
+    },
+    switchTheme(item, num) {
+      for (let i=0; i < this.themeArr.length; i++) {
+        if (num == (i+1)) {
+          console.log(item.items[i])
+          item.items[i].selected = true
+          store.commit('changeTheme', item.items[i].title)
+        } else {
+          item.items[i].selected = false
+        }
+      }
     },
     // switchPortfolio(theme,out) {
     //     if(theme == 'Modal'){
@@ -290,7 +334,6 @@ export default {
       this.cssArr = boolArr
     },
     checkLog(n, m) {
-      n.selected = true
       console.log(n, m)
     }
   }
@@ -323,4 +366,55 @@ export default {
   height:20px;
   width:20px;
 }
+
+// skill graph code
+@keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-webkit-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-moz-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+  @-o-keyframes load{
+  from {
+      width: 0%
+  }
+  }
+
+  .bar{
+  background-color: #EEE;
+  padding: 2px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #FFF;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+  }
+  .bar::before{
+  content:  attr(data-skill);
+  background-color: #f3b0ff;
+  display: inline-block;
+  padding: 5px 0 5px 10px;
+  border-radius: inherit;
+  animation: load 2s 0s;
+  -webkit-animation: load 2s 0s;
+  -moz-animation: load 2s 0s;
+  -o-animation: load 2s 0s;
+  }
+
+  .bar.front::before{
+  background-color: #ffcc33;
+  }
+  .bar.back::before{
+  background-color: #a6cfe3;
+  }
 </style>
