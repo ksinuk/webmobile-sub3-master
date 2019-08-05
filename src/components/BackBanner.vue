@@ -1,5 +1,5 @@
 <template>
-  <v-layout row justify-center align-center style="min-height: 50vh; position: relative; background-size: cover; background-image: url('img/backBanner.png');">
+  <v-layout id="backBanner" row justify-center align-center>
     <slot name="pageName"/>
   </v-layout>
 </template>
@@ -13,3 +13,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#backBanner {
+  min-height: 30vh;
+  position: relative;
+  background-size: cover;
+  background-position: 50% 30%;
+  background-image: url('../../public/img/backBanner.png');
+}
+</style>
