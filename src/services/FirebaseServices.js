@@ -73,7 +73,7 @@ export default {
         return new Promise(function(resolve,reject){
             db.collection('portfolio').get()
             .then(function(doc) {
-                console.log("getTagAll(): ",doc)
+                // console.log("getTagAll(): ",doc)
                 if (!doc.empty){
                     let out = []
                     for(let i=0;i<doc.size;i++){

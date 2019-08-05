@@ -23,6 +23,23 @@
                 </div>
             </div>
             <hr>
+            <br>
+            <div class="sidebar-part">
+                <h3 class="tag-title">정렬</h3>
+                <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
+                <btn class="open-btn" @click="ifsort = !ifsort" v-if="ifsort">-</btn>
+                <div v-if="ifsort">
+                    <ul>
+                        <li class="tag-list" @click="sortup = true">
+                            이름 : 오름차순 <span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                        <li class="tag-list" @click="sortup = false">
+                            이름 : 내림차순 <span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
         <!-- ----- list --------------------------- -->
         <div class="foliolist">
@@ -52,12 +69,17 @@ export default {
             taglist:{},
             tagout:{'size':0},
             tagcnt:0,
+
+            ifsort:false,
+            sortup:false,
         }
     },
     created(){
         let th = this
         Firebase.getUserDataAll().then(function(data){
             th.folios = data
+            console.log(" th.folios: ", th.folios)
+            this.sortPortfolio(this.sortup)
         })
         Firebase.getTagAll().then(function(datas){
             for(let i=0;i<datas.length;i++){
@@ -74,14 +96,11 @@ export default {
                 }
             }
         })
-
-        console.log("start tagout : ",this.tagout)
-        console.log("is tagout : ",Boolean(this.length))
     },
     methods:{
         tagcheck:function(elem,tag){
-            console.log("elem: ",elem)
-            console.log("tag : ",tag)
+            // console.log("elem: ",elem)
+            // console.log("tag : ",tag)
             if(elem['check']){
                 elem['check'] = false
                 for(let i=0;i<elem.length;i++){
@@ -116,9 +135,24 @@ export default {
                 }
             }
             this.tagcnt+=1
-            console.log("this.tagout: ",this.tagout)
+            // console.log("this.tagout: ",this.tagout)
+        },
+        sortPortfolio:function(up){
+            // this.folios[2].id
+            // this.folios.sort()
+            this.folios.sort(this.comparefolio)
+            if(!up) this.folios.reverse()
+        },
+        comparefolio:function(a,b){
+            let str1 = a.id
+            let str2 = b.id
+            return str1.localeCompare(str2)
         }
-        
+    },
+    watch:{
+         sortup:function(){
+             this.sortPortfolio(this.sortup)
+         }
     }
 
 }
