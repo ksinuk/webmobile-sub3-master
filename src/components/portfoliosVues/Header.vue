@@ -1,27 +1,27 @@
 <template>
     <div class="header">
-        <v-layout v-if="layout === null" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-if="layout === null" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
                 <h1 id="portTitle" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
                 <p id="portSubtitle" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
         <!-- template1 -->
-        <v-layout v-else-if="layout === 'template1'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template1'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex style="padding-left: 7rem;">
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" style="text-align: left;">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template2 -->
-        <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template2'" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template3 -->
-        <v-layout v-else-if="layout === 'template3'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template3'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
                 <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" style="text-align: right;">{{portfolio.subtitle.content}}</p>
@@ -383,9 +383,10 @@ export default {
                     __this.sRed = __this.portfolio.subtitle.color.red;
                     __this.sBlue = __this.portfolio.subtitle.color.blue;
                     __this.sGreen = __this.portfolio.subtitle.color.green;
-                    document.getElementById('banner').style.backgroundImage = "url('" + __this.select.img + "')";
+                    console.log(document.getElementById('headBanner'));
+                    document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
                     if (__this.select.opacity === 'opacity2') {
-                        document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                        document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
                     }
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
