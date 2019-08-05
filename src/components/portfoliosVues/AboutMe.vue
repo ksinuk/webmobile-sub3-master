@@ -10,7 +10,7 @@
             <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
           <div id="aboutSubtitle1">
-            <p v-for="item in (userAbout.mySelf || '').split('.')" >{{ item }}</p>
+            <p v-for="item in (portfolio.aboutMe || '').split('.')" >{{ item }}</p>
           </div>
         </v-container>
       </div>
@@ -23,7 +23,7 @@
             <span class="aboutMe_title">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <div id="aboutSubtitle2" v-for="item in userAbout.mySkill">
+          <div id="aboutSubtitle2" v-for="item in portfolio.tmp">
               <p style="display: inline;">{{ item.name }}</p>
               <div :id="item.name" class="bar back" :data-skill="item.degree"></div>
           </div>
@@ -39,7 +39,7 @@
             <span class="aboutMe_subTitle">profile</span>
           </h4>
         </v-container>
-        <v-img class="aboutMe_image" :src="userAbout.url"
+        <v-img class="aboutMe_image" :src="portfolio.userImage"
           lazy-src="https://static.wixstatic.com/media/2a925f_a902eb9026754fc4911fb781ac5f885f~mv2.gif"
         ></v-img>
       </div>
@@ -137,6 +137,16 @@
             </v-card>
           </v-expansion-panel-content>
 
+          <!-- text ditor -->
+          <v-expansion-panel-content>
+            <template v-slot:header>
+                <div @click="dialog = true"><i class="fas fa-keyboard pr-3"></i>Contents</div>
+            </template>
+            <template v-slot:actions>
+                  <v-icon color="teal"> </v-icon>
+            </template>
+          </v-expansion-panel-content>
+
           <!-- <v-expansion-panel-content>
             <template v-slot:header>
               <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
@@ -171,7 +181,84 @@
         </v-expansion-panel>
       </v-list>
     </v-navigation-drawer>
-      
+    <!-- text editor -->
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card>
+        <v-card-title>
+            <span class="headline">ABOUT</span>
+        </v-card-title>
+        <v-card-text>
+            <v-text-field v-model="portfolio.aboutMe" label="About My Self" rows=15></v-text-field>
+            <v-card v-for="item in portfolio.skills" class="mb-3">
+              <v-card-text>
+                <v-layout>
+                  <v-flex lg3 class="px-3">
+                    <v-text-field
+                      label="skill"
+                      v-model="item.name"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex lg9 class="px-3">
+                    <v-subheader>level</v-subheader>
+                    <v-slider
+                      v-model="item.degree"
+                      step="1"
+                      max=10
+                      thumb-label
+                      ticks
+                    ></v-slider>
+                  </v-flex>
+                </v-layout>
+                <v-textarea
+                  name="input-7-1"
+                  label="description"
+                  v-model="item.description"
+                  class="px-3"
+                ></v-textarea>
+              </v-card-text>
+            </v-card>
+            <v-card>
+            <v-card-text>
+              <v-layout>
+                <v-flex lg3 class="px-3">
+                  <v-text-field
+                    label="skill"
+                    v-model="skill.name"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex lg9 class="px-3">
+                  <v-subheader>level</v-subheader>
+                  <v-slider
+                    v-model="skill.degree"
+                    step="1"
+                    max=10
+                    thumb-label
+                    ticks
+                  ></v-slider>
+                </v-flex>
+              </v-layout>
+              <v-textarea
+                name="input-7-1"
+                label="description"
+                v-model="skill.description"
+                hint="해당 기술 수준을 설명해주세요."
+                class="px-3"
+              ></v-textarea>
+            </v-card-text>
+          </v-card>
+          <div class="text-xs-center py-3">
+            <v-btn color="teal" fab small dark @click="addSkill()">
+              <v-icon>add</v-icon>
+            </v-btn>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer/>
+            <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat @click="dialog = false; saveMe();">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -193,6 +280,7 @@ export default {
       user: null,
       aboutLayout: 'css1',
       aboutDrawer: false,
+      dialog: false,
       // css
       cssArr: [true, false],
       themeArr: [true, false, false],
@@ -243,21 +331,24 @@ export default {
       //   },
       // ],
       // firebase insert
-      userAbout: {
-        url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
-        // myIntro
-        mySelf: '싸피 수강생 서지훈입니다. 저는 아카데믹한 수단으로 지식을 쌓는 대신, 본인의 실제적인 필요에 의해 웹사이트를 제작하면서 다년간 다양한 기술을 터득해 왔습니다. 스스로 생산자이자 동시에 소비자로서 쌓아올린 경험은, 클라이언트에게 보다 섬세하고 직접적이며, 실용적인 서비스를 제공할 것입니다',
-        // mySkills
-        mySkill: {
-          css: ['css3'],
-          html: ['html5'],
-          js: ['vanilla']
-        }
+      // userAbout: {
+      //   url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
+      //   // myIntro
+      //   mySelf: null,
+      //   // mySkills
+      //   mySkill: []
+      // },
+      userImage: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
+      skill: {
+        name: null,
+        degree: null,
+        description: null
       },
       // font
       aboutChoice: 'title',
       aboutTitleS: '1',
       aboutSubtitleS: '1',
+      portfolio: []
     }
   },
   watch: {
@@ -284,15 +375,19 @@ export default {
       const tmp = firebase.auth().onAuthStateChanged(function(user) {
         __this.user = user.uid;
         FirebaseServices.getMyPort(__this.user).then(function(res) {
-          __this.userAbout.mySelf = res.aboutMe;
-          __this.userAbout.mySkill = res.skills;
-          console.log(res.skills);
+          __this.portfolio = res;
+          __this.portfolio.tmp = []
           res.skills.forEach(function(skill) {
-            let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
-            console.log(document.getElementById(skill.name));
-            document.getElementById(skill.name).style.width = calc(tmp);
-            console.log(document.getElementById(skill.name).style);
+            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
+            skill.degree = skill.degree.substring(7, skill.degree.length);
           })
+          console.log(__this.portfolio);
+          // res.skills.forEach(function(skill) {
+          //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
+          //   console.log(document.getElementById(skill.name));
+          //   document.getElementById(skill.name).style.width = calc(tmp);
+          //   console.log(document.getElementById(skill.name).style);
+          // })
         })
       })
     },
@@ -337,6 +432,27 @@ export default {
     },
     checkLog(n, m) {
       console.log(n, m)
+    },
+    addSkill: function() {
+      // 깊은 복사
+      if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
+        this.portfolio.skills.push(JSON.parse(JSON.stringify(this.skill)))
+        this.skill = 'Level. ' + this.skill
+        this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
+        this.skill.name = null
+        this.skill.degree = null
+        this.skill.description = null
+      } else {
+        alert("모두 작성하지 않은 skill은 저장되지 않습니다.");
+      }
+    },
+    async saveMe() {
+      if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
+        this.portfolio.skills.push(JSON.parse(JSON.stringify(this.skill)))
+        this.skill.degree = 'Level. ' + this.skill.degree
+        this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
+      }
+      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.tmp, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
     }
   }
 }

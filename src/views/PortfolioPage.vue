@@ -12,7 +12,7 @@ import Header from '@/components/portfoliosVues/Header.vue'
 import AboutMe from '@/components/portfoliosVues/AboutMe.vue'
 import PortfolioList from '@/components/portfoliosVues/PortfolioList.vue'
 import NavPortfolio from '@/components/portfoliosVues/navPortfolio.vue'
-import FirebaseService from '../services/FirebaseServices'
+import FirebaseServices from '../services/FirebaseServices'
 import firebase from 'firebase/app'
 
 export default {
@@ -54,6 +54,7 @@ export default {
         let __this = this;
         var user = firebase.auth().currentUser;
 
+        // user login 정보가 없을 때 로그인 페이지로 redirect
         if (!user) {
           alert('로그인이 필요합니다!');
 
@@ -61,11 +62,13 @@ export default {
         }
         const tmp = firebase.auth().onAuthStateChanged(function(user) {
             __this.user = user.uid;
-
+            console.log(__this.user);
 
             FirebaseServices.getMyPort(user.uid).then(function(res) {
                 __this.item = res;
-                console.log("test"+res);
+                console.log(__this.item);
+
+                // 저장된 portfolio 페이지가 없을 때에 포트폴리오 입력 페이지로 redirect
                 if(res==null){
                   alert('저장된 포트폴리오 정보가 없습니다!')
 

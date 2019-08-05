@@ -253,17 +253,31 @@
                     </v-expansion-panel-content>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fas fa-play-circle pr-3"></i>Animation</div>
+                            <div @click="dialog = true"><i class="fas fa-keyboard pr-3"></i>Contents</div>
                         </template>
-                        <v-card>
-                            <v-card-text>
-                                <p></p>
-                            </v-card-text>
-                        </v-card>
+                        <template v-slot:actions>
+                             <v-icon color="teal"> </v-icon>
+                        </template>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-list>
         </v-navigation-drawer>
+        <v-dialog v-model="dialog" max-width="600">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">TITLE</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field v-model="portfolio.title.content" label="Page Title"></v-text-field>
+                    <v-text-field v-model="portfolio.subtitle.content" label="Subtitle"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialog = false; saveHeader();">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -279,6 +293,7 @@ export default {
             user: null,
             portfolio: [],
             headerDrawer: null,
+            dialog: false,
             mini: false,
             select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
             fileName: null,
@@ -357,7 +372,6 @@ export default {
                 __this.user = user.uid;
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
                     __this.portfolio = res;
-                    console.log(__this.portfolio);
                     __this.select = __this.portfolio.banner;
                     __this.layout = __this.portfolio.layout;
                     __this.tmplayout = __this.layout;
@@ -434,7 +448,7 @@ export default {
             }
             this.portfolio.banner = this.select;
             console.log(this.portfolio.banner);
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
             document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
             if (this.select.opacity === 'opacity2') {
                 document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
@@ -443,7 +457,7 @@ export default {
         async saveLayout() {
             this.layout = this.tmplayout;
             this.portfolio.layout = this.layout;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         },
         async saveFont() {
             this.portfolio.title.size = this.titleS;
@@ -454,7 +468,10 @@ export default {
             this.portfolio.subtitle.color.red = this.sRed;
             this.portfolio.subtitle.color.blue = this.sBlue;
             this.portfolio.subtitle.color.green = this.sGreen;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+        },
+        async saveHeader() {
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         }
     }
 }

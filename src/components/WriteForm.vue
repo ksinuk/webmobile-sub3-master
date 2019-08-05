@@ -463,7 +463,9 @@ export default {
     addSkill: function() {
       // 깊은 복사
       if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
-        this.skills.push(JSON.parse(JSON.stringify(this.skill)))
+        let tmp = JSON.parse(JSON.stringify(this.skill))
+        tmp.degree = "Level. " + tmp.degree
+        this.skills.push(tmp)
         this.skill.name = null
         this.skill.degree = null
         this.skill.description = null
@@ -566,7 +568,7 @@ export default {
       let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6}
       // firebase storage에 저장
       this.upload(user.uid);
-      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title);
+      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title, "");
     }
   }
 }
