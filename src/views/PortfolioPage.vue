@@ -1,6 +1,6 @@
 <template lang="html">
 <div class="portfolio">
-  <NavPortfolio/>
+  <NavPortfolio v-if="this.isotherUid"/>
   <Header id="customHeader" :uid="uid"/>
   <AboutMe id="customAbout" :uid="uid"/>
   <PortfolioList id="customPortfolio" :uid="uid" :css="css"/>
@@ -27,6 +27,7 @@ export default {
     created(){
         let th = this
         if(!this.$route.params.uid){
+            this.isotherUid = true
             this.getUserID();
         }
     },
@@ -43,6 +44,8 @@ export default {
           css:0,
           visitNum:0,
           toBookMarkNum:0,
+
+          isotherUid:false,
         }
     },
 
