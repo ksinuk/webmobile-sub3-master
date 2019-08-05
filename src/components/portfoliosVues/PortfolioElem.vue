@@ -108,23 +108,47 @@ export default {
             cssStyle:'',
             cssAddr:'',
             cssColor:'',
+            images: []
         }
     },
     props:{
-        ports: {type: null},
+        ports: {type: String},
         cssmod:{type: null},
         change:{type: null},
+        user: {type: null}
     },
     components:{
     },
     created(){
         console.log("start css : ",this.cssmod)
+        this.imgSrc()
         this.changeCss()
     },
     mounted(){
         this.linkcss()
     },
     methods:{
+        imgSrc() {
+            console.log(this.ports);
+            let __this = this;
+            var storage = firebase.storage();
+            var storageRef = storage.ref();
+            ports.imageNames.forEach(function(image) {
+                storageRef.child('users/' + this.user + '/' + this.select.theme).getDownloadURL().then(function(url) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function(event) {
+                        var blob = xhr.response;
+                    }
+                    xhr.open('GET', url)
+                    xhr.send();
+                    __this.images.push(url);
+                }).catch(function(error) {
+                    console.log(error);
+                })
+            })
+            console.log(__this.images);
+        },
         open:function(point){
             if(this.ismodal){
                 console.log(point,": ",this.out)
