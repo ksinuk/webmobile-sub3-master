@@ -46,7 +46,7 @@
 
     </div>
     <!-- sidebar -->
-    <v-navigation-drawer v-model="aboutDrawer" fixed dark temporary >
+    <v-navigation-drawer v-model="aboutDrawer" fixed temporary disable-route-watcher>
       <v-list class="pt-0" dense>
         <v-expansion-panel>
 

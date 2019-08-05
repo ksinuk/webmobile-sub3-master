@@ -1,9 +1,9 @@
 <template lang="html">
 <div class="portfolio">
   <NavPortfolio/>
-  <Header :uid="uid"/>
-  <AboutMe :uid="uid"/>
-  <PortfolioList :uid="uid" :css="css"/>
+  <Header id="customHeader" :uid="uid"/>
+  <AboutMe id="customAbout" :uid="uid"/>
+  <PortfolioList id="customPortfolio" :uid="uid" :css="css"/>
 </div>
 </template>
 

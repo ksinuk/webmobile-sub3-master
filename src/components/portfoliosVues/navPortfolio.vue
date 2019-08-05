@@ -1,10 +1,7 @@
 <template>
   <v-navigation-drawer
-    v-model="drawer"
-    :mini-variant="mini"
-    fixed
-    hide-overlay
-    stateless
+    v-model="drawer" :mini-variant="mini"
+    fixed hide-overlay disable-route-watcher
   >
     <v-toolbar flat class="transparent">
     </v-toolbar>
@@ -19,7 +16,7 @@
       >
         <v-list-tile-action>
           <!-- eventBus를 활용한 데이터 통신 -->
-          <v-btn @click="$EventBus.$emit(item.title)">{{ item.title }}</v-btn>
+          <v-btn icon @click="drawerHandler(item.title)"><v-icon>{{ item.icon }}</v-icon></v-btn>
         </v-list-tile-action>
 
       </v-list-tile>
@@ -33,13 +30,23 @@ export default {
   data () {
     return {
       items: [
-        { title: 'Header', icon: 'dashboard' },
-        { title: 'About', icon: 'question_answer' },
-        { title: 'Portfolio', icon: 'question_answer' },
+        { title: 'Header', icon: 'fas fa-home' },
+        { title: 'About', icon: 'fas fa-user-edit' },
+        { title: 'Portfolio', icon: 'fas fa-file-code' },
       ],
       drawer: true,
       mini: true,
     }
+  },
+  methods: {
+    drawerHandler(location) {
+      templateMove(location)
+      this.$EventBus.$emit(location)
+    }
   }
+}
+function templateMove(location){
+  var offset = $("#custom" + location).offset();
+  $('html, body').animate({scrollTop : offset.top}, 100);
 }
 </script>

@@ -29,7 +29,7 @@
         </v-layout>
 
         <!-- sidebar -->
-        <v-navigation-drawer v-model="headerDrawer" :mini-variant="mini" fixed dark temporary>
+        <v-navigation-drawer v-model="headerDrawer" :mini-variant="mini" fixed temporary disable-route-watcher>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>

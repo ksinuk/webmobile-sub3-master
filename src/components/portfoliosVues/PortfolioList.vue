@@ -17,7 +17,7 @@
         </div>
     </section>
     
-    <v-navigation-drawer v-model="portfolioDrawer" fixed dark temporary >
+    <v-navigation-drawer v-model="portfolioDrawer" fixed temporary disable-route-watcher>
       <v-list class="pt-0" dense>
         <v-expansion-panel>
 
