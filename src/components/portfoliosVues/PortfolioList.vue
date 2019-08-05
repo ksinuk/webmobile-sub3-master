@@ -7,12 +7,12 @@
                 <span class="primary">My works</span>
             </h1>
             <div id="portfolio" class="section-content gallery alternate">
-                <v-flex v-for="portfolio in portfolios">
-                    <PortfolioList :ports="portfolio" :cssmod="css" :change="cssChange"></PortfolioList>
-                </v-flex>
-                <v-flex v-for="ex in examples">
+                <!--<v-flex v-for="portfolio in portfolios">
+                    <PortfolioList :ports="portfolio" :cssmod="css" :change="cssChange" :user="user"></PortfolioList>
+                </v-flex>-->
+                <!--<v-flex v-for="ex in examples">
                     <PortfolioList :ports="ex" :cssmod="css" :change="cssChange"></PortfolioList>
-                </v-flex>
+                </v-flex>-->
             </div>
         </div>
     </section>
@@ -54,15 +54,6 @@
                 </v-card-text>
                 </v-card>
             </v-expansion-panel-content>
-            <!-- contents editor -->
-            <v-expansion-panel-content>
-                <template v-slot:header>
-                    <div @click="dialog = true"><i class="fas fa-keyboard pr-3"></i>Contents</div>
-                </template>
-                <template v-slot:actions>
-                        <v-icon color="teal"> </v-icon>
-                </template>
-            </v-expansion-panel-content>
           <!-- animation selector -->
           <v-expansion-panel-content>
             <template v-slot:header>
@@ -78,22 +69,40 @@
               </v-card-text>
             </v-card>
           </v-expansion-panel-content>
+          <!-- contents editor -->
+            <v-expansion-panel-content>
+                <template v-slot:header>
+                    <div><i class="fas fa-keyboard pr-3"></i>Contents</div>
+                </template>
+                <v-card>
+                    <v-card-text>
+                        <v-card class="mb-3" style="height: 15rem; width: 18rem;" v-for="port in portfolios.portfolios">
+                            <p>{{port}}</p>
+                        </v-card>
+                        <v-card style="height: 15rem; width: 18rem; text-align: center;">
+                            <i class="fas fa-plus fa-2x" style="color: grey; line-height: 15rem; vertical-align: middle;"></i>
+                        </v-card>
+                    </v-card-text>
+                </v-card>
+            </v-expansion-panel-content>
         </v-expansion-panel>
       </v-list>
     </v-navigation-drawer>
+
+    <!-- contents editor -->
     <v-dialog v-model="dialog" max-width="600">
         <v-card>
             <v-card-title>
                 <span class="headline">PORTFOLIO</span>
             </v-card-title>
             <v-card-text>
-                <v-text-field v-model="portfolio.title.content" label="Page Title"></v-text-field>
-                <v-text-field v-model="portfolio.subtitle.content" label="Subtitle"></v-text-field>
+                <!--<v-text-field v-model="portfolio.title.content" label="Page Title"></v-text-field>
+                <v-text-field v-model="portfolio.subtitle.content" label="Subtitle"></v-text-field>-->
             </v-card-text>
             <v-card-actions>
                 <v-spacer/>
                 <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                <v-btn color="blue darken-1" flat @click="dialog = false; saveHeader();">Save</v-btn>
+                <v-btn color="blue darken-1" flat @click="dialog = false; save();">Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -101,7 +110,7 @@
 </template>
 
 <script>
-import FirebaseService from '@/services/FirebaseServices'
+import FirebaseServices from '@/services/FirebaseServices'
 import PortfolioList from './PortfolioElem.vue'
 import firebase from 'firebase/app'
 
@@ -341,8 +350,8 @@ export default {
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
             __this.uid = uid
-            __this.getMyPortfolio(uid)
-            FirebaseService.getUserData(uid)
+            __this.getPortfolio(uid)
+            FirebaseServices.getUserData(uid)
             .then(function(data){
                 if(data){
                     if(data.css.version) th.css = data.css
@@ -369,10 +378,10 @@ export default {
                             }
                         }
                     }
-                    FirebaseService.updateUserData(uid,__this.css,__this.visitNum)
+                    FirebaseServices.updateUserData(uid,__this.css,__this.visitNum)
                 }
                 else{
-                    FirebaseService.setUserData(uid,__this.css,__this.visitNum)
+                    FirebaseServices.setUserData(uid,__this.css,__this.visitNum)
                 }
                 th.cssChange = th.cssChange+1
             })
@@ -388,8 +397,8 @@ export default {
                 if (user) {
                     __this.user = user
                     __this.iscontrol = true
-                    __this.getMyPortfolio(user.uid)
-                    FirebaseService.getUserData(user.uid)
+                    __this.getPortfolio(user.uid)
+                    FirebaseServices.getUserData(user.uid)
                     .then(function(data){
                         if(data){
                             if(data.css.version) __this.css = data.css
@@ -416,10 +425,17 @@ export default {
         }
     },
     methods:{
-        async getMyPortfolio(uid){
-            this.portfolios = await FirebaseService.getUidPortfolios(uid)
+        async getPortfolio(uid) {
+            let __this = this;
+            const tmp = firebase.auth().onAuthStateChanged(function(user) {
+                __this.user = user.uid;
+                FirebaseServices.getMyPort(user.uid).then(function(res) {
+                    console.log(res);
+                    __this.portfolios = res;
+                })
+            })
         },
-        changeCss(num,write){
+        changeCss(num,write) {
             if(num == 0) this.css.color = write
             else if(num == 1) this.css.modal = !this.css.modal
             else if(num == 2) this.css.grid = !this.css.grid
@@ -436,8 +452,11 @@ export default {
             this.mybookmark = !del
             this.toBookMarkNum += del ? -1:1
             FirebaseService.setBookMark(this.user.uid,this.uid,del)
+        },
+        save() {
+            //
         }
-    },
+    }
 }
 </script>
 
