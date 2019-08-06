@@ -1,6 +1,9 @@
 <template>
   <div>
-    bookmark
+    <h1>북마크</h1>
+    <div v-for="item in bookmarks">
+      <h1>{{ item }}</h1>
+    </div>
   </div>
 </template>
 
@@ -23,11 +26,13 @@ export default {
     this.getBookmarks()
   },
   methods: {
-    getBookmarks: function() {
-      console.log(this.$store.state.firebaseUser.uid)
-      // this.bookmarks = FirebaseServices.getBookMarkFromUid(this.$store.state.firebaseUser.uid)
-      console.log("UserProfile th.bookmarkList: ", this.bookmarks)
-    }
+    getBookmarks:  function() {
+      let _this = this
+      firebase.auth().onAuthStateChanged(async function(user){
+        _this.bookmarkList = await FirebaseServices.getBookMarkFromUid(user.uid) 
+        console.log("UserProfile _this.bookmarkList: ", _this.bookmarkList)           
+      })
+    },
   }
 }
 </script>

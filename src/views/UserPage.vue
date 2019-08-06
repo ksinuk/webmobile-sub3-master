@@ -6,40 +6,101 @@
       </div>
     </BackBanner>
     <div style="display: flex;">
-      <!-- <UserDrawer/> -->
-      <UserProfile/>
+      <UserProfile v-bind:userData="{userData: userData, spark: spark}"/>
     </div>
-    <UserBookMark/>
+    <!-- <UserBookMark/> -->
   </div>
 </template>
 
 <script>
 import FirebaseServices from '../services/FirebaseServices'
 import BackBanner from '../components/BackBanner'
-// import UserProfile from '../components/UserProfile'
 import UserProfile from '../components/userVues/UserProfile.vue'
-import UserDrawer from '../components/userVues/UserDrawer.vue'
 import UserBookMark from '../components/userVues/UserBookMark.vue'
-
 
 export default {
   name: 'userprofile',
   components: {
       BackBanner,
       UserProfile,
-      UserDrawer,
       UserBookMark
   },
   data () {
     return {
+      // firestore
+      // bookmark, uid, visit, visitCnt, created_at
+      userData: [],
+      spark: {
+        labels: [],
+        value: []
+      },
+      date: null
     }
   },
   created() {
-    this.getState()
+    this.setDate()
+    this.getView()
   },
   methods: {
-    getState() {
-      FirebaseServices.userState()
+    // get user view data
+    setDate() {
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth()+1
+      let day = date.getDate()
+      if(month < 10){
+          month = "0"+month
+      }
+      if(day < 10){
+          day = "0"+day
+      }
+      let today = year+month+day
+      this.date = today
+    },
+    getData() {
+      let data = this.userData.visit
+      // this.userData.visit.sort()
+      let i = 0
+      if (data.length < 7) {
+        i = 0
+      } else {
+        i = data.length - 7
+      }
+      for (i; i < data.length; i++) {
+        this.spark.labels.push(data[i].split('.')[0].substring(4, 8))
+        this.spark.value.push(Number(data[i].split('.')[1]))
+      }
+    },
+    async getView() {
+      this.userData = await FirebaseServices.getVisitView(this.$store.state.firebaseUser.uid)
+      if (this.userData.uid === this.$store.state.firebaseUser.uid) {
+      } else {
+        // 유저가 다를경우 view 카운트
+        this.cntView(this.userData.visit)
+      }
+      // 하위 컴포넌트에 전달할 데이터
+      this.getData()
+    },
+    // view counting
+    cntView(data) {
+      let _target = false
+      for (let i=0; i < data.length; i++) {
+        // 동일한 날짜일 경우 cnt++
+        if (data[i].split('.')[0] == this.date) {
+          _target = true
+          let visitCnt = Number(data[i].split('.')[1]) + 1
+          this.userData.visit[i] = data[i].split('.')[0] + '.' + visitCnt
+          // this.updateView(this.userData.visit)
+        }
+      }
+      // 날짜 없는 경우
+      if(!_target) {
+        this.userData.visit.push(this.date + '.' + 1)
+      }
+    },
+    // view count update
+    async updateView(viewResult) {
+      await FirebaseServices.updateUserView(this.$store.state.firebaseUser.uid, viewResult)
     }
   }
 }
@@ -48,4 +109,3 @@ export default {
 <style scoped>
   
 </style>
-
