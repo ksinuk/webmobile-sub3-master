@@ -8,7 +8,7 @@
             <v-layout my-3>
                 <div style="margin: auto;">
                   <v-avatar tile size="256" class="profileImg">
-                    <img :src="photoURL" alt="avatar">
+                    <img :src="userImg" alt="avatar">
                   </v-avatar>
                 </div>
             </v-layout>
@@ -68,10 +68,20 @@ export default {
   props: ['userData'],
   data () {
     return {
-      photoURL: this.$store.state.firebaseUser.photoURL,
+      userImg: null,
     }
   },
+  created() {
+     this.setProfile();
+  },
   methods: {
+    setProfile() {
+      if (this.$store.state.firebaseUser.photoURL === null) {
+        this.userImg = this.$store.state.imgSrc.noImgSrc;
+      } else {
+        this.userImg = this.$store.state.firebaseUser.photoURL;
+      }
+    },
   }
 }
 </script>
