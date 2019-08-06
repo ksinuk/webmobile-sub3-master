@@ -3,7 +3,7 @@
     <BackBanner>
         <div slot="pageName">
             <p class="mainBackBanner" v-if="ifsearch">Search Results</p>
-            <p class="mainBackBanner" v-if="!ifsearch">MAIN Portfolio Page</p>
+            <p class="mainBackBanner" v-if="!ifsearch">All of portfolio</p>
         </div>
     </BackBanner>
     
