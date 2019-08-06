@@ -5,7 +5,7 @@
         <p style="font-weight: 900; text-shadow: 2px 2px 2px #103b5b; font-size: 5rem; color: white; font-family: 'Raleway', sans-serif;">DevFolio</p>
         <h2 id="animatedText"></h2>
         <div class="py-4">
-          <v-btn round color="light" v-on:click="aboutFunction()" style="color: #ff6b6b; font-weight: bold; padding: .375rem 2.75rem;">ABOUT US</v-btn>
+          <v-btn round color="light" to="/login" style="color: #ff6b6b; font-weight: bold; padding: .375rem 2.75rem;">GET STARTED</v-btn>
         </div>
       </v-flex>
       <v-flex xs6 style="padding-right: 10%;">
@@ -31,11 +31,10 @@ export default {
   },
 
   methods : {
-    aboutFunction: function() {
-      // 723.2000122070312
-      document.documentElement.scrollTop = 796;
-    }
-
+    // aboutFunction: function() {
+    //   // 723.2000122070312
+    //   document.documentElement.scrollTop = 796;
+    // }
   }
 }
 
