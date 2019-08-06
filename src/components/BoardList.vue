@@ -29,7 +29,7 @@
           <td v-if="props.item.notice"><v-btn small round color="primary" style="width: 2rem;">공지</v-btn></td>
           <td v-else>{{ posts.length - props.item.idx }}</td>
           <td class="text-xs-right">{{ props.item.title }}</td>
-          <td class="text-xs-right">{{ props.item.created_at }}</td>
+          <td class="text-xs-right">{{ props.item.view_created }}</td>
           <td class="justify-center layout px-0">
             <v-icon
               small
@@ -194,7 +194,7 @@ export default {
               this.posts[post].notice = true
             }
             const user = firebase.auth().currentUser
-            await FirebaseServices.editPost(this.posts[post].pk, user.uid, this.posts[post].title, this.posts[post].body, this.posts[post].notice)
+            await FirebaseServices.editPost(this.posts[post].pk, user.uid, this.posts[post].title, this.posts[post].body, this.posts[post].notice, this.posts[post].created_at)
           }
         }
         window.location.reload()

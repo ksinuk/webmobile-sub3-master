@@ -71,7 +71,8 @@ export default {
     },
     async postPost () {
       const user = firebase.auth().currentUser
-      await FirebaseServices.editPost(this.post.pk, user.uid, this.title, this.body, this.post.notice)
+      this.post.created_at = firebase.firestore.FieldValue.serverTimestamp()
+      await FirebaseServices.editPost(this.post.pk, user.uid, this.title, this.body, this.post.notice, this.post.created_at)
       this.ListMode()
     },
     ListMode: function() {

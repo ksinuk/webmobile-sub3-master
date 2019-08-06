@@ -156,13 +156,14 @@ export default {
         }).then(console.log('done'))
     },
     // 다음 코드는 같은 uid 인 포스트를 조회하여 바꿈
-    editPost(pk, uid, title, body, notice) {
+    editPost(pk, uid, title, body, notice, created_at) {
         return db.collection(POSTS).doc(pk).set({
             uid,
             title,
             body,
             notice,
-            created_at: firebase.firestore.FieldValue.serverTimestamp()
+            created_at
+            // created_at: firebase.firestore.FieldValue.serverTimestamp()
         }).then(console.log('done'))
     },
     // 전체 포스트 목록을 조회
@@ -176,7 +177,7 @@ export default {
             return docSnapshots.docs.map((doc) => {
                 let data = doc.data()
                 data.pk = doc.id
-                data.created_at = new Date(data.created_at.toDate())
+                data.view_created = new Date(data.created_at.toDate())
                 data.idx = idx
                 idx += 1
                 return data
