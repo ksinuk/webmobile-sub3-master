@@ -38,10 +38,8 @@ export default {
 
   },
   data () {
-      return {
-      }
-  },
-  mounted(){
+    return {
+    }
   },
   methods: {
   }
