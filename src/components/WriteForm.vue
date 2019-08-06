@@ -212,14 +212,14 @@
                 </v-sheet>
               </v-flex>
             </v-layout>
-            <v-layout v-if="portItem.dumpList.length > 0">
-              <v-flex v-for="item in portItem.dumpList" lg3 md3 xs3 class="px-3 py-3" style="height: 20rem;">
-                <img v-bind:src="item" width="100%" height="100%">
+            <v-layout v-if="portItem.dumpImg !== null">
+              <v-flex style="height: 20rem;">
+                <img v-bind:src="portItem.dumpImg" width="400rem" height="200rem">
               </v-flex>
             </v-layout>
             <v-layout>
               <v-flex>
-                <v-btn color="grey" @click="portItem.dumpList=[];">Reset</v-btn>
+                <v-btn color="grey" @click="portItem.dumpImg = null;">Reset</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -376,18 +376,14 @@
                 </v-sheet>
               </v-flex>
             </v-layout>
-            <v-layout v-if="portfolio.dumpList.length > 0">
-              <v-flex v-for="item in portfolio.dumpList" lg3 md3 xs3 class="px-3 py-3" style="height: 20rem;">
-                <img v-bind:src="item" width="100%" height="100%">
+            <v-layout v-if="portfolio.dumpImg !== null">
+              <v-flex class="py-5">
+                <img v-bind:src="portfolio.dumpImg" width="400rem" height="200rem">
               </v-flex>
             </v-layout>
             <v-layout>
               <v-flex>
-                <v-btn color="grey" @click="portfolio.dumpList=[];">Reset</v-btn>
-                <!-- dumplist를 확인하기 위한 view -->
-                <v-btn color="primary" @click="viewList()">View</v-btn> 
-                <!-- upload는 최종 저장에서 함께 되도록 함 -->
-                <!--<v-btn color="success" @click="upload()">Upload</v-btn>-->
+                <v-btn color="grey" @click="portfolio.dumpImg = null;">Reset</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -440,11 +436,11 @@ export default {
         hashtags: [],
         repository: null,
         sources: [],
-        imageNames: [],
-        dumpList: []
+        imageNames: null,
+        dumpImg: null
       },
       imageList: [],
-      items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
+      items: ['html', 'css', 'vue', 'js', 'json', 'c', 'c++', 'java', 'python'],
       isDragging: false,
     }
   },
@@ -507,11 +503,11 @@ export default {
           reader.onload = function(e) {
             for (let j=0; j < files.length; j++) {
             }
-            _this.portfolio.dumpList.push(e.target.result)
+            _this.portfolio.dumpImg = e.target.result
           }
           reader.readAsDataURL(file)
           console.log(file)
-          _this.portfolio.imageNames.push(file.name)
+          _this.portfolio.imageNames = file.name
           _this.imageList.push(file)
         } else {
           alert('이미지 파일만 올려주세요.')
@@ -524,9 +520,6 @@ export default {
       for (const image in this.imageList) {
         FirebaseServices.uploadfile(user, this.imageList[image])
       }
-    },
-    viewList() {
-      console.log(this.imageList)
     },
     addPortfolio: function() {
       if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
@@ -547,7 +540,7 @@ export default {
         this.portfolio.repository = null
         this.portfolio.sources = []
         this.portfolio.imageList = []
-        this.portfolio.dumpList = []
+        this.portfolio.dumpImg = null
       }
       console.log(this.portfolios)
     },
@@ -569,7 +562,7 @@ export default {
       // firebase storage에 저장
       this.upload(user.uid);
       const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title, "");
-      return   __this.$router.push('/write_portfolio');
+      return   this.$router.push('/write_portfolio');
     }
   }
 }

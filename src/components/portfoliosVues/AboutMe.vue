@@ -381,7 +381,6 @@ export default {
             __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
             skill.degree = skill.degree.substring(7, skill.degree.length);
           })
-          console.log(__this.portfolio);
           // res.skills.forEach(function(skill) {
           //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
           //   console.log(document.getElementById(skill.name));
@@ -394,7 +393,6 @@ export default {
     switchTheme(item, num) {
       for (let i=0; i < this.themeArr.length; i++) {
         if (num == (i+1)) {
-          console.log(item.items[i])
           item.items[i].selected = true
           store.commit('changeTheme', item.items[i].title)
         } else {

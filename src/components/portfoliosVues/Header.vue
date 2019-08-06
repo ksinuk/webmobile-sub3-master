@@ -383,14 +383,12 @@ export default {
                     __this.sRed = __this.portfolio.subtitle.color.red;
                     __this.sBlue = __this.portfolio.subtitle.color.blue;
                     __this.sGreen = __this.portfolio.subtitle.color.green;
-                    console.log(document.getElementById('headBanner'));
                     document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
                     if (__this.select.opacity === 'opacity2') {
                         document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
                     }
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
-                    console.log(document.getElementById('portTitle').style);
                     document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
                     document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
                 })
@@ -448,7 +446,6 @@ export default {
                 this.getBanner();
             }
             this.portfolio.banner = this.select;
-            console.log(this.portfolio.banner);
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
             document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
             if (this.select.opacity === 'opacity2') {

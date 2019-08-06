@@ -7,12 +7,9 @@
                 <span class="primary">My works</span>
             </h1>
             <div id="portfolio" class="section-content gallery alternate">
-                <!--<v-flex v-for="portfolio in portfolios">
+                <v-flex v-for="portfolio in portfolios.portfolios">
                     <PortfolioList :ports="portfolio" :cssmod="css" :change="cssChange" :user="user"></PortfolioList>
-                </v-flex>-->
-                <!--<v-flex v-for="ex in examples">
-                    <PortfolioList :ports="ex" :cssmod="css" :change="cssChange"></PortfolioList>
-                </v-flex>-->
+                </v-flex>
             </div>
         </div>
     </section>
@@ -75,13 +72,20 @@
                     <div><i class="fas fa-keyboard pr-3"></i>Contents</div>
                 </template>
                 <v-card>
-                    <v-card-text>
-                        <v-card class="mb-3" style="height: 15rem; width: 18rem;" v-for="port in portfolios.portfolios">
-                            <p>{{port}}</p>
+                    <v-card-text  v-for="port in portfolios.portfolios">
+                        <v-hover>
+                        <v-card @click="dialog = true; editPort(portfolios.portfolios.indexOf(port))" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
+                            <v-img :src="port.imageNames" style="height: 12rem;"></v-img>
+                            <span style="line-height: 3rem; vertical-align: middle;">{{port.title}}</span>
                         </v-card>
-                        <v-card style="height: 15rem; width: 18rem; text-align: center;">
+                        </v-hover>
+                    </v-card-text>
+                    <v-card-text>
+                        <v-hover>
+                        <v-card @click="dialog = true; addPort();" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
                             <i class="fas fa-plus fa-2x" style="color: grey; line-height: 15rem; vertical-align: middle;"></i>
                         </v-card>
+                        </v-hover>
                     </v-card-text>
                 </v-card>
             </v-expansion-panel-content>
@@ -96,9 +100,141 @@
                 <span class="headline">PORTFOLIO</span>
             </v-card-title>
             <v-card-text>
-                <!--<v-text-field v-model="portfolio.title.content" label="Page Title"></v-text-field>
-                <v-text-field v-model="portfolio.subtitle.content" label="Subtitle"></v-text-field>-->
-            </v-card-text>
+                <v-text-field v-model="portfolio.title" label="Title"></v-text-field>
+                <v-text-area name="input-7-1" v-model="portfolio.description" label="Description"></v-text-area>
+                <v-text-field v-model="hashtag" label="Hashtag" v-on:keyup.enter="enrollTag()"></v-text-field>
+                <template>
+                    <td v-for="(tag, index) in portfolio.hashtags">
+                        <v-chip close color="teal" text-color="white" v-model="portfolio.hashtags[index]">
+                            <v-avatar>
+                                <v-icon>check_circle</v-icon>
+                            </v-avatar>
+                            {{ tag }}
+                        </v-chip>
+                    </td>
+                </template>
+                <v-text-field v-model="portfolio.viewport" label="ViewPort"></v-text-field>
+                <v-text-field v-model="portfolio.ie" label="IE"></v-text-field>
+                <v-text-field v-model="portfolio.demo" label="Demo Link"></v-text-field>
+                <v-text-field v-model="portfolio.repository" label="Repository Link"></v-text-field>
+                <v-simple-table>
+                    <thead>
+                        <tr>
+                        <th class="text-left pt-3 pb-2">Category</th>
+                        <th class="text-left">File Name</th>
+                        <th class="text-left">Git Path</th>
+                        <th class="texdt-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="pb-2" v-for="(item, index) in portfolio.sources">
+                        <td>
+                            <v-select
+                            v-model="item.category"
+                            :items="items"
+                            label="Category"
+                            solo
+                            required
+                            ></v-select>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="item.fileName"
+                            label="File Name"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="item.gitPath"
+                            label="Git Path"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="item.fileDes"
+                            label="Description"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td class="text-xs-center">
+                            <v-btn color="error" fab small dark @click="removeSource(index)">
+                            <v-icon>remove</v-icon>
+                            </v-btn>
+                        </td>
+                        </tr>
+                        <tr class="pb-2">
+                        <td>
+                            <v-select
+                            v-model="source.category"
+                            :items="items"
+                            label="Category"
+                            solo
+                            required
+                            ></v-select>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="source.fileName"
+                            label="File Name"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="source.gitPath"
+                            label="Git Path"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field
+                            v-model="source.fileDes"
+                            label="Description"
+                            solo
+                            ></v-text-field>
+                        </td>
+                        <td class="text-xs-center">
+                            <v-btn color="teal" fab small dark @click="addSource()">
+                            <v-icon>add</v-icon>
+                            </v-btn>
+                        </td>
+                        </tr>
+                    </tbody>
+                    </v-simple-table>
+                    <!-- image 추가하기 -->
+                    <v-layout wrap justify-center>
+                        <v-flex xs6 md6 lg6 d-flex>
+                            <v-sheet
+                            class="d-flex my-3"
+                            color="teal lighten-3"
+                            height="150"
+                            :elevation="6"
+                            id="drop-zone"
+                            v-bind:class="[isDragging?'drag-over':'']"
+                            v-on:dragover="isDragging=true"
+                            v-on:dragenter="isDragging=true"
+                            v-on:dragleave="isDragging=false"
+                            >
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
+                                <p class="my-auto mx-auto">Drag and Drop image files</p>
+                            </div>
+                            <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                            </v-sheet>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout v-if="portfolio.dumpImg !== null">
+                        <v-flex class="px-3 py-3">
+                            <img v-bind:src="portfolio.dumpImg" width="400rem" height="200rem">
+                        </v-flex>
+                    </v-layout>
+                    <v-layout>
+                        <v-flex>
+                            <v-btn color="grey" @click="portfolio.dumpImg = null;">Reset</v-btn>
+                        </v-flex>
+                    </v-layout>
+                </v-card-text>
             <v-card-actions>
                 <v-spacer/>
                 <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
@@ -124,200 +260,6 @@ export default {
     },
     data() {
         return {
-            // examples:[
-            //     {
-            //         title:'예술의 전당 랜딩 페이지',
-            //         img:require("@/assets/example1.png"),
-            //         viewport:'반응형',
-            //         ie_support:'IE9+',
-            //         demo_url:'./Portfolio-SAC/',
-            //         repos_url:'https://github.com/findawayer/Portfolio-SAC/tree/gh-pages',
-            //         content:'<p><a href="http://www.sac.or.kr/" target="_blank">예술의 전당 사이트</a>의 메인 페이지를 부트스트랩 4를 기반으로 한 반응형 구조로 리뉴얼해 보았습니다.</p> \
-            //                     <p><a href="https://v4-alpha.getbootstrap.com/" target="_blank">부트스트랩의 4 alpha 버전</a>을 기반으로 제작되었고, 이 버전의 부트스트랩이 사용하는 Sass를 테마 제작에도 사용했으며, IE9+를 지원하는 jQuery 3.1 및 jQuery UI가 사용되었습니다.</p>\
-            //                 ',
-            //         category_html:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/index.html',
-            //                 file:'index.html',
-            //                 keyword:'HTML5, ARIA, SVG'
-            //             }
-            //         ],
-            //         category_css:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/bootstrap-theme.scss',
-            //                 file:'bootstrap-custom.css',
-            //                 keyword:'Responsive, Bootstrap 4'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/scss/style.scss',
-            //                 file:'style.scss',
-            //                 keyword:'CSS3, Sass, Compass'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-SAC/tree/gh-pages/scss/partials',
-            //                 file:'Sass partials',
-            //                 keyword:'CSS3, Sass, Compass, Responsive'
-            //             }
-            //         ],
-            //         category_js:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-SAC/blob/gh-pages/js/main.js',
-            //                 file:'main.js',
-            //                 keyword:'JavaScript, jQuery 3, <a href="http://kenwheeler.github.io/slick/" target="_blank">slick</a>'
-            //             }
-            //         ],
-            //     },
-            //     {
-            //         title:'대한민국 기상청 랜딩 페이지',
-            //         img:require("@/assets/example2.png"),
-            //         viewport:'IE8+',
-            //         ie_support:'데스크탑',
-            //         content:'<p><a href="http://www.kma.go.kr/index.jsp" target="_blank">기상청</a> 사이트의 대문을 리뉴얼해 보았습니다. 인터페이스용 그림에는 SVG를 적극적으로 활용했고, 백업 png를 병용했습니다.</p> \
-            //                     <p>공공기관 사이트로서 보다 많은 사용자 환경에 대응하기 위해 익스플로러 8까지의 호환성 지원, 웹 접근성 관리가 되어 있습니다.</p> \
-            //                 ',
-            //         demo_url:'./Portfolio-KMA/',
-            //         repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-            //         category_html:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/index.html',
-            //                 file:'index.html',
-            //                 keyword:'HTML5, ARIA, SVG'
-            //             }
-            //         ],
-            //         category_css:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/scss/style.scss',
-            //                 file:'style.scss',
-            //                 keyword:'CSS3, Sass, Compass'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages/scss/partials',
-            //                 file:'Sass partials',
-            //                 keyword:'CSS3, Sass, Compass, CSS sprite'
-            //             },
-            //         ],
-            //         category_js:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/common.js',
-            //                 file:'common.js',
-            //                 keyword:'JavaScript, jQuery 1, <a href="https://modernizr.com/" target="_blank">Modernizr</a>'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/js/main.js',
-            //                 file:'main.js',
-            //                 keyword:'JavaScript, jQuery 1, jQuery UI, AJAX'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-KMA/blob/gh-pages/json/meteo.json',
-            //                 file:'meteo.json',
-            //                 keyword:'JSON'
-            //             }
-            //         ],
-            //     },
-            //     {
-            //         title:'오리지널 영화 사이트',
-            //         img:require("@/assets/example3.png"),
-            //         viewport:'모바일',
-            //         ie_support:'',
-            //         demo_url:'./Portfolio-KMA/',
-            //         repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-            //         content:'<p>오리지널 영화 정보 및 예매사이트를 모바일 전용으로 구성해 보았습니다. <b>영화 목록 페이지</b>, <b>특정 영화 정보 페이지</b>, <b>티켓 예매 페이지</b> 3가지 샘플을 포함하고 있습니다.</p>\
-            //                     <p>기기별 기본 UX를 최대한 유지하기 위해 검색상자나 선택상자 등은 네이티브 형식을 사용했으며, 유튜브의 트레일러 영상 불러오기, 날짜 선택기 등의 기능이 추가돼 있습니다.</p>\
-            //                 ',
-            //         category_html:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/index.html',
-            //                 file:'index.html',
-            //                 keyword:'HTML5'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/movie.html',
-            //                 file:'movie.html',
-            //                 keyword:'HTML5'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/order.html',
-            //                 file:'order.html',
-            //                 keyword:'HTML5'
-            //             }
-            //         ],
-            //         category_css:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/style.less',
-            //                 file:'style.scss',
-            //                 keyword:'CSS3, LESS'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/tree/gh-pages/less/partials',
-            //                 file:'dhtmlxcalendar material dark.less',
-            //                 keyword:'CSS3, LESS, Responsive'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/less/dhtmlxcalendar_material_dark.less',
-            //                 file:'Sass partials',
-            //                 keyword:'CSS3, LESS'
-            //             },
-            //         ],
-            //         category_js:[
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/common.js',
-            //                 file:'common.js',
-            //                 keyword:'JavaScript, jQuery 1, <a href="http://hammerjs.github.io/" target="_blank">HammerJS</a>'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/movie.js',
-            //                 file:'movie.js',
-            //                 keyword:'JavaScript, jQuery 1, <a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank">YouTube Iframe Player</a>, <a href="https://dhtmlx.com/docs/products/dhtmlxCalendar/" target="_blank">dhtmlXCalendar</a>, starRate(자작)'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/plugins/starRate/starRate.js',
-            //                 file:'starRate.js',
-            //                 keyword:'JavaScript, jQuery 1'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Portfolio-MovieSite/blob/gh-pages/js/order.js',
-            //                 file:'order.js',
-            //                 keyword:'JavaScript, jQuery 1'
-            //             }
-            //         ],
-            //     },
-            //     {
-            //         title:'다목적 탭스 플러그인',
-            //         img:require("@/assets/example3.png"),
-            //         viewport:'jQuery 플러그인',
-            //         ie_support:'IE8+',
-            //         demo_url:'./Portfolio-KMA/',
-            //         repos_url:'https://github.com/findawayer/Portfolio-KMA/tree/gh-pages',
-            //         content:'<p>웹 접근성 및 폭넓은 커스터마이징에 초점을 맞춘 jQuery용 탭스 플러그인입니다. 활성화 및 비활성화할 탭의 선택이나 사용자 셀렉터 설정 같은 기본적인 설정은 물론, 반응형 아코디언 레이아웃 및 자동재생 기능을 갖추고 있어 아코디언 또는 캐루셀로도 응용 가능합니다.</p>\
-            //                     <p>마크업의 접근성은 물론 키보드 사용자를 위한 키보드 내비게이션 강화로 보다 넓은 사용자층을 타깃으로 하는 프로젝트에 사용할 수 있으며, 기본으로 제공되는 애니메이션 효과 이외에도 손쉬운 애니메이션 커스터마이징을 가능하게 해 크리에이티브한 디자인에도 적용할 수 있습니다.</p>\
-            //                 ',
-            //         category_html:[],
-            //         category_css:[
-            //             {
-            //                 url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.core.scss',
-            //                 file:'skeletabs.core.scss',
-            //                 keyword:'CSS, Sass'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.animation.scss',
-            //                 file:'skeletabs.animation.scss',
-            //                 keyword:'CSS, Sass, CSS3 animation'
-            //             },
-            //             {
-            //                 url:'https://github.com/findawayer/Skeletabs/blob/master/src/scss/skeletabs.theme.default.scss',
-            //                 file:'skeletabs.theme.default.scss',
-            //                 keyword:'CSS, Sass'
-            //             },
-            //         ],
-            //         category_js:[
-            //             {
-            //                 url:'https://github.com/findawayer/Skeletabs/blob/master/src/js/skeletabs.js',
-            //                 file:'skeletabs.js',
-            //                 keyword:'JavaScript, jQuery'
-            //             }
-            //         ],
-            //     }
-            // ],
             portfolios:[],
             uid:'',
             user:'',
@@ -338,15 +280,42 @@ export default {
             visitNum:0,
             toBookMarkNum:0,
             cssChange:0,
-            dialog: false
+            dialog: false,
+            idx: null,
+            hashtag: null,
+            items: ['html', 'css', 'vue', 'js', 'json', 'c', 'c++', 'java', 'python'],
+            isDragging: false,
+            imageList: [],
+            source: {
+                category: null,
+                fileName: null,
+                gitPath: null,
+                fileDes: null
+            },
+            portfolio: {
+                title: null,
+                description: null,
+                viewport: null,
+                ie: null,
+                demo: null,
+                hashtags: [],
+                repository: null,
+                sources: [],
+                imageNames: null,
+                dumpImg: null
+            }
         }
     },
     created(){
+        let __this = this;
+
+        this.getPortfolio();
+        
         this.$EventBus.$on('Portfolio', () => {
             this.portfolioDrawer = !this.portfolioDrawer
             })
 
-        let __this = this
+        
         if(this.$route.params.uid){
             let uid = this.$route.params.uid
             __this.uid = uid
@@ -427,11 +396,28 @@ export default {
     methods:{
         async getPortfolio(uid) {
             let __this = this;
+            var storage = firebase.storage();
+            var storageRef = storage.ref();
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
-                    console.log(res);
                     __this.portfolios = res;
+                    console.log(__this.portfolios);
+                    for (let item in __this.portfolios.portfolios) {
+                        storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
+                            var xhr = new XMLHttpRequest();
+                            xhr.responseType = 'blob';
+                            xhr.onload = function(event) {
+                                var blob = xhr.response;
+                            }
+                            xhr.open('GET', url)
+                            xhr.send();
+                            __this.portfolios.portfolios[item].imageNames = url;
+                        }).catch(function(error) {
+                            console.log(error);
+                        })
+                    }
+                    console.log(__this.portfolios);
                 })
             })
         },
@@ -453,8 +439,116 @@ export default {
             this.toBookMarkNum += del ? -1:1
             FirebaseService.setBookMark(this.user.uid,this.uid,del)
         },
-        save() {
-            //
+        editPort(idx) {
+            this.idx = idx;
+            this.portfolio.title = this.portfolios.portfolios[idx].title;
+            this.portfolio.description = this.portfolios.portfolios[idx].description;
+            this.portfolio.viewport = this.portfolios.portfolios[idx].viewport;
+            this.portfolio.ie = this.portfolios.portfolios[idx].ie;
+            this.portfolio.demo = this.portfolios.portfolios[idx].demo;
+            this.portfolio.hashtags = this.portfolios.portfolios[idx].hashtags;
+            this.portfolio.repositofy = this.portfolios.portfolios[idx].repository;
+            this.portfolio.sources = this.portfolios.portfolios[idx].sources;
+            this.portfolio.imageNames = this.portfolios.portfolios[idx].imageNames;
+            this.portfolio.dumpImg = this.portfolios.portfolios[idx].imageNames;
+        },
+        // 태그 추가하기
+        enrollTag: function() {
+            this.portfolio.hashtags.push(this.hashtag)
+            this.hashtag = null
+        },
+        // 소스 추가하기
+        addSource: function() {
+            if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
+                this.portfolio.sources.push(JSON.parse(JSON.stringify(this.source)))
+                this.source.category = null
+                this.source.fileName = null
+                this.source.gitPath = null
+                this.source.fileDes = null
+            }
+        },
+        // 소스 지우기
+        removeSource: function(idx) {
+            this.portfolio.sources.splice(idx, 1)
+        },
+        // image view 만들기
+        onChange(file) {
+            this.isDragging = false
+            let loadFile = file.target.files || file.dataTransfer.files
+
+            if (loadFile.length == 0) {
+                return
+            }
+            this.addViewImage(loadFile)
+        },
+        addViewImage: function(files) {
+            let _this = this
+
+            for (let i=0; i < files.length; i++) {
+                let file = files[i]
+                let reader = new FileReader()
+                if (file.type.match(/image.*/)) {
+                reader.onload = function(e) {
+                    for (let j=0; j < files.length; j++) {
+                    }
+                    _this.portfolio.dumpImg = e.target.result;
+                    console.log(_this.portfolio.dumpImg);
+                }
+                reader.readAsDataURL(file)
+                _this.portfolio.imageNames = file.name
+                _this.imageList.push(file)
+                } else {
+                alert('이미지 파일만 올려주세요.')
+                }
+            }
+        },
+        upload(user) {
+            console.log(user)
+            for (const image in this.imageList) {
+                FirebaseServices.uploadfile(user, this.imageList[image])
+            }
+        },
+        addPort() {
+            this.idx = null;
+            this.portfolio.title = null;
+            this.portfolio.description = null;
+            this.portfolio.viewport = null;
+            this.portfolio.ie = null;
+            this.portfolio.demo = null;
+            this.portfolio.hashtags = [];
+            this.portfolio.repositofy = null;
+            this.portfolio.sources = [];
+            this.portfolio.imageNames = [];
+            this.portfolio.dumpImg = null;
+        },
+        async save() {
+            if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
+                this.portfolio.sources.push(JSON.parse(JSON.stringify(this.source)))
+                this.source.category = null
+                this.source.fileName = null
+                this.source.gitPath = null
+                this.source.fileDes = null
+            }
+            // 포트폴리오 저장하기
+            if (this.idx !== null) {
+                this.portfolios.portfolios[this.idx].title = this.portfolio.title;
+                this.portfolios.portfolios[this.idx].description = this.portfolio.description;
+                this.portfolios.portfolios[this.idx].viewport = this.portfolio.viewport;
+                this.portfolios.portfolios[this.idx].ie = this.portfolio.ie;
+                this.portfolios.portfolios[this.idx].demo = this.portfolio.demo;
+                this.portfolios.portfolios[this.idx].hashtags = this.portfolio.hashtags;
+                this.portfolios.portfolios[this.idx].repository = this.portfolio.repositofy;
+                this.portfolios.portfolios[this.idx].sources = this.portfolio.sources;
+                this.portfolios.portfolios[this.idx].imageNames = this.portfolio.imageNames;
+                this.portfolios.portfolios[this.idx].dumpImg = this.portfolio.dumpImg;
+                this.upload(this.user);
+                this.imageList = [];
+            } else {
+                this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));
+                console.log(this.portfolios.portfolios);
+            }
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            this.getPortfolio();
         }
     }
 }
