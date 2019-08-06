@@ -22,42 +22,12 @@
 
       <v-card-text class="white--text pt-0">
         대전광역시 유성구 덕명동 124  |  Tel. 02-1111-2222  |  Fax. 02-1111-2222</br>
-        Copyright ©2019 FOLIOU Inc Co., Ltd. All rights reserved.
+        Copyright ©2019 BANGKOK Inc Co., Ltd. All rights reserved.
       </v-card-text>
-
-      <v-divider></v-divider>
-      <v-card-title primary-title>
-          <div style="width:33%;">
-            <h3 class="headline mb-0">회사소개</h3>
-            <ul>
-              <a href="#"><li>CEO</li></a>
-              <a href="#"><li>연혁</li></a>
-              <a href="#"><li>찾아오시는길</li></a>
-            </ul>
-          </div>
-          <div style="width:33%;">
-            <h3 class="headline mb-0">서비스</h3>
-            <ul>
-              <a href="/portfolio"><li>플랫폼1</li></a>
-              <a href="/portfolio2"><li>플랫폼2</li></a>
-              <a href="/portfolio3"><li>플랫폼3</li></a>
-              <a href="/writeport"><li>플랫폼4</li></a>
-            </ul>
-          </div>
-          <div style="width:33%;">
-            <h3 class="headline mb-0">고객문의</h3>
-            <ul>
-              <a href="/board"><li>공지사항</li></a>
-              <a href="#"><li>이메일</li></a>
-              <a href="#"><li>QnA</li></a>
-            </ul>
-          </div>
-        </v-card-title>
-
   <v-divider></v-divider>
       <v-card-text class="white--text">
         {{ new Date().getFullYear() }} — <strong>BangKok</strong></br>
-        <strong>Made by</strong></br><strong>황여진 전영진 서지훈 강신욱</strong>
+        Made by</br>황여진 전영진 서지훈 강신욱
       </v-card-text>
     </v-card>
   </v-footer>
