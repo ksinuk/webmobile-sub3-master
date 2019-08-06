@@ -1,15 +1,14 @@
 <template>
-    <div>
+    <div v-if="isshow">
         <v-card>
-            <v-img :src="result.img" height="200px">
-            </v-img>
+            <img :src="result.img" class="card-img">
 
             <v-card-title primary-title>
                 <div>
                     <div style="font-weight: 600;">
                         {{ result.title }}
-                        <v-icon v-if="result.like" class="mx-2" color="warning" @click="enrollLike(result.pk)">star</v-icon>
-                        <v-icon v-else class="mx-2" @click="enrollLike(result.pk)">star</v-icon>
+                        <v-icon v-if="islike" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
+                        <v-icon v-else class="mx-2" @click="enrollLike()">star</v-icon>
                     </div>
                     <div>
                         <tr>
@@ -42,6 +41,7 @@
 <script>
 import FirebaseService from '@/services/FirebaseServices'
 import Loading from 'vue-loading-overlay';
+import FirebaseServices from '../../services/FirebaseServices';
 
 export default {
     name:'folioCard',
@@ -50,36 +50,65 @@ export default {
     },
     props:{
         result:{type:null},
+        me:{type:null},
+        updateSignal:{type:null},
+    },
+    data(){
+        return{
+            islike:false,
+            isshow:true,
+        }
+    },
+    cearted(){
+        this.checkme()
     },
     methods: {
         // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장
-        enrollLike(pk) {
-            // for (let result in this.resultList) {
-            //     if (this.resultList[result].pk === pk) {
-            //         if (this.resultList[result].like === true) {
-            //             this.resultList[result].like = false
-            //             this.likeList = this.likeList.filter(function(e) { return e !== pk})
-            //             // var index = user.bookmark.indexOf(pk)
-            //             // user.bookmark.splice(index, 1)
-            //         } 
-            //         else {
-            //             this.resultList[result].like = true
-            //             this.likeList.push(pk)
-            //         }
-            //     }
-            // }
-            // FirebaseServices.editUser(this.uid, this.likeList);
-            console.log("enrollLike(pk) : 준비중")
+        enrollLike() {
+            // console.log("islike: ",this.islike)
+            // console.log("enrollLike result: ",this.result)
+
+            if(this.me){
+                FirebaseServices.updateUserBookmark(this.me.uid, this.result.pk,!this.islike)
+                this.islike = !this.islike
+            }
         },
         onCancel() {
             console.log('User cancelled the loader.')
+        },
+        checkme(){
+            if(this.me){
+                let mybook = this.me.myBookmark
+                // console.log("mybook : ",mybook)
+                // console.log("result.pk : ",this.result.pk)
+                for(let i=0; i<mybook.length; i++){
+                    let to = mybook[i]
+                    if(to == this.result.pk) {
+                        this.islike = true
+                        break
+                    }
+                }
+            }
+            this.isshow = false
+            this.isshow = true
+        }
+    },
+    watch:{
+        me:function(){
+            this.checkme()
+        },
+        updateSignal:function(){
+            this.checkme()
         }
     }
 }
 </script>
 
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+.card-img{
+    height:200px;
+    width:auto;
+}
 </style>
 
 

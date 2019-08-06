@@ -46,18 +46,19 @@
         <div class="foliolist" v-if="folios.length != 0 && tagout['num'] != 0 || tagout['size'] == 0">
             <div class="folio" v-for="user in folios" v-if="tagout[user.pk] || !tagout.size">
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user"/>
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
             </div>
         </div>
 
         <!-- 검색 결과가 없을 때 -->
         <div v-if="folios.length == 0 || tagout['num'] == 0 && tagout['size'] != 0" style="height: 50vh;">
             <div>
-                <p class="resultOut">"{{ query }}"의 검색 결과가 없습니다.</p>
+                <p class="resultOut">검색 결과가 없습니다.</p>
             </div>
         </div>
         
     </div>
+    {{me.uid}}
     <newFooter></newFooter>
 </div>
 </template>
@@ -65,8 +66,10 @@
 <script>
 import BackBanner from '@/components/BackBanner.vue'
 import Firebase from '@/services/FirebaseServices.js'
+import firebase from 'firebase/app'
 import newFooter from '@/components/newFooter.vue'
 import folioCard from '@/components/portfoliosVues/portfolioCard.vue'
+
 
 export default {
     name:'mainPortfolioPage',
@@ -78,6 +81,8 @@ export default {
     },
     data(){
         return{
+            me:{},
+
             folios:[],
             iftag:false,
             taglist:{},
@@ -88,16 +93,28 @@ export default {
             sortup:false,
 
             ifsearch:false,
+            cardUpdateSignal:0,
 
             prnok:true,
         }
     },
-    created(){
+    async created(){
         let th = this
-        Firebase.getPortfolios().then(function(data){
+
+        await firebase.auth().onAuthStateChanged(function(user) {
+            if(user && user.uid){
+                Firebase.getUserData(user.uid).then(function(data){
+                    th.me = data
+                    th.me['uid'] = user.uid
+                    th.cardUpdateSignal += 1
+                })
+            }
+        });
+
+        await Firebase.getPortfolios().then(function(data){
             // console.log(" th.folios data: ", data)
             th.folios = data
-            
+            th.cardUpdateSignal += 1
             this.sortPortfolio(this.sortup)
         })
         .catch(function(error){
@@ -263,11 +280,11 @@ export default {
     margin:30px 0 30px 40px;
     width:70%;
     border:2px solid black;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 32% 32% 32%;
 }
 
 .folio{
-    // height:200px;
+    // height:500px;
     width:90%;
     margin:10px auto;
     border:1px solid blue;
@@ -277,7 +294,7 @@ export default {
 }
 
 .resultOut{
-    align: center; 
+    text-align: center; 
     font-size: 2rem; 
     font-weight: 300; 
     margin-top: 3rem; 

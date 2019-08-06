@@ -104,6 +104,19 @@ export default {
             visitNum:visit
         })
     },
+    updateUserBookmark(from, to,add){
+        if(add){
+            return db.collection('userData').doc(from).update({
+                myBookmark: firebase.firestore.FieldValue.arrayUnion(to)
+            })
+        }
+        else{
+            return db.collection('userData').doc(from).update({
+                myBookmark: firebase.firestore.FieldValue.arrayRemove(to)
+            })
+        }
+            
+    },
     setBookMark(from,to,del){
         if(!del){
             return db.collection('userData').doc(to).update({
