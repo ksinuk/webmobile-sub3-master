@@ -104,6 +104,19 @@ export default {
             visitNum:visit
         })
     },
+    updateUserBookmark(from, to,add){
+        if(add){
+            return db.collection('userData').doc(from).update({
+                myBookmark: firebase.firestore.FieldValue.arrayUnion(to)
+            })
+        }
+        else{
+            return db.collection('userData').doc(from).update({
+                myBookmark: firebase.firestore.FieldValue.arrayRemove(to)
+            })
+        }
+            
+    },
     setBookMark(from,to,del){
         if(!del){
             return db.collection('userData').doc(to).update({
@@ -202,15 +215,24 @@ export default {
 
     // 포트폴리오 목록 조회
     getPortfolios(){
-        const portfolios = db.collection(PORTFOLIO)
-        return portfolios
-        .get()
-        .then((docSnapshots)=> {
-            return docSnapshots.docs.map((doc) => {
-                let data = doc.data()
-                data.pk = doc.id
-                data.like = false
-                return data
+        return new Promise(function(resolve,reject){
+            db.collection('portfolio').get()
+            .then(function(snapshot) {
+                // console.log("getPortfolios(): ",snapshot.docs)
+                let outlist = snapshot.docs
+                let out = []
+
+                for(let i=0;i<outlist.length;i++){
+                    let doc = outlist[i].data()
+                    doc.pk = outlist[i].id
+                    doc.like = false
+                    out.push(doc)
+                }
+                console.log("getPortfolios() return : ",out)
+                resolve(out)
+            })
+            .catch(function(res){
+                console.log("getPortfolios() error : ",res)
             })
         })
     },
