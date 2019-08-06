@@ -27,7 +27,7 @@ export default {
   },
   mounted() {
     // 0729 error 주석처리
-    // this.startRotation();
+    this.startRotation();
   },
 
   methods : {
