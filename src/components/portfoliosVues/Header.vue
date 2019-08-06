@@ -2,29 +2,29 @@
     <div class="header">
         <v-layout v-if="layout === null" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
-                <p id="portSubtitle" style="display: hidden;"></p>
+                <h1 id="portTitle" class="animated" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
+                <p id="portSubtitle" class="animated delay-2s" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
         <!-- template1 -->
         <v-layout v-else-if="layout === 'template1'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex style="padding-left: 7rem;">
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="text-align: left;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s" style="text-align: left;">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template2 -->
         <v-layout v-else-if="layout === 'template2'" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-3s">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template3 -->
         <v-layout v-else-if="layout === 'template3'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="text-align: right;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
 
@@ -81,7 +81,7 @@
                     </v-expansion-panel-content>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fas fa-font pr-3"></i>Font</div>
+                            <div @click="choice = 'title'"><i class="fas fa-font pr-3"></i>Font</div>
                         </template>
                         <v-card>
                             <v-card-text>
@@ -251,6 +251,37 @@
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
+                    <!-- animation selector -->
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div @click="choice = 'title'"><i class="fas fa-play-circle pr-3"></i>Animation</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <div class="px-1">
+                                    <v-radio-group v-model="choice" row>
+                                        <v-radio label="Title" value="title" color="primary"></v-radio>
+                                        <v-radio label="Subtitle" value="subtitle" color="primary"></v-radio>
+                                    </v-radio-group>
+                                    <v-combobox
+                                    v-if="choice === 'title'"
+                                    v-model="titleAni"
+                                    :items="animations"
+                                    label="Select a text animation"
+                                    ></v-combobox>
+                                    <v-combobox
+                                    v-if="choice === 'subtitle'"
+                                    v-model="subtitleAni"
+                                    :items="animations"
+                                    label="Select a text animation"
+                                    ></v-combobox>
+                                </div>
+                                <div style="text-align: center;">
+                                    <v-btn small color="primary" @click="saveAni()">Apply</v-btn>
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
                     <v-expansion-panel-content>
                         <template v-slot:header>
                             <div @click="dialog = true"><i class="fas fa-keyboard pr-3"></i>Contents</div>
@@ -315,7 +346,9 @@ export default {
             sRed: "255",
             sBlue: "255",
             sGreen: "255",
-            
+            animations: ['none', 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'headShake', 'swing', 'tada', 'wobble', 'jello', 'bounceIn'],
+            titleAni: 'none',
+            subtitleAni: 'none'
         }
     },
     created() {
@@ -363,6 +396,30 @@ export default {
             let rgb = 'rgb(' + this.sRed + ',' + this.sGreen + ',' + this.sBlue + ')';
             document.getElementById('subtitleColor').style.backgroundColor = rgb;
             document.getElementById('portSubtitle').style.color = rgb;
+        },
+        titleAni: function() {
+            let elem = document.querySelector('#portTitle');
+            elem.classList.forEach(function(item) {
+                    if (item !== 'animated' && item !== 'delay-2s') {
+                        elem.classList.remove(item);
+                    }
+                })
+            if (this.titleAni !== 'none') {
+                elem.classList.add(this.titleAni);
+            }
+            console.log(elem.classList);
+        },
+        subtitleAni: function() {
+            let elem = document.querySelector('#portSubtitle');
+            elem.classList.forEach(function(item) {
+                    if (item !== 'animated' && item !== 'delay-2s') {
+                        elem.classList.remove(item);
+                    }
+                })
+            if (this.subtitleAni !== 'none') {
+                elem.classList.add(this.subtitleAni);
+            }
+            console.log(elem.classList);
         }
     },
     methods: {
@@ -383,9 +440,20 @@ export default {
                     __this.sRed = __this.portfolio.subtitle.color.red;
                     __this.sBlue = __this.portfolio.subtitle.color.blue;
                     __this.sGreen = __this.portfolio.subtitle.color.green;
+                    __this.titleAni = __this.portfolio.title.animation;
+                    __this.subtitleAni = __this.portfolio.subtitle.animation;
+                }).then(function(res) {
                     document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
                     if (__this.select.opacity === 'opacity2') {
                         document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                    }
+                    // console.log(document.querySelector('#portTitle').classList);
+                    // console.log(document.querySelector('#portSubitle').classList);
+                    if (__this.titleAni !== 'none') {
+                        document.querySelector('#portTitle').classList.add(__this.titleAni);
+                    }
+                    if (__this.subtitleAni !== 'none') {
+                        document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
                     }
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
@@ -468,6 +536,12 @@ export default {
             this.portfolio.subtitle.color.green = this.sGreen;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         },
+        async saveAni() {
+            //
+            this.portfolio.title.animation = this.titleAni;
+            this.portfolio.subtitle.animation = this.subtitleAni;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+        },
         async saveHeader() {
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         }
@@ -505,36 +579,6 @@ export default {
     animation-iteration-count: infinite;
 }
 
-    /*.item-1{
-        animation-name: anim-1;
-    }
-
-.item-2{
-    animation-name: anim-2;
-}
-
-.item-3{
-    animation-name: anim-3;
-}
-
-@keyframes anim-1 {
-    0%, 8.3% { left: -100%; opacity: 0; }
-    8.3%,25% { left: 25%; opacity: 1; }
-    33.33%, 100% { left: 110%; opacity: 0; }
-}
-
-@keyframes anim-2 {
-    0%, 33.33% { left: -100%; opacity: 0; }
-    41.63%, 58.29% { left: 25%; opacity: 1; }
-    66.66%, 100% { left: 110%; opacity: 0; }
-}
-
-@keyframes anim-3 {
-    0%, 66.66% { left: -100%; opacity: 0; }
-    74.96%, 91.62% { left: 25%; opacity: 1; }
-    100% { left: 110%; opacity: 0; }
-    }
-    */
     .filebox input[type="file"] {
         position: absolute;
         width: 1px;
