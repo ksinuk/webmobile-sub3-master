@@ -425,13 +425,14 @@ export default {
     },
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
-    async createdbForNewUser(userID) {
+    async createdbForNewUser(userID,    ) {
+        console.log(date)
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
             bookmark: [],
             visit: {
             },
-            visitCnt: 0
+            created_at: date
         })
     },
     // users collection 데이터 수정
@@ -441,7 +442,6 @@ export default {
             bookmark: bookmarkList
         })
     },
-
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
     updatedForUser(display_name, photo_url) {
         var user = firebase.auth().currentUser
@@ -450,34 +450,6 @@ export default {
             photoURL: photo_url
         })
         console.log(user)
-    },
-    // store 에 있는 유저정보 업데이트
-    updatedStoreUser() {
-        let _user = firebase.auth().currentUser
-        if (_user) {
-            store.commit('setUserName', _user.displayName)
-            store.commit('setUserState', true)
-            store.commit('setUserId', _user.uid)
-        }
-        else {
-            store.commit('setUserName', '')
-            store.commit('setUserState', false)
-        }
-        console.log(store)
-    },
-    // login 2-1.1 create user with e-mail
-    createUserWithEmail(email, password, userName) {
-        let _this = this
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(function(user) {
-            _this.createdbForNewUser(user.user.uid)
-            // 유저 생성하면서 입력받은 이름 설정
-            let _user = firebase.auth().currentUser
-            _user.updateProfile({
-                displayName: userName
-            })
-            console.log(user)
-        })
     },
     // store 에 있는 유저정보 업데이트
     updatedStoreUser() {
@@ -494,11 +466,11 @@ export default {
         }
     },
     // login 2-1.1 create user with e-mail
-    createUserWithEmail(email, password, userName) {
+    createUserWithEmail(email, password, userName, date) {
         let _this = this
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function(user) {
-            _this.createdbForNewUser(user.user.uid)
+            _this.createdbForNewUser(user.user.uid, date)
             // 유저 생성하면서 입력받은 이름 설정
             let _user = firebase.auth().currentUser
             _user.updateProfile({

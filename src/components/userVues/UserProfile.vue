@@ -98,6 +98,7 @@ export default {
   created() {
     this.setProfile()
     this.setSpark()
+    console.log('userProfile load Data')
   },
   methods: {
     setProfile() {

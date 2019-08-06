@@ -242,7 +242,7 @@ export default {
   },
   methods: {
     async createUserWithEmail() {
-      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName)
+      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName, this.$store.state.today)
     },
     emailLogin(){
       FirebaseServices.loginUserWithEmail(this.email, this.password)
