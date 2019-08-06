@@ -28,11 +28,11 @@ export default {
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-          console.log('User is logined')
           FirebaseServices.updatedStoreUser()
+          store.commit('setUserId', user.uid)
       } else {
-          console.log('User is not logged in.')
           FirebaseServices.updatedStoreUser()
+          store.commit('setUserId', null)
       }
     })
   }
