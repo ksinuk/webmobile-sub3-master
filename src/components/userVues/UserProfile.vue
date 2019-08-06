@@ -8,15 +8,15 @@
             <v-layout my-3>
                 <div style="margin: auto;">
                   <v-avatar tile size="256" class="profileImg">
-                    <img :src="photoURL" alt="avatar">
+                    <img :src="userImg" alt="avatar">
                   </v-avatar>
                 </div>
             </v-layout>
           </v-flex>
           
           <v-flex xs8>
-            <v-layout my-3>
-
+            <!-- 뷰 길이가 3 이상 -->
+            <v-layout v-show="spark" my-3>
               <v-card flat>
                 <v-sheet
                   color="green"
@@ -30,7 +30,26 @@
                     padding="16"
                   ></v-sparkline>
                 </v-sheet>
-
+              </v-card>
+            </v-layout>
+            <!-- 뷰 길이가 3 이하 -->
+            <v-layout v-show="!spark" my-3>
+              <v-card flat>
+                <v-sheet
+                  color="green"
+                  max-width="calc(100%)"
+                >
+                  <v-sparkline
+                    :labels="this.examSpark.labels"
+                    :value="this.examSpark.value"
+                    color="white"
+                    line-width="1"
+                    padding="16"
+                  ></v-sparkline>
+                </v-sheet>
+                <div id="sparkOverlay">
+                  <p class="sparkP">정보가 없어요</p>
+                </div>
               </v-card>
               
             </v-layout>
@@ -68,10 +87,32 @@ export default {
   props: ['userData'],
   data () {
     return {
-      photoURL: this.$store.state.firebaseUser.photoURL,
+      userImg: null,
+      spark: true,
+      examSpark: {
+        labels: ['none', 'none', 'none'],
+        value: [222, 222, 222]
+      },
     }
   },
+  created() {
+    this.setProfile()
+    this.setSpark()
+    console.log('userProfile load Data')
+  },
   methods: {
+    setProfile() {
+      if (this.$store.state.firebaseUser.photoURL === null) {
+        this.userImg = this.$store.state.imgSrc.noImgSrc;
+      } else {
+        this.userImg = this.$store.state.firebaseUser.photoURL;
+      }
+    },
+    setSpark() {
+      if (this.userData.spark.labels.length < 3) {
+        this.spark = false
+      }
+    }
   }
 }
 </script>
@@ -86,5 +127,21 @@ export default {
 }
 .userIcon {
   margin: auto;
+}
+/* 정보가 없을 경우 보여주는 overlay */
+#sparkOverlay {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  min-width: 70%; 
+  min-height: 70%;
+  width: auto; 
+  height: auto; 
+  background: rgba(0, 0, 0, .7);
+}
+.sparkP {
+  color: #ffffff;
+  font-size: 4em;
+  line-height: 210%;
 }
 </style>
