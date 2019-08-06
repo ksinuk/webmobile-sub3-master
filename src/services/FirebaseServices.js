@@ -12,6 +12,7 @@ const POSTS = 'posts'
 const PORTFOLIO = 'portfolio'
 const PORTFOLIOS = 'tportfolio'
 const MYPORT = 'portfolios'
+const USERDATA = 'userData'
 
 // Firebase SDK snippet
 const firebaseConfig = {
@@ -372,12 +373,43 @@ export default {
             console.log('password update is failed.')
         })
     },
+
+    // 0806 view data
+    async getVisitView(userID) {
+        const userView = db.collection(USERDATA)
+        const viewData = await userView
+            .get()
+            .then((docSnapshots)=> {
+                let results = docSnapshots.docs.map((doc) => {
+                    let data = doc.data()
+                    if(data.uid == userID) {
+                        return data;
+                    }
+                })
+                for (var res in results) {
+                    if (results[res] !== undefined) {
+                        return results[res]
+                    }
+                }
+            })
+        return viewData;
+    },
+    // 0806 view data update
+    // updated view
+    updateUserView(userID, result) {
+        return db.collection(USERDATA).doc(userID).update({
+            visit: result
+        })
+    },
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
     async createdbForNewUser(userID) {
-        await db.collection(USERS).doc(userID).set({
+        await db.collection(USERDATA).doc(userID).set({
             uid: userID,
-            bookmark: []
+            bookmark: [],
+            visit: {
+            },
+            visitCnt: 0
         })
     },
     // users collection 데이터 수정
@@ -431,10 +463,12 @@ export default {
         if (_user) {
             store.commit('setUserName', _user.displayName)
             store.commit('setUserState', true)
+            store.commit('setPhotoURL', _user.photoURL)
         }
         else {
             store.commit('setUserName', '')
             store.commit('setUserState', false)
+            store.commit('setPhotoURL', null)
         }
     },
     // login 2-1.1 create user with e-mail
@@ -446,7 +480,8 @@ export default {
             // 유저 생성하면서 입력받은 이름 설정
             let _user = firebase.auth().currentUser
             _user.updateProfile({
-                displayName: userName
+                displayName: userName,
+                photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg'
             })
         })
         .catch(function(error) {
