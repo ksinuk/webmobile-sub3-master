@@ -1,7 +1,9 @@
 <template>
     <div v-if="isshow">
         <v-card>
-            <img :src="result.img" class="card-img">
+            <div style="height:200px;">
+                <img :src="result.img" class="card-img" :alt="result.pk">
+            </div>
 
             <v-card-title primary-title>
                 <div>
@@ -108,6 +110,7 @@ export default {
 .card-img{
     height:200px;
     width:auto;
+    min-width: 1px;
 }
 </style>
 
