@@ -26,9 +26,7 @@ export default {
     }
   },
   mounted() {
-    this.startRotation();
   },
-
   methods : {
     aboutFunction: function() {
       document.documentElement.scrollTop = 723.2000122070312;
