@@ -4,17 +4,9 @@
       <v-toolbar absolute dark flat class="py-2" style="background: none;">
         <router-link :to="'/'" id="title">DevFolio</router-link>
       <v-spacer></v-spacer>
-      <!-- 제공되는 검색 기능 -->
-      <v-flex>
-        <v-text-field
-          label="Search"
-          v-model="searchItem"
-          v-on:keyup.enter="findItem"
-          ></v-text-field>
-      </v-flex>
       </v-toolbar>
       <!-- sidebar -->
-      <v-navigation-drawer v-model="drawer" fixed stateless=true right class="grey lighten-3">
+      <v-navigation-drawer v-model="drawer" stateless fixed stateless=true right dark color="#000">
         <!-- sidebar list -->
         <SideBarItems/>
       </v-navigation-drawer>
@@ -37,19 +29,11 @@ export default {
   name: 'Header',
   data() {
     return {
-       drawer: false,
-       searchItem: null,
+       drawer: false
     }
   },
   components: {
     SideBarItems
-  },
-  methods: {
-    findItem: function() {
-      console.log(this.searchItem)
-      this.$router.push("/search/" + this.searchItem)
-      window.location.reload()
-    },
   }
 }
 </script>
