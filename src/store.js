@@ -35,6 +35,9 @@ export default new Vuex.Store({
     },
     setUserId(state, id) {
       state.firebaseUser.uid = id
+    },
+    setPhotoURL(state, link) {
+      state.firebaseUser.photoURL = link
     }
   },
   actions: {
