@@ -160,7 +160,7 @@
           color="success"
           @click="loader = 'loading'"
         >
-          가입
+          가입하기
         </v-btn>
 
         <v-btn
