@@ -556,9 +556,9 @@ export default {
       // default banner
       let banner = {theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1'}
       // default title
-      let title = {content: this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6}
+      let title = {content: this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6, animation: 'none'}
       // default subtitle
-      let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6}
+      let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6, animation: 'none'}
       // firebase storage에 저장
       this.upload(user.uid);
       const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title, "");
