@@ -425,14 +425,42 @@ export default {
             visit: result
         })
     },
+    // 0807 user career data get
+    getUserCareer(userID) {
+        return new Promise(function(resolve, reject) {
+            db.collection(USERDATA).doc(userID).get()
+                .then(function(snapshot) {
+                    if (snapshot.empty) {
+                        resolve(null)
+                    }
+                    let out = new Array()
+                    out.push(snapshot.data())
+                    resolve(out[0].selected)
+                })
+                .catch(function(res) {
+                    console.log("error: ", res)
+                })
+        })
+    },
+    // 0807 user career data update
+    updateUserCareer(userID, result) {
+        return db.collection(USERDATA).doc(userID).update({
+            selected: result
+        })
+    },
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
-    async createdbForNewUser(userID,    ) {
+    async createdbForNewUser(userID, date) {
         console.log(date)
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
             bookmark: [],
             visit: {
+            },
+            selected: {
+                recruit: [],
+                tool: [],
+                career: [],
             },
             created_at: date
         })
