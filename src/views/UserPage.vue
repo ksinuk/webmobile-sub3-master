@@ -100,7 +100,7 @@ export default {
     // view count update
     async updateView(viewResult) {
       await FirebaseServices.updateUserView(this.$store.state.firebaseUser.uid, viewResult)
-    }
+    },
   }
 }
 </script>

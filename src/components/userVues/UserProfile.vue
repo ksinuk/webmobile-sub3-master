@@ -8,12 +8,17 @@
             <v-layout my-3>
                 <div style="margin: auto;">
                   <v-avatar tile size="256" class="profileImg">
-                    <img :src="userImg" alt="avatar">
+                    <img :src="careerData.userImg" alt="avatar">
                   </v-avatar>
                 </div>
             </v-layout>
             <!-- 수정페이지 -->
-            <UserDialog v-bind:userImg="userImg"/>
+            <div>
+              {{ careerData.selected.career }}
+              {{ careerData.selected.recruit }}
+              {{ careerData.selected.tool }}
+            </div>
+            <UserDialog v-bind:careerData="careerData"/>
           </v-flex>
           
           <v-flex xs8>
@@ -91,6 +96,14 @@ export default {
   props: ['userData'],
   data () {
     return {
+      careerData: {
+        userImg: null,
+        selected: {
+          recruit: [],
+          tool: [],
+          career: [],
+        },
+      },
       userImg: null,
       spark: true,
       examSpark: {
@@ -102,21 +115,28 @@ export default {
   created() {
     this.setProfile()
     this.setSpark()
+    this.getCareer()
     console.log('userProfile load Data')
   },
   methods: {
     setProfile() {
       if (this.$store.state.firebaseUser.photoURL === null) {
-        this.userImg = this.$store.state.imgSrc.noImgSrc;
+        this.careerData.userImg = this.$store.state.imgSrc.noImgSrc;
       } else {
-        this.userImg = this.$store.state.firebaseUser.photoURL;
+        this.careerData.userImg = this.$store.state.firebaseUser.photoURL;
       }
     },
     setSpark() {
       if (this.userData.spark.labels.length < 3) {
         this.spark = false
       }
-    }
+    },
+    // career 가져오기
+    async getCareer() {
+      let result = await FirebaseServices.getUserCareer(this.$store.state.firebaseUser.uid)
+      this.careerData.selected = result
+      console.log('get user career success')
+    },
   }
 }
 </script>
