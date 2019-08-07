@@ -81,29 +81,6 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
-<<<<<<< HEAD
-    name: 'SearchResult',
-    components: {
-        BackBanner,
-        Loading
-    },
-    data() {
-        return {
-            query: null,
-            resultList: [],
-            likeList: [],
-            uid: null,
-            like: false,
-            isLoading: false,
-            fullPage: true
-        }
-    },
-    mounted(){
-        this.doAjax();
-    },
-    created() {
-        this.getItems()
-=======
   name: 'SearchResult',
   components: {
     BackBanner,
@@ -149,7 +126,6 @@ export default {
       })
       this.likeList = user.bookmark
       this.uid = user.uid
->>>>>>> 657232827f421ef959897edbe4289345bb31463a
     },
 
     // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장

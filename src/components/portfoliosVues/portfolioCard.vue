@@ -61,7 +61,7 @@ export default {
             taglist:[],
         }
     },
-    cearted(){
+    created(){
         this.checkme()
         this.makeTagList()
     },
@@ -96,6 +96,8 @@ export default {
             this.isshow = true
         },
         makeTagList:function(){
+            this.taglist = []
+
             if(this.result && this.result.portfolios){
                 let foliolist = this.result.portfolios
                 for(let i=0;i<foliolist.length;i++){
