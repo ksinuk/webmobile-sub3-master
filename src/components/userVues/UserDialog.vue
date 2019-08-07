@@ -163,7 +163,7 @@ export default {
     },
     // career 저장
     async updateCareer() {
-      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.selected)
+      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.careerData.selected)
       console.log('save career')
     },
   }
