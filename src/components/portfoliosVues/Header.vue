@@ -515,9 +515,9 @@ export default {
             }
             this.portfolio.banner = this.select;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
-            document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
+            document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
             if (this.select.opacity === 'opacity2') {
-                document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
+                document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
             }
         },
         async saveLayout() {
@@ -537,7 +537,6 @@ export default {
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         },
         async saveAni() {
-            //
             this.portfolio.title.animation = this.titleAni;
             this.portfolio.subtitle.animation = this.subtitleAni;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
