@@ -106,12 +106,12 @@ export default {
         })
     },
     updateUserBookmark(from, to,add){
-        if(add){
+        if (add) {
             return db.collection('userData').doc(from).update({
                 myBookmark: firebase.firestore.FieldValue.arrayUnion(to)
             })
         }
-        else{
+        else {
             return db.collection('userData').doc(from).update({
                 myBookmark: firebase.firestore.FieldValue.arrayRemove(to)
             })
@@ -141,6 +141,7 @@ export default {
                     temp['addr'] = '/portfoliopage/'+doc.docs[i].id
                     out.push(temp)
                 }
+                console.log(out);
                 resolve(out)
             })
         })
@@ -437,10 +438,11 @@ export default {
         })
     },
     // users collection 데이터 수정
-    editUser(userId, bookmarkList) {
-        db.collection(USERS).doc(userId).set({
-            uid: userId,
-            bookmark: bookmarkList
+    editUser(userId, bookmarkList, css, visitNum) {
+        db.collection(USERDATA).doc(userId).set({
+            bookmarks: bookmarkList,
+            css: css,
+            visitNum: visitNum
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
