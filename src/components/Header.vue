@@ -6,7 +6,7 @@
       <v-spacer></v-spacer>
       </v-toolbar>
       <!-- sidebar -->
-      <v-navigation-drawer v-model="drawer" stateless fixed stateless=true right dark color="#000">
+      <v-navigation-drawer v-model="drawer" stateless fixed right dark color="#000">
         <!-- sidebar list -->
         <SideBarItems/>
       </v-navigation-drawer>
@@ -29,7 +29,8 @@ export default {
   name: 'Header',
   data() {
     return {
-       drawer: false
+       drawer: false,
+       stateless: true
     }
   },
   components: {

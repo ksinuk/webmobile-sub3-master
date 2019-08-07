@@ -1,24 +1,25 @@
 <template>
     <v-navigation-drawer
-      v-model="drawer" :mini-variant="mini"
-      fixed hide-overlay disable-route-watcher
+      fixed permanent disable-route-watcher
+      width="90rem"
     >
-      <v-toolbar flat class="transparent">
+      <v-toolbar flat>
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-title class="title">
+              Editor
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
       </v-toolbar>
-
-      <v-list class="pt-0" dense>
-        <v-divider></v-divider>
-
+      <v-list dense calss="pt-0" v-for="item in items">
         <v-list-tile
-          v-for="item in items"
           :key="item.title"
-          @click=""
+          @click="drawerHandler(item.title)"
         >
-          <v-list-tile-action>
-            <!-- eventBus를 활용한 데이터 통신 -->
-            <v-btn icon @click="drawerHandler(item.title)"><v-icon>{{ item.icon }}</v-icon></v-btn>
-          </v-list-tile-action>
-
+          <v-list-tile-content>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>

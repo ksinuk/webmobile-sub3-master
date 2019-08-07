@@ -2,8 +2,13 @@
 <div>
     <BackBanner>
         <div slot="pageName">
+<<<<<<< HEAD
             <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
             <p class="mainBackBanner" v-if="!ifsearch">MAIN Portfolio Page</p>
+=======
+            <p class="mainBackBanner" v-if="ifsearch">Search Results</p>
+            <p class="mainBackBanner" v-if="!ifsearch">All of portfolio</p>
+>>>>>>> 657232827f421ef959897edbe4289345bb31463a
         </div>
     </BackBanner>
     

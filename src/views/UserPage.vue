@@ -8,7 +8,7 @@
     <div style="display: flex;">
       <UserProfile v-bind:userData="{userData: userData, spark: spark}"/>
     </div>
-    <!-- <UserBookMark/> -->
+    <UserBookMark/>
   </div>
 </template>
 
@@ -58,8 +58,7 @@ export default {
       this.date = today
     },
     getData() {
-      let data = this.userData.visit
-      // this.userData.visit.sort()
+      let data = this.userData.visit.sort()
       let i = 0
       if (data.length < 7) {
         i = 0

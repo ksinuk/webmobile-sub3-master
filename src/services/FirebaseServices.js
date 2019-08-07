@@ -106,12 +106,12 @@ export default {
         })
     },
     updateUserBookmark(from, to,add){
-        if(add){
+        if (add) {
             return db.collection('userData').doc(from).update({
                 myBookmark: firebase.firestore.FieldValue.arrayUnion(to)
             })
         }
-        else{
+        else {
             return db.collection('userData').doc(from).update({
                 myBookmark: firebase.firestore.FieldValue.arrayRemove(to)
             })
@@ -140,6 +140,7 @@ export default {
                     temp['addr'] = '/portfoliopage/'+doc.docs[i].id
                     out.push(temp)
                 }
+                console.log(out);
                 resolve(out)
             })
         })
@@ -155,13 +156,14 @@ export default {
         }).then(console.log('done'))
     },
     // 다음 코드는 같은 uid 인 포스트를 조회하여 바꿈
-    editPost(pk, uid, title, body, notice) {
+    editPost(pk, uid, title, body, notice, created_at) {
         return db.collection(POSTS).doc(pk).set({
             uid,
             title,
             body,
             notice,
-            created_at: firebase.firestore.FieldValue.serverTimestamp()
+            created_at
+            // created_at: firebase.firestore.FieldValue.serverTimestamp()
         }).then(console.log('done'))
     },
     // 전체 포스트 목록을 조회
@@ -175,7 +177,7 @@ export default {
             return docSnapshots.docs.map((doc) => {
                 let data = doc.data()
                 data.pk = doc.id
-                data.created_at = new Date(data.created_at.toDate())
+                data.view_created = new Date(data.created_at.toDate())
                 data.idx = idx
                 idx += 1
                 return data
@@ -462,25 +464,49 @@ export default {
             visit: result
         })
     },
+    // 0807 user career data get
+    getUserCareer(userID) {
+        return new Promise(function(resolve, reject) {
+            db.collection(USERDATA).doc(userID).get()
+                .then(function(snapshot) {
+                    if (snapshot.empty) {
+                        resolve(null)
+                    }
+                    let out = new Array()
+                    out.push(snapshot.data())
+                    resolve(out[0].selected)
+                })
+                .catch(function(res) {
+                    console.log("error: ", res)
+                })
+        })
+    },
+    // 0807 user career data update
+    updateUserCareer(userID, result) {
+        return db.collection(USERDATA).doc(userID).update({
+            selected: result
+        })
+    },
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
-    async createdbForNewUser(userID) {
+    async createdbForNewUser(userID, date) {
+        console.log(date)
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
             bookmark: [],
             visit: {
             },
-            visitCnt: 0
+            created_at: date
         })
     },
     // users collection 데이터 수정
-    editUser(userId, bookmarkList) {
-        db.collection(USERS).doc(userId).set({
-            uid: userId,
-            bookmark: bookmarkList
+    editUser(userId, bookmarkList, css, visitNum) {
+        db.collection(USERDATA).doc(userId).set({
+            bookmarks: bookmarkList,
+            css: css,
+            visitNum: visitNum
         })
     },
-
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
     updatedForUser(display_name, photo_url) {
         var user = firebase.auth().currentUser
@@ -489,34 +515,6 @@ export default {
             photoURL: photo_url
         })
         console.log(user)
-    },
-    // store 에 있는 유저정보 업데이트
-    updatedStoreUser() {
-        let _user = firebase.auth().currentUser
-        if (_user) {
-            store.commit('setUserName', _user.displayName)
-            store.commit('setUserState', true)
-            store.commit('setUserId', _user.uid)
-        }
-        else {
-            store.commit('setUserName', '')
-            store.commit('setUserState', false)
-        }
-        console.log(store)
-    },
-    // login 2-1.1 create user with e-mail
-    createUserWithEmail(email, password, userName) {
-        let _this = this
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(function(user) {
-            _this.createdbForNewUser(user.user.uid)
-            // 유저 생성하면서 입력받은 이름 설정
-            let _user = firebase.auth().currentUser
-            _user.updateProfile({
-                displayName: userName
-            })
-            console.log(user)
-        })
     },
     // store 에 있는 유저정보 업데이트
     updatedStoreUser() {
@@ -533,11 +531,11 @@ export default {
         }
     },
     // login 2-1.1 create user with e-mail
-    createUserWithEmail(email, password, userName) {
+    createUserWithEmail(email, password, userName, date) {
         let _this = this
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function(user) {
-            _this.createdbForNewUser(user.user.uid)
+            _this.createdbForNewUser(user.user.uid, date)
             // 유저 생성하면서 입력받은 이름 설정
             let _user = firebase.auth().currentUser
             _user.updateProfile({
