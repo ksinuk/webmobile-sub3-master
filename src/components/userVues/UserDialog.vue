@@ -29,7 +29,7 @@
                   <div>
                     <p>경력</p>
                     <v-combobox
-                      v-model="selected.career" :items="selectItems.경력여부"
+                      v-model="careerData.selected.career" :items="selectItems.경력여부"
                       label="Add some tags" multiple small-chips hide-selected
                     ></v-combobox>
                   </div>
@@ -37,7 +37,7 @@
                   <div>
                     <p>채용</p>
                     <v-combobox
-                      v-model="selected.recruit" :items="selectItems.채용분야"
+                      v-model="careerData.selected.recruit" :items="selectItems.채용분야"
                       label="Add some tags" multiple small-chips hide-selected
                     ></v-combobox>
                   </div>
@@ -45,11 +45,11 @@
                   <div>
                     <p>활동</p>
                     <v-combobox
-                      v-model="selected.tool" :items="selectItems.활동분야"
+                      v-model="careerData.selected.tool" :items="selectItems.활동분야"
                       label="Add some tags" multiple small-chips hide-selected
                     ></v-combobox>
                   </div>
-                  <v-btn color="blue darken-1" flat @click="saveHandler()">Save</v-btn>
+                  <v-btn color="blue darken-1" flat @click="saveCareerHandler()">Save</v-btn>
                 </div>
               </v-container>
             </v-card-text>
@@ -62,30 +62,57 @@
 
         <!-- 유저 name, password -->
         <v-tab-item>
-          <v-card flat>
+          
+          <v-card flat v-show="!edit">
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex>
                     <v-avatar tile size="256" class="profileImg">
-                      <img :src="userImg" alt="avatar">
+                      <img :src="careerData.userImg" alt="avatar">
                     </v-avatar>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field label="User name*" required></v-text-field>
+                    <v-text-field v-model="user.name" label="User name*" disabled></v-text-field>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field label="Password*" type="password" required></v-text-field>
+                    <v-text-field label="Password*" type="password" disabled></v-text-field>
                   </v-flex>
                 </v-layout>
+                <v-btn color="blue darken-1" flat @click="edit = true">Edit</v-btn>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-              <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
             </v-card-actions>
           </v-card>
+
+          <v-card flat v-show="edit">
+            <v-card-text>
+              <v-container grid-list-md>
+                <v-layout wrap>
+                  <v-flex>
+                    <v-avatar tile size="256" class="profileImg">
+                      <img :src="careerData.userImg" alt="avatar">
+                    </v-avatar>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-text-field v-model="user.name" label="User name*"></v-text-field>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-text-field label="Password*" type="password" required></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-btn color="blue darken-1" flat @click="saveUserHandler()">save</v-btn>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" flat @click="saveUserHandler()">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+
         </v-tab-item>
       </v-tabs-items>
 
@@ -97,14 +124,20 @@
 import FirebaseServices from '../../services/FirebaseServices'
 
 export default {
-  props: ['userImg'],
+  props: ['careerData'],
   data () {
     return {
       dialog: false,
+      // 정보수정
+      edit: false,
+      user: {
+        name: this.$store.state.firebaseUser.name,
+        password: ''
+      },
       // tab items
       tab: null,
       items: ['content', 'account'],
-      // comboBox saveData
+      // comboBox save Data
       // 선택된 것 저장
       selected: {
         recruit: [],
@@ -118,26 +151,21 @@ export default {
       }
     }
   },
-  created() {
-    this.getCareer()
-  },
   methods: {
     // btn handler
-    saveHandler() {
+    saveCareerHandler() {
       this.dialog = false
       this.updateCareer()
     },
-    // career 가져오기
-    async getCareer() {
-      let result = await FirebaseServices.getUserCareer(this.$store.state.firebaseUser.uid)
-      this.selected = result
-      console.log('get user career success')
+    saveUserHandler() {
+      this.dialog = false
+      this.edit = false
     },
     // career 저장
     async updateCareer() {
-      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.selected)
+      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.careerData.selected)
       console.log('save career')
-    }
+    },
   }
 }
 </script>

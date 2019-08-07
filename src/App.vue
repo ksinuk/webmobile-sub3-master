@@ -15,43 +15,12 @@ import store from './store'
 import Header from './components/Header'
 import TopButton from './components/TopButton'
 
-import firebase from 'firebase'
-import FirebaseServices from './services/FirebaseServices'
-
 export default {
   name: 'App',
   store,
   components:{
       Header,
       TopButton,
-  },
-  created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-          FirebaseServices.updatedStoreUser()
-          store.commit('setUserId', user.uid)
-          store.commit('setDate', this.setDate())
-      } else {
-          FirebaseServices.updatedStoreUser()
-          store.commit('setUserId', null)
-      }
-    })
-  },
-  methods: {
-    setDate() {
-      let date = new Date()
-      let year = date.getFullYear()
-      let month = date.getMonth()+1
-      let day = date.getDate()
-      if(month < 10){
-          month = "0"+month
-      }
-      if(day < 10){
-          day = "0"+day
-      }
-      let today = year+month+day
-      return today
-    },
   }
 }
 
