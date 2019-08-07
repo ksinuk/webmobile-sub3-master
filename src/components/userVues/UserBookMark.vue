@@ -1,38 +1,105 @@
 <template>
-  <div>
-    <h1>북마크</h1>
-    <div v-for="item in bookmarks">
-      <h1>{{ item }}</h1>
-    </div>
-  </div>
+  <v-container class="my-5">
+    <h1>Bookmark List</h1>
+    <v-layout row wrap class="mt-5">
+        <v-flex>
+            <carousel per-page="3">
+                <slide v-for="bookmark in bookmarkList" class="px-2">
+                    <hr>
+                    <!--<p><a :href="bookmark.addr" class="bookmark-link">Explore</a></p>-->
+                    <v-card>
+                        <v-img :src="bookmark.img" height="200px"></v-img>
+                        <v-card-title primary-title>
+                            <div>
+                                <div class="headline">
+                                  {{ bookmark.title }}
+                                  <v-icon v-if="bookmark.like" class="mx-2" color="warning" @click="enrollLike(bookmark.pk)">star</v-icon>
+                                  <v-icon v-else class="mx-2" @click="enrollLike(bookmark.pk)">star</v-icon>
+                                </div>
+                                <div>
+                                    <tr>
+                                        <td v-for="hashtag in bookmark.hashtags">
+                                            <v-chip color="teal" text-color="white">
+                                            <v-avatar>
+                                                <v-icon>check_circle</v-icon>
+                                            </v-avatar>
+                                            {{ hashtag }}
+                                            </v-chip>
+                                        </td>
+                                    </tr>
+                                </div>
+                            </div>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn :to="bookmark.addr" flat color="purple">Explore</v-btn>
+                            <v-spacer></v-spacer>
+                        </v-card-actions>
+                    </v-card>
+                </slide>
+            </carousel>
+        </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import firebase from 'firebase'
 import FirebaseServices from '../../services/FirebaseServices'
+import { Carousel, Slide } from 'vue-carousel';
 
 export default {
   name: 'UserBookMark',
   components: {
-
+    Carousel,
+    Slide
   },
   data () {
     return {
       // 북마크 저장용
-      bookmarks: []
+      bookmarkList: [],
+      myList: [],
+      user: null,
+      userData: []
     }
   },
   created() {
     this.getBookmarks()
   },
   methods: {
+    // 북마크한 포트폴리오 가져오기
     getBookmarks:  function() {
-      let _this = this
+      let __this = this
       firebase.auth().onAuthStateChanged(async function(user){
-        _this.bookmarkList = await FirebaseServices.getBookMarkFromUid(user.uid) 
-        console.log("UserProfile _this.bookmarkList: ", _this.bookmarkList)           
+        __this.user = user.uid
+        var portfolios = await FirebaseServices.getPortfolios();
+        __this.userData = await FirebaseServices.getUserData(user.uid);
+        // 저장된 북마크 array 이름이 bookmarks일 때
+        __this.myList = __this.userData.bookmarks;
+        for (let port in portfolios) {
+          if (__this.myList.includes(portfolios[port].pk)) {
+            portfolios[port].addr = '/portfoliopage/' + portfolios[port].pk
+            portfolios[port].like = true;
+            __this.bookmarkList.push(portfolios[port]);
+          }
+        }
       })
     },
+    // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장
+    enrollLike(pk) {
+      for (let bookmark in this.bookmarkList) {
+        if (this.bookmarkList[bookmark].pk === pk) {
+          if (this.bookmarkList[bookmark].like === true) {
+            this.bookmarkList[bookmark].like = false
+            var index = this.myList.indexOf(pk)
+            this.myList.splice(index, 1)
+          } else {
+            this.bookmarkList[bookmark].like = true
+            this.myList.push(pk)
+          }
+        }
+      }
+      FirebaseServices.editUser(this.user, this.myList, this.userData.css, this.userData.visitNum);
+    }
   }
 }
 </script>
