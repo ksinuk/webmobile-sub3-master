@@ -30,8 +30,8 @@ export default {
             uid: null,
             like: false,
             isLoading: false,
-                fullPage: true
-            }
+            fullPage: true
+        }
     },
     mounted(){
         this.doAjax();

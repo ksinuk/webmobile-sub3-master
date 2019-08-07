@@ -2,27 +2,25 @@
     <div v-if="isshow">
         <v-card>
             <div style="height:200px;">
-                <img :src="result.img" class="card-img" :alt="result.pk">
+                <img :src="result.banner.img" class="card-img" :alt="result.pk">
             </div>
 
             <v-card-title primary-title>
                 <div>
                     <div style="font-weight: 600;">
-                        {{ result.title }}
+                        {{ result.pk }}
                         <v-icon v-if="islike" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                         <v-icon v-else class="mx-2" @click="enrollLike()">star</v-icon>
                     </div>
                     <div>
-                        <tr>
-                            <td v-for="hashtag in result.hashtags">
-                                <v-chip color="teal" text-color="white">
-                                    <v-avatar>
-                                        <v-icon>check_circle</v-icon>
-                                    </v-avatar>
-                                    {{ hashtag }}
-                                </v-chip>
-                            </td>
-                        </tr>
+                        <span v-for="hashtag in taglist">
+                            <v-chip color="teal" text-color="white">
+                                <v-avatar>
+                                    <v-icon>check_circle</v-icon>
+                                </v-avatar>
+                                {{ hashtag }}
+                            </v-chip>
+                        </span>
                     </div>
                 </div>
             </v-card-title>
@@ -59,10 +57,13 @@ export default {
         return{
             islike:false,
             isshow:true,
+
+            taglist:[],
         }
     },
     cearted(){
         this.checkme()
+        this.makeTagList()
     },
     methods: {
         // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장
@@ -93,14 +94,34 @@ export default {
             }
             this.isshow = false
             this.isshow = true
+        },
+        makeTagList:function(){
+            if(this.result && this.result.portfolios){
+                let foliolist = this.result.portfolios
+                for(let i=0;i<foliolist.length;i++){
+                    let tags = foliolist[i].hashtags
+                    for(let j=0;j<tags.length;j++){
+                        let isok = true
+                        for(let k=0;k<this.taglist.length;k++){
+                            if(this.taglist[k] == tags[j]){
+                                isok = false
+                                break
+                            }
+                        }
+                        if(isok) this.taglist.push(tags[j])
+                    }
+                }
+            }
         }
     },
     watch:{
         me:function(){
             this.checkme()
+            this.makeTagList()
         },
         updateSignal:function(){
             this.checkme()
+            this.makeTagList()
         }
     }
 }

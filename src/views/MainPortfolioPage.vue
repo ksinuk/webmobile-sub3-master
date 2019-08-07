@@ -2,7 +2,7 @@
 <div>
     <BackBanner>
         <div slot="pageName">
-            <p class="mainBackBanner" v-if="ifsearch">Search Results</p>
+            <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
             <p class="mainBackBanner" v-if="!ifsearch">MAIN Portfolio Page</p>
         </div>
     </BackBanner>
@@ -93,6 +93,8 @@ export default {
             sortup:false,
 
             ifsearch:false,
+            search_input:'no search',
+
             cardUpdateSignal:0,
 
             prnok:true,
@@ -101,43 +103,70 @@ export default {
     async created(){
         let th = this
 
-        await firebase.auth().onAuthStateChanged(function(user) {
-            if(user && user.uid){
-                Firebase.getUserData(user.uid).then(function(data){
-                    th.me = data
-                    th.me['uid'] = user.uid
-                    th.cardUpdateSignal += 1
-                })
-            }
-        });
+        this.settingMe(th)
 
-        await Firebase.getPortfolios().then(function(data){
-            // console.log(" th.folios data: ", data)
-            th.folios = data
-            th.cardUpdateSignal += 1
-            this.sortPortfolio(this.sortup)
-        })
-        .catch(function(error){
-            console.log("Firebase.getPortfolios() error : ",error)
-        })
-        // console.log("Firebase.getTagAll() start!")
-        Firebase.getTagAll().then(function(datas){
-            for(let i=0;i<datas.length;i++){
-                let elem = datas[i]
-                for(let j=0;j<elem.length;j++){
-                    let tag = elem[j]
-                    if(th.taglist[tag]){
-                        th.taglist[tag].push(elem['id'])
-                    }
-                    else{
-                        th.taglist[tag] = [elem['id']]
-                        th.taglist[tag]['check'] = false
-                    }
-                }
-            }
-        })
+        console.log("route : ",this.$route)
+        if(this.$route.name == "search"){
+            this.search_input = this.$route.params.search_value
+            this.ifsearch = true
+        }
+
+        this.readFolio(th)     
     },
     methods:{
+        settingMe:async function(th){
+            await firebase.auth().onAuthStateChanged(function(user) {
+                if(user && user.uid){
+                    Firebase.getUserData(user.uid).then(function(data){
+                        th.me = data
+                        th.me['uid'] = user.uid
+                        th.cardUpdateSignal += 1
+                    })
+                }
+            })
+        },
+        readFolio: async function(th){
+            await Firebase.getPortfolios(this.ifsearch, this.search_input).then(function(data){
+                // console.log(" th.folios data: ", data)
+                th.folios = data
+
+                for(let i=0;i<th.folios.length;i++){
+                    let post = th.folios[i]
+                    for(let ii=0;ii<post.portfolios.length;ii++){
+                        let folio = post.portfolios[ii]
+                        for(let j=0;j<folio.hashtags.length;j++){
+                            let tag = 
+                        }
+                    }
+                }
+
+
+                th.cardUpdateSignal += 1
+                this.sortPortfolio(this.sortup)
+            })
+            .catch(function(error){
+                console.log("Firebase.getPortfolios() error : ",error)
+            })
+        },
+        readTag:async function(th){
+            await Firebase.getTagAll().then(function(datas){
+                for(let i=0;i<datas.length;i++){
+                    let elem = datas[i]
+                    for(let j=0;j<elem.length;j++){
+                        let tag = elem[j]
+                        if(th.taglist[tag]){
+                            th.taglist[tag].push(elem['id'])
+                        }
+                        else{
+                            th.taglist[tag] = [elem['id']]
+                            th.taglist[tag]['check'] = false
+                        }
+                    }
+                }
+            })
+        },
+
+
         tagcheck:function(elem,tag){
             // console.log("elem: ",elem)
             // console.log("tag : ",tag)
