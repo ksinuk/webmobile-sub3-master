@@ -12,6 +12,8 @@
                   </v-avatar>
                 </div>
             </v-layout>
+            <!-- 수정페이지 -->
+            <UserDialog v-bind:userImg="userImg"/>
           </v-flex>
           
           <v-flex xs8>
@@ -79,10 +81,12 @@
 
 <script>
 import FirebaseServices from '../../services/FirebaseServices'
+import UserDialog from './UserDialog.vue'
 
 export default {
   name: 'UserProfile',
   components: {
+    UserDialog
   },
   props: ['userData'],
   data () {
