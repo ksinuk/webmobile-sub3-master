@@ -457,6 +457,11 @@ export default {
             bookmark: [],
             visit: {
             },
+            selected: {
+                recruit: [],
+                tool: [],
+                career: [],
+            },
             created_at: date
         })
     },
