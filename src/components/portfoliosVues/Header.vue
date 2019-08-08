@@ -2,28 +2,28 @@
     <div class="header">
         <v-layout v-if="layout === null" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" class="animated" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
+                <h1 id="portTitle" class="animated delay-1s" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
                 <p id="portSubtitle" class="animated delay-2s" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
         <!-- template1 -->
         <v-layout v-else-if="layout === 'template1'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex style="padding-left: 7rem;">
-                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" class="animated delay-2s" style="text-align: left;">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template2 -->
         <v-layout v-else-if="layout === 'template2'" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" class="animated delay-3s">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
         <!-- template3 -->
         <v-layout v-else-if="layout === 'template3'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" class="animated" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" class="animated delay-2s" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
         </v-layout>
@@ -351,7 +351,7 @@ export default {
             subtitleAni: 'none'
         }
     },
-    created() {
+    mounted() {
         this.getPortfolio();
         this.$EventBus.$on('Header', () => {
             this.headerDrawer = !this.headerDrawer
@@ -400,7 +400,7 @@ export default {
         titleAni: function() {
             let elem = document.querySelector('#portTitle');
             elem.classList.forEach(function(item) {
-                    if (item !== 'animated' && item !== 'delay-2s') {
+                    if (item !== 'animated' && item !== 'delay-1s') {
                         elem.classList.remove(item);
                     }
                 })
@@ -427,6 +427,7 @@ export default {
             let __this = this;
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
+                console.log(__this.user);
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
                     __this.portfolio = res;
                     __this.select = __this.portfolio.banner;
@@ -515,9 +516,9 @@ export default {
             }
             this.portfolio.banner = this.select;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
-            document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
+            document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
             if (this.select.opacity === 'opacity2') {
-                document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
+                document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
             }
         },
         async saveLayout() {
@@ -537,7 +538,6 @@ export default {
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         },
         async saveAni() {
-            //
             this.portfolio.title.animation = this.titleAni;
             this.portfolio.subtitle.animation = this.subtitleAni;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
