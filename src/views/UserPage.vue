@@ -23,7 +23,7 @@ export default {
   components: {
       BackBanner,
       UserProfile,
-      UserBookMark
+      UserBookMark,
   },
   data () {
     return {
@@ -34,7 +34,7 @@ export default {
         labels: [],
         value: []
       },
-      date: null
+      date: null,
     }
   },
   created() {
