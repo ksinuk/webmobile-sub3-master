@@ -1,5 +1,6 @@
 <template lang="html">
-<div>
+    <div>
+    <div v-if="listlayout === 'template1'">
     <section role="region" id="works" class="l-section" style="background-color: #fafafa;">
         <div class="l-section-holder">
             <h2 class="section-heading is-init">
@@ -15,7 +16,7 @@
 
                         </div>
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span>{{ item. title }}</h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span>{{ item.title }}</h3>
                             <ul class="gallery-spec">
                                 <li v-if="item.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ item.viewport }}</span></li>
                                 <li v-if="item.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ item.ie }}</span></li>
@@ -66,226 +67,312 @@
             </v-container>
         </div>
     </section>
-    
+    </div>
 
-    <!-- portfolio editor -->
-    <v-navigation-drawer v-model="PortfolioDrawer" fixed temporary disable-route-watcher>
-      <v-list dense>
-        <v-expansion-panel>
-            <!-- layout selector -->
-            <v-expansion-panel-content>
-                <template v-slot:header>
-                    <div><i class="fas fa-indent pr-3"></i>Layout</div>
-                </template>
-                <v-card>
-                    <v-card-text>
-                        <v-radio-group v-model="listlayout">
-                            <v-radio label="left" value="template1" color="primary"></v-radio>
-                            <v-radio label="center" value="template2" color="primary"></v-radio>
-                        </v-radio-group>
-                        <div style="text-align: center;">
-                            <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
+    <div v-else-if="listlayout === 'template2'">
+        <div id="title_on">
+            <div style="background-color: #67ceeb; width: 1px; margin-top: 3rem; height: 10rem; margin-left: 50%; display: block;"></div>
+            <h1 style="font-size: 9em; color:#8cddeb;">Work.</h1>
+
+            <i style="top: -10px; font-size: 2rem; color: #aaa; font-weight: light;">Featured Work</i>
+        </div>
+        <div style="margin-top: 5rem;">
+            <v-layout style="margin-left: 5rem; margin-right: 5rem;">
+                <v-flex lg6 md6 sm6 v-for="item in portfolios.portfolios" style="padding-left: 0.5rem; padding-right: 0.5rem;">
+                    <div class="container" @click="modal = true;viewPort(portfolios.portfolios.indexOf(item))">
+                        <img :src="item.imageNames" alt="Avatar" class="image">
+                        <div class="overlay">
+                            <div class="text" style="font-family: 'Roboto', sans-serif; letter-spacing: 0.08rem;">{{ item.title }}</div>
                         </div>
-                    </v-card-text>
-                </v-card>
-            </v-expansion-panel-content>
-            <!-- color selector -->
-            <v-expansion-panel-content>
-                <template v-slot:header>
-                <div><i class="fas fa-palette pr-3"></i>Color</div>
-                </template>
-                <v-card>
-                <v-card-text>
-                    <v-radio-group v-model="colorchip" row>
-                        <v-layout>
-                            <v-radio color="info" label="blue" value="blue" style="padding-right: 1.5rem;"></v-radio>
-                            <v-radio color="success" label="green" value="green"></v-radio>
-                        </v-layout>
-                        <v-layout style="padding-top: 1rem;">
-                            <v-radio color="indigo" label="indigo" value="indigo" style="padding-right: 0.6rem;"></v-radio>
-                            <v-radio color="orange" label="orange" value="orange"></v-radio>
-                        </v-layout>
-                    </v-radio-group>
-                </v-card-text>
-                </v-card>
-            </v-expansion-panel-content>
-            <!-- text ditor -->
-            <v-expansion-panel-content>
-                <template v-slot:header>
-                    <div><i class="fas fa-keyboard pr-3"></i>Contents</div>
-                </template>
-                <v-card>
-                    <v-card-text v-for="port in portfolios.portfolios">
-                        <v-hover>
-                        <v-card @click="dialog = true; editPort(portfolios.portfolios.indexOf(port))" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
-                            <v-img :src="port.imageNames" style="height: 12rem;"></v-img>
-                            <span style="line-height: 3rem; vertical-align: middle;">{{port.title}}</span>
-                        </v-card>
-                        </v-hover>
-                    </v-card-text>
-                    <v-card-text>
-                        <v-hover>
-                        <v-card @click="dialog = true; addPort();" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
-                            <i class="fas fa-plus fa-2x" style="color: grey; line-height: 15rem; vertical-align: middle;"></i>
-                        </v-card>
-                        </v-hover>
-                    </v-card-text>
-                </v-card>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-list>
-    </v-navigation-drawer>
+                    </div>
+                </v-flex>
+            </v-layout>
+        </div>
 
-    <!-- contents editor -->
-    <v-dialog v-model="dialog" max-width="600">
-        <v-card>
-            <v-card-title>
-                <span class="headline">PORTFOLIO</span>
-            </v-card-title>
-            <v-card-text>
-                <v-text-field v-model="portfolio.title" label="Title"></v-text-field>
-                <v-text-area name="input-7-1" v-model="portfolio.description" label="Description"></v-text-area>
-                <v-text-field v-model="hashtag" label="Hashtag" v-on:keyup.enter="enrollTag()"></v-text-field>
-                <template>
-                    <td v-for="(tag, index) in portfolio.hashtags">
-                        <v-chip close color="teal" text-color="white" v-model="portfolio.hashtags[index]">
-                            <v-avatar>
-                                <v-icon>check_circle</v-icon>
-                            </v-avatar>
-                            {{ tag }}
-                        </v-chip>
-                    </td>
-                </template>
-                <v-text-field v-model="portfolio.viewport" label="ViewPort"></v-text-field>
-                <v-text-field v-model="portfolio.ie" label="IE"></v-text-field>
-                <v-text-field v-model="portfolio.demo" label="Demo Link"></v-text-field>
-                <v-text-field v-model="portfolio.repository" label="Repository Link"></v-text-field>
-                <v-simple-table>
-                    <thead>
-                        <tr>
-                            <th class="text-left pt-3 pb-2">Category</th>
-                            <th class="text-left">File Name</th>
-                            <th class="text-left">Git Path</th>
-                            <th class="texdt-left">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="pb-2" v-for="(item, index) in portfolio.sources">
-                        <td>
-                            <v-select
-                            v-model="item.category"
-                            :items="items"
-                            label="Category"
-                            solo
-                            required
-                            ></v-select>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="item.fileName"
-                            label="File Name"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="item.gitPath"
-                            label="Git Path"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="item.fileDes"
-                            label="Description"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td class="text-xs-center">
-                            <v-btn color="error" fab small dark @click="removeSource(index)">
-                            <v-icon>remove</v-icon>
-                            </v-btn>
-                        </td>
-                        </tr>
-                        <tr class="pb-2">
-                        <td>
-                            <v-select
-                            v-model="source.category"
-                            :items="items"
-                            label="Category"
-                            solo
-                            required
-                            ></v-select>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="source.fileName"
-                            label="File Name"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="source.gitPath"
-                            label="Git Path"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td>
-                            <v-text-field
-                            v-model="source.fileDes"
-                            label="Description"
-                            solo
-                            ></v-text-field>
-                        </td>
-                        <td class="text-xs-center">
-                            <v-btn color="teal" fab small dark @click="addSource()">
-                            <v-icon>add</v-icon>
-                            </v-btn>
-                        </td>
-                        </tr>
-                    </tbody>
-                    </v-simple-table>
-                    <!-- image 추가하기 -->
-                    <v-layout wrap justify-center>
-                        <v-flex xs6 md6 lg6 d-flex>
-                            <v-sheet
-                            class="d-flex my-3"
-                            color="teal lighten-3"
-                            height="150"
-                            :elevation="6"
-                            id="drop-zone"
-                            v-bind:class="[isDragging?'drag-over':'']"
-                            v-on:dragover="isDragging=true"
-                            v-on:dragenter="isDragging=true"
-                            v-on:dragleave="isDragging=false"
-                            >
-                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
-                                <p class="my-auto mx-auto">Drag and Drop image files</p>
+        <!-- contents 를 보는 모달 -->
+        <v-dialog v-model="modal" persistent>
+            <v-card>
+                <v-card-text>
+                    <figure role="group" class="gallery-figure">
+                        <figcaption class="gallery-caption">
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ portidx+1 }}</p></span>{{ portfolio.title }}</h3>
+                            <ul class="gallery-spec">
+                                <li v-if="portfolio.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ portfolio.viewport }}</span></li>
+                                <li v-if="portfolio.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ portfolio.ie }}</span></li>
+
+                            </ul>
+                            <div id="work1Description">
+                                <p>{{ portfolio.description }}</p>
                             </div>
-                            <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
-                            </v-sheet>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout v-if="portfolio.dumpImg !== null">
-                        <v-flex class="px-3 py-3">
-                            <img v-bind:src="portfolio.dumpImg" width="400rem" height="200rem">
-                        </v-flex>
-                    </v-layout>
-                    <v-layout>
-                        <v-flex>
-                            <v-btn color="grey" @click="portfolio.dumpImg = null;">Reset</v-btn>
-                        </v-flex>
-                    </v-layout>
+                            <div class="ui-group text-xs-center ml-5" >
+                                <v-btn round class="listbutton" :color="btncolor" :href="portfolio.demo" style="height: 3rem;  width: 8rem;" target="_blank" dark>Demo</v-btn>
+                                <v-btn round class="listbutton" :color="btncolor" :href="portfolio.repository" style="height: 3rem;  width: 8rem;" target="_blank" dark>Repos</v-btn>
+                            </div>
+                        </figcaption>
+                    </figure>
+                    <div class="gallery-image">
+                        <img class="gallery-image-thumb" :src="portfolio.imageNames" :alt="portfolio.title" aria-describedby="work1Description" style="width: 65rem;">
+                    </div>
+                    <table class="gallery-table">
+                        <thead>
+                            <tr id="headname">
+                                <th class="gallery-table-col category">Category</th>
+                                <th class="gallery-table-col source">Source</th>
+                                <th class="gallery-table-col keywords">Detailed</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="portfolio.sources.length < 1">
+                            <tr style="text-align: center;">
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;">no source code :(</td>
+                                <td style="text-align: center;"></td>
+                            </tr>
+                        </tbody>
+                        <tbody v-for="source in portfolio.sources">
+                            <tr>
+                                <td v-if="source.category === 'css'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #8dca35; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'vue'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #00bfdd; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'html'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #ff702a; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'js'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #39CCCC; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'json'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #85144b; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'java'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #001f3f; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'c'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #FFDC00; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'c++'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #B10DC9; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'python'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: ##FF4136; color: white;">{{ source.category }}</span></td>
+                                <td data-th="Source"><a :href="source.gitPath" target="_blank">{{ source.fileName }}</a></td>
+                                <td data-th="Related Keywords">{{ source.fileDes }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </v-card-text>
-            <v-card-actions>
-                <v-spacer/>
-                <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                <v-btn color="blue darken-1" flat @click="dialog = false; save();">Save</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-</div>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" dark @click="modal = false" style="margin-right: 43rem; margin-bottom: 3rem;">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
+    
+    <div class="editor">
+        <!-- portfolio editor -->
+        <v-navigation-drawer v-model="PortfolioDrawer" fixed temporary disable-route-watcher>
+        <v-list dense>
+            <v-expansion-panel>
+                <!-- layout selector -->
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                        <div><i class="fas fa-indent pr-3"></i>Layout</div>
+                    </template>
+                    <v-card>
+                        <v-card-text>
+                            <v-radio-group v-model="listlayout">
+                                <v-radio label="List" value="template1" color="primary"></v-radio>
+                                <v-radio label="Dialog" value="template2" color="primary"></v-radio>
+                            </v-radio-group>
+                            <div style="text-align: center;">
+                                <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
+                            </div>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+                <!-- color selector -->
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                    <div><i class="fas fa-palette pr-3"></i>Color</div>
+                    </template>
+                    <v-card>
+                    <v-card-text>
+                        <v-radio-group v-model="colorchip" row>
+                            <v-layout>
+                                <v-radio color="info" label="blue" value="blue" style="padding-right: 1.5rem;"></v-radio>
+                                <v-radio color="success" label="green" value="green"></v-radio>
+                            </v-layout>
+                            <v-layout style="padding-top: 1rem;">
+                                <v-radio color="indigo" label="indigo" value="indigo" style="padding-right: 0.6rem;"></v-radio>
+                                <v-radio color="orange" label="orange" value="orange"></v-radio>
+                            </v-layout>
+                        </v-radio-group>
+                    </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+                <!-- text ditor -->
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                        <div><i class="fas fa-keyboard pr-3"></i>Contents</div>
+                    </template>
+                    <v-card>
+                        <v-card-text v-for="port in portfolios.portfolios">
+                            <v-hover>
+                            <v-card @click="dialog = true; editPort(portfolios.portfolios.indexOf(port))" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
+                                <v-img :src="port.imageNames" style="height: 12rem;"></v-img>
+                                <span style="line-height: 3rem; vertical-align: middle;">{{port.title}}</span>
+                            </v-card>
+                            </v-hover>
+                        </v-card-text>
+                        <v-card-text>
+                            <v-hover>
+                            <v-card @click="dialog = true; addPort();" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
+                                <i class="fas fa-plus fa-2x" style="color: grey; line-height: 15rem; vertical-align: middle;"></i>
+                            </v-card>
+                            </v-hover>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-list>
+        </v-navigation-drawer>
+
+        <!-- contents editor -->
+        <v-dialog v-model="dialog" max-width="600">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">PORTFOLIO</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field v-model="portfolio.title" label="Title"></v-text-field>
+                    <v-text-area name="input-7-1" v-model="portfolio.description" label="Description"></v-text-area>
+                    <v-text-field v-model="hashtag" label="Hashtag" v-on:keyup.enter="enrollTag()"></v-text-field>
+                    <template>
+                        <td v-for="(tag, index) in portfolio.hashtags">
+                            <v-chip close color="teal" text-color="white" v-model="portfolio.hashtags[index]">
+                                <v-avatar>
+                                    <v-icon>check_circle</v-icon>
+                                </v-avatar>
+                                {{ tag }}
+                            </v-chip>
+                        </td>
+                    </template>
+                    <v-text-field v-model="portfolio.viewport" label="ViewPort"></v-text-field>
+                    <v-text-field v-model="portfolio.ie" label="IE"></v-text-field>
+                    <v-text-field v-model="portfolio.demo" label="Demo Link"></v-text-field>
+                    <v-text-field v-model="portfolio.repository" label="Repository Link"></v-text-field>
+                    <v-simple-table>
+                        <thead>
+                            <tr>
+                                <th class="text-left pt-3 pb-2">Category</th>
+                                <th class="text-left">File Name</th>
+                                <th class="text-left">Git Path</th>
+                                <th class="texdt-left">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="pb-2" v-for="(item, index) in portfolio.sources">
+                            <td>
+                                <v-select
+                                v-model="item.category"
+                                :items="items"
+                                label="Category"
+                                solo
+                                required
+                                ></v-select>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="item.fileName"
+                                label="File Name"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="item.gitPath"
+                                label="Git Path"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="item.fileDes"
+                                label="Description"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td class="text-xs-center">
+                                <v-btn color="error" fab small dark @click="removeSource(index)">
+                                <v-icon>remove</v-icon>
+                                </v-btn>
+                            </td>
+                            </tr>
+                            <tr class="pb-2">
+                            <td>
+                                <v-select
+                                v-model="source.category"
+                                :items="items"
+                                label="Category"
+                                solo
+                                required
+                                ></v-select>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="source.fileName"
+                                label="File Name"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="source.gitPath"
+                                label="Git Path"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td>
+                                <v-text-field
+                                v-model="source.fileDes"
+                                label="Description"
+                                solo
+                                ></v-text-field>
+                            </td>
+                            <td class="text-xs-center">
+                                <v-btn color="teal" fab small dark @click="addSource()">
+                                <v-icon>add</v-icon>
+                                </v-btn>
+                            </td>
+                            </tr>
+                        </tbody>
+                        </v-simple-table>
+                        <!-- image 추가하기 -->
+                        <v-layout wrap justify-center>
+                            <v-flex xs6 md6 lg6 d-flex>
+                                <v-sheet
+                                class="d-flex my-3"
+                                color="teal lighten-3"
+                                height="150"
+                                :elevation="6"
+                                id="drop-zone"
+                                v-bind:class="[isDragging?'drag-over':'']"
+                                v-on:dragover="isDragging=true"
+                                v-on:dragenter="isDragging=true"
+                                v-on:dragleave="isDragging=false"
+                                >
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"> 
+                                    <p class="my-auto mx-auto">Drag and Drop image files</p>
+                                </div>
+                                <input type="file" @change="onChange" multiple style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100% opacity: 0;">
+                                </v-sheet>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout v-if="portfolio.dumpImg !== null">
+                            <v-flex class="px-3 py-3">
+                                <img v-bind:src="portfolio.dumpImg" width="400rem" height="200rem">
+                            </v-flex>
+                        </v-layout>
+                        <v-layout>
+                            <v-flex>
+                                <v-btn color="grey" @click="portfolio.dumpImg = null;">Reset</v-btn>
+                            </v-flex>
+                        </v-layout>
+                    </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialog = false; save();">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -301,7 +388,7 @@ export default {
             portfolios:[],
             user: null,
             PortfolioDrawer:false,
-            listlayout: null,
+            listlayout: 'template1',
             colorchip: 'orange',
             dialog: false,
             idx: null,
@@ -511,6 +598,47 @@ export default {
     }
 }
 </script>
+
+<style>
+    .container {
+        position: relative;
+    }
+
+    .image {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: .5s ease;
+        background-color: rgba(69, 69, 69, 0.8);
+    }
+
+    .container:hover .overlay {
+        opacity: 1;
+    }
+
+    .text {
+        color: white;
+        font-size: 2rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+</style>
 
 <style lang="css" scoped>
     /* section */
