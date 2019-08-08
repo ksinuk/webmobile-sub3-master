@@ -10,23 +10,25 @@
                     <hr>
                     <!--<p><a :href="bookmark.addr" class="bookmark-link">Explore</a></p>-->
                     <v-card>
-                        <v-img :src="bookmark.img" height="200px"></v-img>
+                        <v-img :src="bookmark.banner.img" height="200px"></v-img>
                         <v-card-title primary-title>
                             <div>
                                 <div class="headline">
-                                  {{ bookmark.title }}
+                                  {{ bookmark.title.content }}
                                   <v-icon v-if="bookmark.like" class="mx-2" color="warning" @click="enrollLike(bookmark.pk)">star</v-icon>
                                   <v-icon v-else class="mx-2" @click="enrollLike(bookmark.pk)">star</v-icon>
                                 </div>
                                 <div>
                                     <tr>
-                                        <td v-for="hashtag in bookmark.hashtags">
+                                        <td v-for="portfolios in bookmark.portfolios">
+                                          <div v-for="hashtag in portfolios.hashtags">
                                             <v-chip color="teal" text-color="white">
                                             <v-avatar>
                                                 <v-icon>check_circle</v-icon>
                                             </v-avatar>
-                                            {{ hashtag }}
+                                              {{ hashtag }}
                                             </v-chip>
+                                          </div>
                                         </td>
                                     </tr>
                                 </div>
@@ -62,7 +64,6 @@ export default {
   components: {
     Carousel,
     Slide,
-
   },
   data () {
     return {
@@ -87,8 +88,9 @@ export default {
         __this.user = user.uid
         var portfolios = await FirebaseServices.getPortfolios();
         __this.userData = await FirebaseServices.getUserData(user.uid);
-        // 저장된 북마크 array 이름이 bookmarks일 때 => myBookmark
-        __this.myList = __this.userData.myBookmark;
+        console.log(__this.userData)
+        // 저장된 북마크 array 이름이 bookmarks일 때 => 
+        __this.myList = __this.userData.bookmarks;
 
         if (__this.myList.length == 0) {
           __this.inMark = false
@@ -112,13 +114,15 @@ export default {
             this.bookmarkList[bookmark].like = false
             var index = this.myList.indexOf(pk)
             this.myList.splice(index, 1)
+            FirebaseServices.updateUserBookmark(this.user, pk, false)
           } else {
             this.bookmarkList[bookmark].like = true
             this.myList.push(pk)
+            FirebaseServices.updateUserBookmark(this.user, pk, true)
           }
         }
       }
-      FirebaseServices.editUser(this.user, this.myList, this.userData.css, this.userData.visitNum);
+      
     }
   }
 }
