@@ -64,7 +64,7 @@
         <div class="foliolist" v-if="folios.length != 0 && tagoutList.length != 0 || tagCheckNum == 0">
             <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
             </div>
             <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
@@ -82,7 +82,6 @@
     </div>
     uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
-    {{SelectIfDict}}
 </div>
 </template>
 
@@ -216,19 +215,14 @@ export default {
                 this.tagoutList = []
             }
             else if(tag['check'] && this.tagCheckNum == 1){
-                this.tagoutList = []
-                for(let i=0; i<this.folios.length; i++){
-                    let folioTags = this.searchTagInFolio(this.folios[i],  whereSelect,  whereSelect)
-                    if(this.ifelemInList(tag_name, folioTags)){
-                        this.tagoutList.push(this.folios[i])
-                    }
-                }
+                // console.log("solo tag : ",tag)
+                this.tagoutList = tag
             }
             else if(tag['check']){
                 for(let i=0; i<this.tagoutList.length; i++){
+                    let nowUser = this.tagoutList[i]
                     let len = this.tagoutList.length
-                    let folioTags = this.searchTagInFolio(this.tagoutList[i],  whereSelect,  whereSelect)
-                    if(!this.ifelemInList(tag_name, folioTags)){
+                    if(!this.ifelemInList(nowUser, tag)){
                         this.tagoutList[i] = this.tagoutList[len-1]
                         i-=1
                         this.tagoutList.pop()
@@ -255,7 +249,7 @@ export default {
                             for(let selectName in selectMain){
                                 let select = selectMain[selectName]
                                 if(!select['check']) continue
-                                if(!this.ifelemInList(select.name ,folioTags)){
+                                if(!this.ifelemInList(selectName ,folioTags)){
                                     inputok = false
                                     break 
                                 }
@@ -271,6 +265,7 @@ export default {
             this.prnok = false
             this.prnok = true
             this.cardUpdateSignal += 1
+            console.log("tag : ",tag)
         },
         checkFolioUid:function(uid){
             for(let i=0;i<this.folios.length;i++){
@@ -296,10 +291,13 @@ export default {
                 }
                 return out
             }
-            let userTags = post.userData.selected[selectName]
-            for(let i=0; i<userTags.length; i++){
-                out.push(userTags[i])
+            else if(post.userData && post.userData.selected){
+                let userTags = post.userData.selected[selectName]
+                for(let i=0; i<userTags.length; i++){
+                    out.push(userTags[i])
+                }
             }
+                
             return out                
         },
         ifelemInList(elem,list){
