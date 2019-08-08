@@ -2,7 +2,7 @@
 <div>
     <section role="region" id="works" class="l-section" style="background-color: #fafafa;">
         <div class="l-section-holder">
-            <h2 class="section-heading is-init is-animated" data-animation="fade-up">
+            <h2 class="section-heading is-init">
                 <span class="secondary">Portfolio</span>
                 <span class="primary">My works</span>
             </h2>

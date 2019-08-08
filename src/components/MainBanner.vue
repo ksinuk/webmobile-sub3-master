@@ -3,7 +3,7 @@
       <v-flex xs6 style="padding-left:10%;">
         <p style="font-size: 1.8rem; font-weight: 100; letter-spacing: 0.08rem; text-shadow: 2px 2px 5px #185886; color: white;">YOUR NEW PORTFOLIO TEMPLATE</p>
         <p style="font-weight: 900; text-shadow: 2px 2px 2px #103b5b; font-size: 5rem; color: white; font-family: 'Raleway', sans-serif;">DevFolio</p>
-        <h2 id="animatedText"></h2>
+        <h2 id="bannerTitle"></h2>
         <div class="py-4">
           <v-btn round color="light" to="/login" style="color: #ff6b6b; font-weight: bold; padding: .375rem 2.75rem;">GET STARTED</v-btn>
         </div>
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded',function(event){
     // chekc if text isn't finished yet
     if (i < (text.length)) {
       // add next character to h2
-     document.querySelector("h2").innerHTML = text.substring(0, i+1) +'<span id="cursor" aria-hidden="true"></span>';
+     document.getElementById("bannerTitle").innerHTML = text.substring(0, i+1) +'<span id="cursor" aria-hidden="true"></span>';
 
       // wait for a while and call this function again for next character
       setTimeout(function() {
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded',function(event){
 </script>
 
 <style>
-#animatedText {
+#bannerTitle {
   font-size: 1.8rem;
   color: white;
 }
