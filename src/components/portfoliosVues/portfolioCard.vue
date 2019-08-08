@@ -21,6 +21,32 @@
                             {{ hashtag }}
                         </v-chip>
                     </span>
+
+                    <span v-for="career in result.userData.selected.career">
+                        <v-chip color="red" text-color="white">
+                            <v-avatar>
+                                <v-icon>check_circle</v-icon>
+                            </v-avatar>
+                            {{ career }}
+                        </v-chip>
+                    </span>
+                    <span v-for="recruit in result.userData.selected.recruit">
+                        <v-chip color="blue" text-color="white">
+                            <v-avatar>
+                                <v-icon>check_circle</v-icon>
+                            </v-avatar>
+                            {{ recruit }}
+                        </v-chip>
+                    </span>
+                    <span v-for="tool in result.userData.selected.tool">
+                        <v-chip color="black" text-color="white">
+                            <v-avatar>
+                                <v-icon>check_circle</v-icon>
+                            </v-avatar>
+                            {{ tool }}
+                        </v-chip>
+                    </span>
+
                 </div>
             </div>
         </v-card-title>

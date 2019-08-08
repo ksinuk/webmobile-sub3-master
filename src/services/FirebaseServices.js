@@ -220,7 +220,7 @@ export default {
         return new Promise(function(resolve,reject){
             if(!issearch){
                 db.collection('portfolios').get()
-                .then(function(snapshot) {
+                .then(async function(snapshot) {
                     // console.log("getPortfolios(): ",snapshot.docs)
                     let outlist = snapshot.docs
                     let out = []
@@ -229,7 +229,38 @@ export default {
                         let doc = outlist[i].data()
                         doc.pk = outlist[i].id
                         doc.like = false
-                        out.push(doc)
+
+                        let user_data = await db.collection('userData').doc(doc.pk).get()
+                        if(user_data.exists){
+                            doc.userData = user_data.data()
+
+                            // doc.userData.selected = {'career':[],'recruit':[],'tool':[]}
+                            // if(true){
+                            //     let temp = Math.floor(Math.random() * 3) 
+                            //     let li = ['신입', '인턴', '경력']
+                            //     doc.userData.selected.career = [li[temp]]
+                            // }
+                            // if(true){
+                            //     let li = []
+                            //     if(Math.floor(Math.random() * 2)) li.push('SW 개발')
+                            //     if(Math.floor(Math.random() * 2)) li.push('HW 개발')
+                            //     if(Math.floor(Math.random() * 2)) li.push('운영')
+                            //     if(li.length ==0) li.push("마케팅")
+                            //     doc.userData.selected.recruit = li
+                            // }
+                            // if(true){
+                            //     let li = []
+                            //     if(Math.floor(Math.random() * 2)) li.push('C#')
+                            //     if(Math.floor(Math.random() * 2)) li.push('C++')
+                            //     if(Math.floor(Math.random() * 2)) li.push('Java')
+                            //     if(li.length ==0) li.push("PHP")
+                            //     doc.userData.selected.tool = li
+                            // }
+
+                            // db.collection('userData').doc(doc.pk).set(doc.userData)
+
+                            out.push(doc)
+                        }
                     }
                     // console.log("getPortfolios() return : ",out)
                     resolve(out)
@@ -240,7 +271,7 @@ export default {
             }
             else{
                 db.collection('portfolios').get()
-                .then(function(snapshot) {
+                .then(async function(snapshot) {
                     // console.log("getPortfolios(): ",snapshot.docs)
                     let foliolist = snapshot.docs
                     let out = []
@@ -249,6 +280,7 @@ export default {
                         let doc = foliolist[i].data()
                         let folio = doc.portfolios
                         let tagok = false
+                        
                         for(let j=0;j<folio.length;j++){
                             let tags = folio[j].hashtags
                             for(let k=0;k<tags.length;k++){
@@ -263,7 +295,12 @@ export default {
                         if(tagok){
                             doc.pk = foliolist[i].id
                             doc.like = false
-                            out.push(doc)
+
+                            let user_data = await db.collection('userData').doc(doc.pk).get()
+                            if(user_data.exists){
+                                doc.userData = user_data.data()
+                                out.push(doc)
+                            }
                         } 
                     }
                     // console.log("getPortfolios() return : ",out)

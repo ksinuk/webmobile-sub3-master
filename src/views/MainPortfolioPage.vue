@@ -12,12 +12,12 @@
         <div class="sidebar">
             <br>
             <div class="sidebar-part">
-                <h3 class="tag-title">tag</h3>
-                <btn class="open-btn" @click="iftag = !iftag" v-if="!iftag">+</btn>
-                <btn class="open-btn" @click="iftag = !iftag" v-if="iftag">-</btn>
-                <div v-if="iftag">
+                <h3 class="tag-title">hash</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
                     <ul>
-                        <li class="tag-list" v-for="(elem,tag) in tagdict" @click="tagcheck(elem,tag)">
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
                             {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
                         </li>
                     </ul>
@@ -25,6 +25,52 @@
             </div>
             <hr>
             <br>
+
+            <div class="sidebar-part">
+                <h3 class="tag-title">career</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
+                    <ul>
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <br>
+
+            <div class="sidebar-part">
+                <h3 class="tag-title">recruit</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
+                    <ul>
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <br>
+
+            <div class="sidebar-part">
+                <h3 class="tag-title">tool</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
+                    <ul>
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <br>
+
             <div class="sidebar-part">
                 <h3 class="tag-title">정렬</h3>
                 <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
@@ -86,13 +132,17 @@ export default {
     data(){
         return{
             me:{},
-
             folios:[],
-            iftag:false,
-            tagdict:{},
+
             tagCheckNum:0,
             tagoutList:[],
-            tagcnt:0,
+
+            ifHash:false,
+            hashDict:{},
+
+
+            SelectListDict:{},
+                      
 
             ifsort:false,
             sortup:false,
@@ -142,16 +192,32 @@ export default {
                         for(let j=0;j<folio.hashtags.length;j++){
                             let tag = folio.hashtags[j]
 
-                            if(th.tagdict[tag]){
-                                th.tagdict[tag].push(post)
+                            if(th.hashDict[tag]){
+                                th.hashDict[tag].push(post)
                             }
                             else{
-                                th.tagdict[tag] = [post]
-                                th.tagdict[tag]['check'] = false
-                                th.tagdict[tag]['name'] = tag
+                                th.hashDict[tag] = [post]
+                                th.hashDict[tag]['check'] = false
+                                th.hashDict[tag]['name'] = tag
                             }
                         }
                     }
+                }
+
+                for(let i=0;i<th.folios.length;i++){
+                    let seleteDict = th.folios[i].selected
+                    for(let seleter in seleteDict){
+                        if(!th.SelectListDict[seleter]){
+                            th.SelectListDict[seleter] = {}
+                            th.SelectListDict[seleter]['ifopen'] = false
+                        }
+                        let selectList = seleteDict[seleter]
+                        for(let j=0; j<selectList.length; j++){
+                            if(th.SelectListDict)
+                        }
+
+                    }
+                    
                 }
 
 
@@ -195,8 +261,8 @@ export default {
                 for(let i=0; i<this.folios.length; i++){
                     if(this.ifelemInList(this.folios[i] ,this.tagoutList )) continue
                     let inputok = true
-                    for(let other in this.tagdict){
-                        let otherTag = this.tagdict[other]
+                    for(let other in this.hashDict){
+                        let otherTag = this.hashDict[other]
                         if(!otherTag['check']) continue
                         let folioTags = this.searchTagInFolio(this.folios[i])
                         if(otherTag['check'] && !this.ifelemInList(otherTag.name ,folioTags)){
