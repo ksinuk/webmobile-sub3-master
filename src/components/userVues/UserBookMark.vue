@@ -1,9 +1,11 @@
 <template>
+  
   <v-container class="my-5">
+    <v-card>
     <h1>Bookmark List</h1>
-    <v-layout row wrap class="mt-5">
+    <v-layout row wrap class="mt-5" v-show="inMark">
         <v-flex>
-            <carousel per-page="3">
+            <carousel :per-page="pageNum">
                 <slide v-for="bookmark in bookmarkList" class="px-2">
                     <hr>
                     <!--<p><a :href="bookmark.addr" class="bookmark-link">Explore</a></p>-->
@@ -39,7 +41,14 @@
             </carousel>
         </v-flex>
     </v-layout>
+    
+    <!-- no bookmark -->
+    <v-layout class="mt-5 noMark" v-show="!inMark">
+      <p class="display-2 noMarkText">북마크가 없어요<v-icon class="iconSize">fas fa-exclamation-circle</v-icon></p>
+    </v-layout>
+    </v-card>
   </v-container>
+  
 </template>
 
 <script>
@@ -47,14 +56,19 @@ import firebase from 'firebase'
 import FirebaseServices from '../../services/FirebaseServices'
 import { Carousel, Slide } from 'vue-carousel';
 
+
 export default {
   name: 'UserBookMark',
   components: {
     Carousel,
-    Slide
+    Slide,
+
   },
   data () {
     return {
+      // loading
+      inMark: false,
+      pageNum: 3,
       // 북마크 저장용
       bookmarkList: [],
       myList: [],
@@ -67,19 +81,25 @@ export default {
   },
   methods: {
     // 북마크한 포트폴리오 가져오기
-    getBookmarks:  function() {
+    getBookmarks: function() {
       let __this = this
       firebase.auth().onAuthStateChanged(async function(user){
         __this.user = user.uid
         var portfolios = await FirebaseServices.getPortfolios();
         __this.userData = await FirebaseServices.getUserData(user.uid);
-        // 저장된 북마크 array 이름이 bookmarks일 때
-        __this.myList = __this.userData.bookmarks;
-        for (let port in portfolios) {
-          if (__this.myList.includes(portfolios[port].pk)) {
-            portfolios[port].addr = '/portfoliopage/' + portfolios[port].pk
-            portfolios[port].like = true;
-            __this.bookmarkList.push(portfolios[port]);
+        // 저장된 북마크 array 이름이 bookmarks일 때 => myBookmark
+        __this.myList = __this.userData.myBookmark;
+
+        if (__this.myList.length == 0) {
+          __this.inMark = false
+        } else {
+          __this.inMark = true
+          for (let port in portfolios) {
+            if (__this.myList.includes(portfolios[port].pk)) {
+              portfolios[port].addr = '/portfoliopage/' + portfolios[port].pk
+              portfolios[port].like = true;
+              __this.bookmarkList.push(portfolios[port]);
+            }
           }
         }
       })
@@ -105,6 +125,14 @@ export default {
 </script>
 
 <style scoped>
-  
+.noMark {
+  height: 17em;
+}
+.noMarkText {
+  margin: auto;
+}
+.iconSize {
+  font-size: 50px;
+}
 </style>
 
