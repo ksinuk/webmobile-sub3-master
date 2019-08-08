@@ -567,14 +567,22 @@ export default {
         })
         .then('done')
     },
+    // changePassword
+    changeUserPassword(password) {
+        var user = firebase.auth().currentUser;
+        var newPassword = password
 
-
+        user.updatePassword(newPassword).then(function() {
+            console.log('done')
+        }).catch(function(error) {
+            console.log('error: ', error)
+        });
+    },
     updateUser() {
         // 이미지 올리면 유저 변경
     },
     // 이미지 업로더
     uploadfile(user, loadFile) {
-
        let filename = loadFile.name
        let storageRef = firebase.storage().ref('/users/' + user + '/' + filename)
        let uploadTask = storageRef.put(loadFile)
@@ -606,5 +614,43 @@ export default {
            console.log('File available at', downloadURL)
          })
        })
-     }
+     },
+     uploadImage(user, loadFile, path) {
+        console.log(loadFile)
+        let filename = loadFile.name
+        let storageRef = firebase.storage().ref('/users/' + user + '/' + path + '/' + filename)
+        let uploadTask = storageRef.put(loadFile)
+        uploadTask.on('state_changed', function(snapshot) {
+          // progressbar
+          // 진행정도를 보여줌
+          let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done')
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED:
+              console.log('Upload is paused')
+              break
+            case firebase.storage.TaskState.RUNNING:
+              console.log('Upload is running')
+              break
+          }
+        }, function(error) {
+          console.log(error)
+          switch (error.code) {
+            case 'storage/unauthorized':
+              break
+            case 'storage/canceled':
+              break
+            case 'storage/unknown':
+              break
+          }
+        }, function() {
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                var user = firebase.auth().currentUser
+                user.updateProfile({
+                    photoURL: downloadURL
+                })
+            console.log('File available at', downloadURL)
+          })
+        })
+      }
     }
