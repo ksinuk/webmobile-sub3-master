@@ -229,11 +229,9 @@ export default {
       } else {
         alert('이미지 파일만 올려주세요.')
       }
-  
     },
     async changePhoto() {
       let result = await FirebaseServices.uploadImage(this.$store.state.firebaseUser.uid, this.saveImage, 'profilePhoto')
-      setTimeout(console.log(result), 5000)
     }
   }
 }
