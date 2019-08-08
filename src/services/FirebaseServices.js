@@ -567,8 +567,17 @@ export default {
         })
         .then('done')
     },
+    // changePassword
+    changeUserPassword(password) {
+        var user = firebase.auth().currentUser;
+        var newPassword = password
 
-
+        user.updatePassword(newPassword).then(function() {
+            console.log('done')
+        }).catch(function(error) {
+            console.log('error: ', error)
+        });
+    },
     updateUser() {
         // 이미지 올리면 유저 변경
     },

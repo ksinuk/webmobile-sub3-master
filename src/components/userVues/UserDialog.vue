@@ -98,10 +98,17 @@
                     </v-avatar>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field v-model="user.name" label="User name*"></v-text-field>
+                    <v-text-field v-model="user.name" label="User name*" disabled></v-text-field>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field label="Password*" type="password" required></v-text-field>
+                    <v-text-field
+                      v-model="user.password"
+                      :append-icon="pwShow ? 'visibility' : 'visibility_off'"
+                      :rules="pwRules"
+                      label="Password*"
+                      :type="pwShow ? 'text' : 'password'"
+                      @click:append="pwShow = !pwShow"
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-btn color="blue darken-1" flat @click="saveUserHandler()">save</v-btn>
@@ -109,7 +116,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="saveUserHandler()">Close</v-btn>
+              <v-btn color="blue darken-1" flat @click="dialog = false, edit = false">Close</v-btn>
             </v-card-actions>
           </v-card>
 
@@ -134,6 +141,13 @@ export default {
         name: this.$store.state.firebaseUser.name,
         password: ''
       },
+      // pw rule
+      pwShow: false,
+      password: '',
+      pwRules: [
+        v => !!v || 'password is Required.',
+        v => v.length >= 8 || 'Min 8 characters',
+      ],
       // tab items
       tab: null,
       items: ['content', 'account'],
@@ -158,6 +172,7 @@ export default {
       this.updateCareer()
     },
     saveUserHandler() {
+      this.changePassword()
       this.dialog = false
       this.edit = false
     },
@@ -166,6 +181,12 @@ export default {
       let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.careerData.selected)
       console.log('save career')
     },
+    // 유저 프로필 이미지 바꾸기, 패스워드 바꾸기
+    async changePassword() {
+      let result = await FirebaseServices.changeUserPassword(this.user.password)
+      console.log('change password')
+      this.user.password = ''
+    }
   }
 }
 </script>
