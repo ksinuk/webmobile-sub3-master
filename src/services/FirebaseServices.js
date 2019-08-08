@@ -108,12 +108,12 @@ export default {
     updateUserBookmark(from, to,add){
         if (add) {
             return db.collection('userData').doc(from).update({
-                myBookmark: firebase.firestore.FieldValue.arrayUnion(to)
+                bookmarks: firebase.firestore.FieldValue.arrayUnion(to)
             })
         }
         else {
             return db.collection('userData').doc(from).update({
-                myBookmark: firebase.firestore.FieldValue.arrayRemove(to)
+                bookmarks: firebase.firestore.FieldValue.arrayRemove(to)
             })
         }
     },
@@ -527,7 +527,7 @@ export default {
         console.log(date)
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
-            bookmark: [],
+            bookmarks: [],
             visit: {
             },
             selected: {
@@ -536,14 +536,6 @@ export default {
                 career: [],
             },
             created_at: date
-        })
-    },
-    // users collection 데이터 수정
-    editUser(userId, bookmarkList, css, visitNum) {
-        db.collection(USERDATA).doc(userId).set({
-            bookmarks: bookmarkList,
-            css: css,
-            visitNum: visitNum
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트

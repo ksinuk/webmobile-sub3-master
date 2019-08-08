@@ -88,8 +88,9 @@ export default {
         __this.user = user.uid
         var portfolios = await FirebaseServices.getPortfolios();
         __this.userData = await FirebaseServices.getUserData(user.uid);
-        // 저장된 북마크 array 이름이 bookmarks일 때 => myBookmark
-        __this.myList = __this.userData.myBookmark;
+        console.log(__this.userData)
+        // 저장된 북마크 array 이름이 bookmarks일 때 => 
+        __this.myList = __this.userData.bookmarks;
 
         if (__this.myList.length == 0) {
           __this.inMark = false
@@ -100,7 +101,6 @@ export default {
               portfolios[port].addr = '/portfoliopage/' + portfolios[port].pk
               portfolios[port].like = true;
               __this.bookmarkList.push(portfolios[port]);
-              console.log(__this.bookmarkList)
             }
           }
         }
@@ -114,13 +114,15 @@ export default {
             this.bookmarkList[bookmark].like = false
             var index = this.myList.indexOf(pk)
             this.myList.splice(index, 1)
+            FirebaseServices.updateUserBookmark(this.user, pk, false)
           } else {
             this.bookmarkList[bookmark].like = true
             this.myList.push(pk)
+            FirebaseServices.updateUserBookmark(this.user, pk, true)
           }
         }
       }
-      FirebaseServices.editUser(this.user, this.myList, this.userData.css, this.userData.visitNum);
+      
     }
   }
 }
