@@ -93,9 +93,21 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex>
-                    <v-avatar tile size="256" class="profileImg">
+
+                    <!-- 스토리지에 저장하고 불러오기 / photoURL 저장 -->
+
+                    <!-- user.photoURL -->
+                    <v-avatar v-if="viewImage === null" tile size="256" class="profileImg">
                       <img :src="careerData.userImg" alt="avatar">
                     </v-avatar>
+
+                    <!-- upload image -->
+                    <v-avatar v-if="viewImage !== null" tile size="256" class="profileImg">
+                      <img :src="viewImage" alt="avatar">
+                    </v-avatar>
+
+                    <input class="inputTag" @change="onChange" type="file">
+
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field v-model="user.name" label="User name*" disabled></v-text-field>
@@ -129,6 +141,7 @@
 
 <script>
 import FirebaseServices from '../../services/FirebaseServices'
+import { setTimeout } from 'timers';
 
 export default {
   props: ['careerData'],
@@ -162,7 +175,10 @@ export default {
         채용분야: ['SW 개발', 'HW 개발', '게임 개발', '디자인', '기획/PM', '마케팅', '운영', '경영지원'],
         활동분야: [ 'Android', 'iOS', 'C#', 'C++', 'Java', 'PHP', 'Python', 'Ruby', 'JSP', 'Node.js', 'AngularJS', 'jQuery'],
         경력여부: ['신입', '인턴', '경력'],
-      }
+      },
+      // save image
+      viewImage: null,
+      saveImage: null,
     }
   },
   methods: {
@@ -172,7 +188,13 @@ export default {
       this.updateCareer()
     },
     saveUserHandler() {
-      this.changePassword()
+      // password를 바꿈
+      if (this.user.password.length !== 0) {
+        this.changePassword()
+      }
+      if (this.saveImage !== null) {
+        this.changePhoto()
+      }
       this.dialog = false
       this.edit = false
     },
@@ -186,6 +208,32 @@ export default {
       let result = await FirebaseServices.changeUserPassword(this.user.password)
       console.log('change password')
       this.user.password = ''
+    },
+    onChange: function (file) {
+      let loadFile = file.target.files || file.dataTransfer.files
+      if (loadFile.length == 0) {
+        return
+      }
+      this.addViewImage(loadFile)
+    },
+    addViewImage: function(files) {
+      let _this = this;
+      let file = files[0]
+      let reader = new FileReader()
+      if (file.type.match(/image.*/)) {
+        reader.onload = function(e) {
+        _this.viewImage = e.target.result;
+      }
+        reader.readAsDataURL(file)
+        _this.saveImage = file
+      } else {
+        alert('이미지 파일만 올려주세요.')
+      }
+  
+    },
+    async changePhoto() {
+      let result = await FirebaseServices.uploadImage(this.$store.state.firebaseUser.uid, this.saveImage, 'profilePhoto')
+      setTimeout(console.log(result), 5000)
     }
   }
 }
@@ -194,5 +242,13 @@ export default {
 <style scoped>
 .selectForm {
   display: flex;
+}
+.inputTag {
+  position: absolute;
+  cursor: pointer;
+  top: 6%; left: 20%; right: 0; bottom: 0;
+  width: 256px;
+  height: 256px;
+  opacity: 0;
 }
 </style>
