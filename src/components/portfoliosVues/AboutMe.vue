@@ -362,7 +362,7 @@ export default {
       document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
     }
   },
-  created() {
+  mounted() {
     this.getAbout();
     this.$EventBus.$on('About', () => {
       this.aboutDrawer = !this.aboutDrawer
@@ -374,6 +374,7 @@ export default {
       let __this = this;
       const tmp = firebase.auth().onAuthStateChanged(function(user) {
         __this.user = user.uid;
+        console.log(__this.user);
         FirebaseServices.getMyPort(__this.user).then(function(res) {
           __this.portfolio = res;
           __this.portfolio.tmp = []

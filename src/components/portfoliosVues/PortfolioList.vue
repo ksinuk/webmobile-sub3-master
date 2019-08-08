@@ -355,92 +355,10 @@ export default {
             }
         }
     },
-    created(){
+    mounted(){
         let __this = this;
 
         this.getPortfolio();
-        
-        // this.$EventBus.$on('Portfolio', () => {
-        //     this.portfolioDrawer = !this.portfolioDrawer
-        //     })
-
-        
-        // if(this.$route.params.uid){
-        //     let uid = this.$route.params.uid
-        //     __this.uid = uid
-        //     __this.getPortfolio(uid)
-        //     FirebaseServices.getUserData(uid)
-        //     .then(function(data){
-        //         if(data){
-        //             if(data.css.version) th.css = data.css
-        //             else{
-        //                 __this.css.color = data.css
-        //                 if(data.css == 3){
-        //                     __this.css.modal = true
-        //                 }
-        //                 else if(data.css == 2){
-        //                     __this.css.grid = true
-        //                 }
-        //             }
-
-        //             if(data.visitNum) __this.visitNum = data.visitNum+1
-        //             else __this.visitNum = 1
-
-        //             if(data.bookmarks){
-        //                 __this.toBookMarkNum = data.bookmarks.length
-        //                 for(let i=0;i<data.bookmarks.length;i++){
-        //                     let bookmark = data.bookmarks[i]
-        //                     if(bookmark == __this.user.uid) {
-        //                         __this.mybookmark = true
-        //                         break
-        //                     }
-        //                 }
-        //             }
-        //             FirebaseServices.updateUserData(uid,__this.css,__this.visitNum)
-        //         }
-        //         else{
-        //             FirebaseServices.setUserData(uid,__this.css,__this.visitNum)
-        //         }
-        //         th.cssChange = th.cssChange+1
-        //     })
-
-        //     firebase.auth().onAuthStateChanged(function(user){
-        //         if (user){
-        //             __this.user = user
-        //         }
-        //     })   
-        // }
-        // else{
-        //     firebase.auth().onAuthStateChanged(function(user) {
-        //         if (user) {
-        //             __this.user = user
-        //             __this.iscontrol = true
-        //             __this.getPortfolio(user.uid)
-        //             FirebaseServices.getUserData(user.uid)
-        //             .then(function(data){
-        //                 if(data){
-        //                     if(data.css.version) __this.css = data.css
-        //                     else{
-        //                         __this.css.color = data.css
-        //                         if(data.css == 3){
-        //                             __this.css.modal = true
-        //                         }
-        //                         else if(data.css == 2){
-        //                             __this.css.grid = true
-        //                         }
-        //                     }
-        //                     __this.visitNum = data.visitNum
-        //                 }
-        //                 else{
-        //                     __this.visitNum = 0
-        //                 }
-        //                 __this.cssChange = __this.cssChange+1
-        //             })
-        //             .catch(function(){
-        //             })
-        //         }
-        //     })
-        // }
     },
     methods:{
         async getPortfolio(uid) {
@@ -449,6 +367,7 @@ export default {
             var storageRef = storage.ref();
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
+                console.log(__this.user);
                 FirebaseServices.getMyPort(__this.user).then(function(res) {
                     __this.portfolios = res;
                     for (let item in __this.portfolios.portfolios) {
