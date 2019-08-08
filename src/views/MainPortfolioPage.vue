@@ -33,7 +33,7 @@
                     <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
                     <div v-if="SelectIfDict[mainName]">
                         <ul>
-                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag)">
+                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
                                 {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
                             </li>
                         </ul>
@@ -208,7 +208,7 @@ export default {
             })
         },
 
-        tagcheck:function(tag, tag_name){
+        tagcheck:function(tag, tag_name, whereSelect = false){
             tag['check'] = !tag['check']
             this.tagCheckNum += tag['check'] ? 1:-1
             
@@ -218,7 +218,7 @@ export default {
             else if(tag['check'] && this.tagCheckNum == 1){
                 this.tagoutList = []
                 for(let i=0; i<this.folios.length; i++){
-                    let folioTags = this.searchTagInFolio(this.folios[i])
+                    let folioTags = this.searchTagInFolio(this.folios[i],  whereSelect,  whereSelect)
                     if(this.ifelemInList(tag_name, folioTags)){
                         this.tagoutList.push(this.folios[i])
                     }
@@ -227,7 +227,7 @@ export default {
             else if(tag['check']){
                 for(let i=0; i<this.tagoutList.length; i++){
                     let len = this.tagoutList.length
-                    let folioTags = this.searchTagInFolio(this.tagoutList[i])
+                    let folioTags = this.searchTagInFolio(this.tagoutList[i],  whereSelect,  whereSelect)
                     if(!this.ifelemInList(tag_name, folioTags)){
                         this.tagoutList[i] = this.tagoutList[len-1]
                         i-=1
@@ -251,6 +251,7 @@ export default {
                     if(inputok){
                         for(let selectMainName in this.SelectDictDict){
                             let selectMain = this.SelectDictDict[selectMainName]
+                            folioTags = this.searchTagInFolio(this.folios[i],  true,  selectMainName)
                             for(let selectName in selectMain){
                                 let select = selectMain[selectName]
                                 if(!select['check']) continue
@@ -284,15 +285,22 @@ export default {
             }
             return false
         },
-        searchTagInFolio(post){
+        searchTagInFolio(post , isSelect=false, selectName=''){
             let out = []
-            for(let i=0;i<post.portfolios.length;i++){
-                let folio = post.portfolios[i]
-                for(let j=0;j<folio.hashtags.length;j++){
-                    out.push(folio.hashtags[j])
+            if(!isSelect){
+                for(let i=0;i<post.portfolios.length;i++){
+                    let folio = post.portfolios[i]
+                    for(let j=0;j<folio.hashtags.length;j++){
+                        out.push(folio.hashtags[j])
+                    }
                 }
+                return out
             }
-            return out
+            let userTags = post.userData.selected[selectName]
+            for(let i=0; i<userTags.length; i++){
+                out.push(userTags[i])
+            }
+            return out                
         },
         ifelemInList(elem,list){
             for(let i=0; i<list.length; i++){
@@ -301,10 +309,7 @@ export default {
             return false
         },
         turnSelectIf(dict,name){
-            console.log("turnSelectIf name : ",name)
-            console.log("turnSelectIf  dict : ", dict)
             dict[name] = !dict[name]
-
             this.prnok = false
             this.prnok = true
         },
