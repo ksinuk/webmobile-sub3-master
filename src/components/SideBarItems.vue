@@ -20,13 +20,16 @@
       <v-btn active-class="active" flat block to="/mainPortfoliopage">other portfolio</v-btn>
       <!-- 제공되는 검색 기능 -->
       <v-flex>
-      <v-text-field
-        label="Search"
-        v-model="searchItem"
-        v-on:keyup.enter="findItem"
-        color="white"
-        ></v-text-field>
-        </v-flex>
+        <v-text-field
+          label="Search"
+          v-model="searchItem"
+          v-on:keyup.enter="findItem"
+          color="white"
+          ></v-text-field>
+      </v-flex>
+      <div>
+        <v-btn round depressed small>임베디드</v-btn>
+      </div>
     </div>
   </v-container>
 </template>
@@ -43,8 +46,12 @@ export default {
     }
   },
   methods: {
+    closeDrawer(trigger) {
+      this.$EventBus.$emit(trigger)
+    },
     logoutUser() {
       FirebaseServices.logoutUser()
+      this.closeDrawer('Logout')
     },
     findItem: function() {
       console.log(this.searchItem)

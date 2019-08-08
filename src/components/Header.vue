@@ -35,6 +35,11 @@ export default {
   },
   components: {
     SideBarItems
+  },
+  mounted() {
+    this.$EventBus.$on('Logout', () => {
+        this.drawer = !this.drawer
+      })
   }
 }
 </script>
