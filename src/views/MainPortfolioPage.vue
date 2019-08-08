@@ -26,50 +26,22 @@
             <hr>
             <br>
 
-            <div class="sidebar-part">
-                <h3 class="tag-title">career</h3>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
-                <div v-if="ifHash">
-                    <ul>
-                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
+            <span v-for="(SelectMain , mainName) in SelectDictDict">
+                <div class="sidebar-part">
+                    <h3 class="tag-title">{{mainName}}</h3>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="!SelectIfDict[mainName]">+</btn>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
+                    <div v-if="SelectIfDict[mainName]">
+                        <ul>
+                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag)">
+                                {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <br>
-
-            <div class="sidebar-part">
-                <h3 class="tag-title">recruit</h3>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
-                <div v-if="ifHash">
-                    <ul>
-                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <br>
-
-            <div class="sidebar-part">
-                <h3 class="tag-title">tool</h3>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
-                <div v-if="ifHash">
-                    <ul>
-                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <br>
+                <hr>
+                <br>
+            </span>
 
             <div class="sidebar-part">
                 <h3 class="tag-title">정렬</h3>
@@ -110,6 +82,7 @@
     </div>
     uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
+    {{SelectIfDict}}
 </div>
 </template>
 
@@ -140,8 +113,8 @@ export default {
             ifHash:false,
             hashDict:{},
 
-
-            SelectListDict:{},
+            SelectIfDict:{},
+            SelectDictDict:{},
                       
 
             ifsort:false,
@@ -205,21 +178,27 @@ export default {
                 }
 
                 for(let i=0;i<th.folios.length;i++){
-                    let seleteDict = th.folios[i].selected
+                    let post = th.folios[i]
+                    let seleteDict = th.folios[i].userData.selected
                     for(let seleter in seleteDict){
-                        if(!th.SelectListDict[seleter]){
-                            th.SelectListDict[seleter] = {}
-                            th.SelectListDict[seleter]['ifopen'] = false
+                        if(!th.SelectDictDict[seleter]){
+                            th.SelectDictDict[seleter] = {}
+                            th.SelectIfDict[seleter] = false
                         }
                         let selectList = seleteDict[seleter]
                         for(let j=0; j<selectList.length; j++){
-                            if(th.SelectListDict)
+                            let selectName = selectList[j]
+                            if(th.SelectDictDict[seleter][selectName]){
+                                th.SelectDictDict[seleter][selectName].push(post)
+                            }
+                            else{
+                                th.SelectDictDict[seleter][selectName] = [post]
+                                th.SelectDictDict[seleter][selectName]['check'] = false
+                                th.SelectDictDict[seleter][selectName]['name'] = selectName
+                            }
                         }
-
                     }
-                    
                 }
-
 
                 th.cardUpdateSignal += 1
                 th.sortPortfolio(th.sortup)
@@ -234,7 +213,6 @@ export default {
             this.tagCheckNum += tag['check'] ? 1:-1
             
             if(this.tagCheckNum == 0){
-                this.tagCheckNum = 0
                 this.tagoutList = []
             }
             else if(tag['check'] && this.tagCheckNum == 1){
@@ -261,22 +239,36 @@ export default {
                 for(let i=0; i<this.folios.length; i++){
                     if(this.ifelemInList(this.folios[i] ,this.tagoutList )) continue
                     let inputok = true
+                    let folioTags = this.searchTagInFolio(this.folios[i])
                     for(let other in this.hashDict){
                         let otherTag = this.hashDict[other]
                         if(!otherTag['check']) continue
-                        let folioTags = this.searchTagInFolio(this.folios[i])
-                        if(otherTag['check'] && !this.ifelemInList(otherTag.name ,folioTags)){
+                        if(!this.ifelemInList(otherTag.name ,folioTags)){
                             inputok = false
                             break 
                         }
                     }
+                    if(inputok){
+                        for(let selectMainName in this.SelectDictDict){
+                            let selectMain = this.SelectDictDict[selectMainName]
+                            for(let selectName in selectMain){
+                                let select = selectMain[selectName]
+                                if(!select['check']) continue
+                                if(!this.ifelemInList(select.name ,folioTags)){
+                                    inputok = false
+                                    break 
+                                }
+                                if(!inputok) break 
+                            }
+                        }
+                    }
+
                     if(inputok) this.tagoutList.push(this.folios[i])
                 }
             }
 
             this.prnok = false
             this.prnok = true
-            // console.log("this.tagout: ",this.tagout)
             this.cardUpdateSignal += 1
         },
         checkFolioUid:function(uid){
@@ -307,6 +299,14 @@ export default {
                 if(list[i] == elem) return true
             }
             return false
+        },
+        turnSelectIf(dict,name){
+            console.log("turnSelectIf name : ",name)
+            console.log("turnSelectIf  dict : ", dict)
+            dict[name] = !dict[name]
+
+            this.prnok = false
+            this.prnok = true
         },
         // 이름순 정렬 -------------------------------------------------------
         sortPortfolio:function(up){
