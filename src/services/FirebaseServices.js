@@ -219,7 +219,7 @@ export default {
     getPortfolios(issearch=false , input=''){
         return new Promise(function(resolve,reject){
             if(!issearch){
-                db.collection('portfolio').get()
+                db.collection('portfolios').get()
                 .then(function(snapshot) {
                     // console.log("getPortfolios(): ",snapshot.docs)
                     let outlist = snapshot.docs

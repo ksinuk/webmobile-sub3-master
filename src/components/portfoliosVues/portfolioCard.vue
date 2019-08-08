@@ -1,40 +1,40 @@
 <template>
-    <div v-if="isshow">
-        <v-card>
-            <div style="height:200px;">
-                <img :src="result.banner.img" class="card-img" :alt="result.pk">
-            </div>
-
-            <v-card-title primary-title>
-                <div>
-                    <div style="font-weight: 600;">
-                        {{ result.pk }}
-                        <v-icon v-if="islike" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
-                        <v-icon v-else class="mx-2" @click="enrollLike()">star</v-icon>
-                    </div>
-                    <div>
-                        <span v-for="hashtag in taglist">
-                            <v-chip color="teal" text-color="white">
-                                <v-avatar>
-                                    <v-icon>check_circle</v-icon>
-                                </v-avatar>
-                                {{ hashtag }}
-                            </v-chip>
-                        </span>
-                    </div>
-                </div>
-            </v-card-title>
-            <!-- 해당 포트폴리오 페이지로 이동 -->
-            <v-card-actions>
-                <v-btn flat color="purple">Explore</v-btn>
-                <v-spacer></v-spacer>
-            </v-card-actions>
-        </v-card>
-        <div class="vld-parent">
-            <loading :active.sync="isLoading" :can-cancel="true" :on-cancel="onCancel" :is-full-page="fullPage">
-            </loading>
+<div v-if="isshow">
+    <v-card>
+        <div style="height:200px; margin:5px;">
+            <img :src="result.banner.img" class="card-img" :alt="result.pk">
         </div>
-    </div>
+
+        <v-card-title primary-title>
+            <div>
+                <div style="font-weight: 600;">
+                    {{ result.pk }}
+                    <v-icon v-if="islike" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
+                    <v-icon v-else class="mx-2" @click="enrollLike()">star</v-icon>
+                </div>
+                <div>
+                    <span v-for="hashtag in taglist">
+                        <v-chip color="teal" text-color="white">
+                            <v-avatar>
+                                <v-icon>check_circle</v-icon>
+                            </v-avatar>
+                            {{ hashtag }}
+                        </v-chip>
+                    </span>
+                </div>
+            </div>
+        </v-card-title>
+        <!-- 해당 포트폴리오 페이지로 이동 -->
+        <v-card-actions>
+            <v-btn flat color="purple">Explore</v-btn>
+            <v-spacer></v-spacer>
+        </v-card-actions>
+    </v-card>
+    <!-- <div class="vld-parent">
+        <loading :active.sync="isLoading" :can-cancel="true" :on-cancel="onCancel" :is-full-page="fullPage">
+        </loading>
+    </div> -->
+</div>
 </template>
 
 
@@ -75,22 +75,27 @@ export default {
                 FirebaseServices.updateUserBookmark(this.me.uid, this.result.pk,!this.islike)
                 this.islike = !this.islike
             }
+
+            this.isshow = false
+            this.isshow = true
         },
         onCancel() {
             console.log('User cancelled the loader.')
         },
         checkme(){
+            this.islike = false
             if(this.me){
                 let mybook = this.me.myBookmark
-                // console.log("mybook : ",mybook)
-                // console.log("result.pk : ",this.result.pk)
-                for(let i=0; i<mybook.length; i++){
-                    let to = mybook[i]
-                    if(to == this.result.pk) {
-                        this.islike = true
-                        break
+                if(mybook){
+                    for(let i=0; i<mybook.length; i++){
+                        let to = mybook[i]
+                        if(to == this.result.pk) {
+                            this.islike = true
+                            break
+                        }
                     }
                 }
+                    
             }
             this.isshow = false
             this.isshow = true
@@ -114,16 +119,25 @@ export default {
                     }
                 }
             }
+
+            this.isshow = false
+            this.isshow = true
         }
     },
     watch:{
         me:function(){
             this.checkme()
             this.makeTagList()
+
+            this.isshow = false
+            this.isshow = true
         },
         updateSignal:function(){
             this.checkme()
             this.makeTagList()
+
+            this.isshow = false
+            this.isshow = true
         }
     }
 }

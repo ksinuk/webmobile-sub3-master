@@ -43,23 +43,27 @@
 
         </div>
         <!-- ----- list --------------------------- -->
-        <div class="foliolist" v-if="folios.length != 0 && tagout['num'] != 0 || tagout['size'] == 0">
-            <div class="folio" v-for="user in folios" v-if="tagout[user.pk] || !tagout.size">
+        <div class="foliolist" v-if="folios.length != 0 && tagoutList.length != 0 || tagCheckNum == 0">
+            <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
+                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+            </div>
+            <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
                 <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
             </div>
         </div>
 
         <!-- 검색 결과가 없을 때 -->
-        <div v-if="folios.length == 0 || tagout['num'] == 0 && tagout['size'] != 0" style="height: 50vh;">
+        <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
             <div>
                 <p class="resultOut">검색 결과가 없습니다.</p>
             </div>
         </div>
         
     </div>
-    {{me.uid}}<br>
-    <newFooter></newFooter>
+    uid : {{me.uid}}<br>
+    tagCheckNum : {{tagCheckNum}}<br>
 </div>
 </template>
 
@@ -86,7 +90,8 @@ export default {
             folios:[],
             iftag:false,
             tagdict:{},
-            tagout:{'size':0,'num':0},
+            tagCheckNum:0,
+            tagoutList:[],
             tagcnt:0,
 
             ifsort:false,
@@ -137,14 +142,13 @@ export default {
                         for(let j=0;j<folio.hashtags.length;j++){
                             let tag = folio.hashtags[j]
 
-                            console.log("make tag : ",tag)
-
                             if(th.tagdict[tag]){
-                                th.tagdict[tag].push(post['id'])
+                                th.tagdict[tag].push(post)
                             }
                             else{
-                                th.tagdict[tag] = [post['id']]
+                                th.tagdict[tag] = [post]
                                 th.tagdict[tag]['check'] = false
+                                th.tagdict[tag]['name'] = tag
                             }
                         }
                     }
@@ -152,92 +156,58 @@ export default {
 
 
                 th.cardUpdateSignal += 1
-                this.sortPortfolio(this.sortup)
+                th.sortPortfolio(th.sortup)
             })
             .catch(function(error){
                 console.log("Firebase.getPortfolios() error : ",error)
             })
         },
 
-        tagcheck:function(elem,tag){
-            // console.log("elem: ",elem)
-            // console.log("tag : ",tag)
-            if(elem['check']){
-                elem['check'] = false
-                this.tagout['size'] -= 1
-                if(this.tagout['size'] == 0){
-                    this.tagout = {'size':0,'num':0}
-                }
-                else{
-                    for(let i=0;i<elem.length;i++){
-                        let use = this.searchUid(elem[i])
-                        let nowtags = searchTagInFolio(use)
-                        let inputok = true
-
-                        for(let oktag in this.tagdict){
-                            if(oktag.check){
-                                let tempok = false
-                                for(let k=0;k<nowtags.length;k++){
-                                    let thistag = nowtags[k]
-                                    if(thistag == oktag){
-                                        tempok = true 
-                                        break 
-                                    }
-                                }
-                                if(!tempok) {
-                                    inputok = false
-                                    break
-                                }
-                            }
-                        }
-
-                        if(inputok) {
-                            this.tagout[elem[i]]
-                        }
-                    }
-                }   
+        tagcheck:function(tag, tag_name){
+            tag['check'] = !tag['check']
+            this.tagCheckNum += tag['check'] ? 1:-1
+            
+            if(this.tagCheckNum == 0){
+                this.tagCheckNum = 0
+                this.tagoutList = []
             }
-            else{
-                elem['check'] = true
-                this.tagout['size'] += 1
-                if(this.tagout['size'] == 1){
-                    for(let i=0;i<elem.length;i++){
-                        let uid = elem[i]
-                        if(this.checkFolioUid(uid)){
-                            let temp = this.searchUid(uid)
-
-                            this.tagout[uid] = temp
-                            this.tagout['num'] += 1 
-                        } 
+            else if(tag['check'] && this.tagCheckNum == 1){
+                this.tagoutList = []
+                for(let i=0; i<this.folios.length; i++){
+                    let folioTags = this.searchTagInFolio(this.folios[i])
+                    if(this.ifelemInList(tag_name, folioTags)){
+                        this.tagoutList.push(this.folios[i])
                     }
                 }
-                else{
-                    for(let use in this.tagout){
-                        let uid = user.pk
-                        if(uid == 'size' || uid == 'num') continue 
-
-                        if(this.checkFolioUid(uid)){
-                            let uidtag = searchTagInFolio(use)
-
-                            let delok = true
-                            for(let j=0;j<uidtag.length;j++){
-                                if(uidtag[j] == tag){
-                                    delok = false
-                                    break
-                                }
-                            }
-
-                            if(delok){
-                                this.tagout[i] = this.tagout[this.tagout.length-1]
-                                i-=1
-                                this.tagout.pop()
-                                this.tagout['num'] -= 1 
-                            }
+            }
+            else if(tag['check']){
+                for(let i=0; i<this.tagoutList.length; i++){
+                    let len = this.tagoutList.length
+                    let folioTags = this.searchTagInFolio(this.tagoutList[i])
+                    if(!this.ifelemInList(tag_name, folioTags)){
+                        this.tagoutList[i] = this.tagoutList[len-1]
+                        i-=1
+                        this.tagoutList.pop()
+                    }
+                }
+            }
+            else if(!tag['check']){
+                for(let i=0; i<this.folios.length; i++){
+                    if(this.ifelemInList(this.folios[i] ,this.tagoutList )) continue
+                    let inputok = true
+                    for(let other in this.tagdict){
+                        let otherTag = this.tagdict[other]
+                        if(!otherTag['check']) continue
+                        let folioTags = this.searchTagInFolio(this.folios[i])
+                        if(otherTag['check'] && !this.ifelemInList(otherTag.name ,folioTags)){
+                            inputok = false
+                            break 
                         }
                     }
-                }  
+                    if(inputok) this.tagoutList.push(this.folios[i])
+                }
             }
-            this.tagcnt+=1
+
             this.prnok = false
             this.prnok = true
             // console.log("this.tagout: ",this.tagout)
@@ -265,6 +235,12 @@ export default {
                 }
             }
             return out
+        },
+        ifelemInList(elem,list){
+            for(let i=0; i<list.length; i++){
+                if(list[i] == elem) return true
+            }
+            return false
         },
         // 이름순 정렬 -------------------------------------------------------
         sortPortfolio:function(up){
