@@ -10,23 +10,25 @@
                     <hr>
                     <!--<p><a :href="bookmark.addr" class="bookmark-link">Explore</a></p>-->
                     <v-card>
-                        <v-img :src="bookmark.img" height="200px"></v-img>
+                        <v-img :src="bookmark.banner.img" height="200px"></v-img>
                         <v-card-title primary-title>
                             <div>
                                 <div class="headline">
-                                  {{ bookmark.title }}
+                                  {{ bookmark.title.content }}
                                   <v-icon v-if="bookmark.like" class="mx-2" color="warning" @click="enrollLike(bookmark.pk)">star</v-icon>
                                   <v-icon v-else class="mx-2" @click="enrollLike(bookmark.pk)">star</v-icon>
                                 </div>
                                 <div>
                                     <tr>
-                                        <td v-for="hashtag in bookmark.hashtags">
+                                        <td v-for="portfolios in bookmark.portfolios">
+                                          <div v-for="hashtag in portfolios.hashtags">
                                             <v-chip color="teal" text-color="white">
                                             <v-avatar>
                                                 <v-icon>check_circle</v-icon>
                                             </v-avatar>
-                                            {{ hashtag }}
+                                              {{ hashtag }}
                                             </v-chip>
+                                          </div>
                                         </td>
                                     </tr>
                                 </div>
@@ -62,7 +64,6 @@ export default {
   components: {
     Carousel,
     Slide,
-
   },
   data () {
     return {
@@ -99,6 +100,7 @@ export default {
               portfolios[port].addr = '/portfoliopage/' + portfolios[port].pk
               portfolios[port].like = true;
               __this.bookmarkList.push(portfolios[port]);
+              console.log(__this.bookmarkList)
             }
           }
         }
