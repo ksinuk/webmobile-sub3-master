@@ -351,7 +351,7 @@ export default {
             subtitleAni: 'none'
         }
     },
-    created() {
+    mounted() {
         this.getPortfolio();
         this.$EventBus.$on('Header', () => {
             this.headerDrawer = !this.headerDrawer
@@ -427,6 +427,7 @@ export default {
             let __this = this;
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
+                console.log(__this.user);
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
                     __this.portfolio = res;
                     __this.select = __this.portfolio.banner;

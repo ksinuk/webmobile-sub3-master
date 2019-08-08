@@ -288,8 +288,6 @@ export default {
             let results= docSnapshots.docs.map((doc) => {
                 let data = doc.data()
                 if(data.uid==user_id){
-                    console.log('데이터 반환')
-                    console.log(data);
                     return data;
                 }
             })
@@ -321,7 +319,6 @@ export default {
                 }
             }
         })
-        console.log(detailPort);
         return detailPort;
     },
 
