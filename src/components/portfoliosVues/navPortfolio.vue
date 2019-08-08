@@ -42,6 +42,7 @@ export default {
   methods: {
     drawerHandler(location) {
       templateMove(location)
+      console.log(location)
       this.$EventBus.$emit(location)
     }
   }

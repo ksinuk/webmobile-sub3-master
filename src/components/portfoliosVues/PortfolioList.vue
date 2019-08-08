@@ -4,7 +4,7 @@
         <div class="l-section-holder">
             <h2 class="section-heading is-init">
                 <span class="secondary">Portfolio</span>
-                <span class="primary">My works</span>
+                <span class="primar" id="prim">My works</span>
             </h2>
             <v-container id="portfolio" class="section-content gallery alternate" v-for="(item, index) in portfolios.portfolios">
                 <v-card>
@@ -15,7 +15,7 @@
 
                         </div>
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><p class="index">0</p><p class="index">{{ index+1 }}</p>{{ item. title }}</h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span>{{ item. title }}</h3>
                             <ul class="gallery-spec">
                                 <li v-if="item.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ item.viewport }}</span></li>
                                 <li v-if="item.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ item.ie }}</span></li>
@@ -24,15 +24,15 @@
                             <div id="work1Description">
                                 <p>{{ item.description }}</p>
                             </div>
-                            <div class="ui-group text-xs-center ml-5">
-                                <v-btn round color="#30b7e8" :href="item.demo" style="height: 3rem;  width: 8rem;" target="_blank" dark>Demo</v-btn>
-                                <v-btn round color="#30b7e8" :href="item.repository" style="height: 3rem;  width: 8rem;" target="_blank" dark>Repos</v-btn>
+                            <div class="ui-group text-xs-center ml-5" >
+                                <v-btn round class="listbutton" :color="btncolor" :href="item.demo" style="height: 3rem;  width: 8rem;" target="_blank" dark>Demo</v-btn>
+                                <v-btn round class="listbutton" :color="btncolor" :href="item.repository" style="height: 3rem;  width: 8rem;" target="_blank" dark>Repos</v-btn>
                             </div>
                         </figcaption>
                     </figure>
                     <table class="gallery-table">
                         <thead>
-                            <tr>
+                            <tr id="headname">
                                 <th class="gallery-table-col category">Category</th>
                                 <th class="gallery-table-col source">Source</th>
                                 <th class="gallery-table-col keywords">Detailed</th>
@@ -69,65 +69,53 @@
     
 
     <!-- portfolio editor -->
-    <v-navigation-drawer v-model="portfolioDrawer" fixed temporary disable-route-watcher>
-      <v-list class="pt-0" dense>
+    <v-navigation-drawer v-model="PortfolioDrawer" fixed temporary disable-route-watcher>
+      <v-list dense>
         <v-expansion-panel>
-
             <!-- layout selector -->
             <v-expansion-panel-content>
                 <template v-slot:header>
-                <div><i class="fas fa-image pr-3"></i>Layout</div>
+                    <div><i class="fas fa-indent pr-3"></i>Layout</div>
+                </template>
+                <v-card>
+                    <v-card-text>
+                        <v-radio-group v-model="listlayout">
+                            <v-radio label="left" value="template1" color="primary"></v-radio>
+                            <v-radio label="center" value="template2" color="primary"></v-radio>
+                        </v-radio-group>
+                        <div style="text-align: center;">
+                            <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
+                        </div>
+                    </v-card-text>
+                </v-card>
+            </v-expansion-panel-content>
+            <!-- color selector -->
+            <v-expansion-panel-content>
+                <template v-slot:header>
+                <div><i class="fas fa-palette pr-3"></i>Color</div>
                 </template>
                 <v-card>
                 <v-card-text>
-                    <div>
-
-                        <div style="display: flex;">
-                            <v-checkbox label="modal" @change="changeCss(1,true)"></v-checkbox>
-                            <v-checkbox label="grid" @change="changeCss(2,true)"></v-checkbox>
-                        </div>
-
-                    </div>
-                    <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
-
-                    <div class="px-1">
-                    <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
-                    <div>
-                        <v-radio-group v-model="tmp.color">
-                            <v-radio label="white" value="portColor1" @change="changeCss(0,1)"></v-radio>
-                            <v-radio label="black" value="portColor2" @change="changeCss(0,2)"></v-radio>
-                            <v-radio label="blue" value="portColor3" @change="changeCss(0,3)"></v-radio>
-                        </v-radio-group>
-                    </div>
-                    </div>
-                    <div style="text-align: center;">
-                    <v-btn small color="primary" @click="">Apply</v-btn>
-                    </div>
+                    <v-radio-group v-model="colorchip" row>
+                        <v-layout>
+                            <v-radio color="info" label="blue" value="blue" style="padding-right: 1.5rem;"></v-radio>
+                            <v-radio color="success" label="green" value="green"></v-radio>
+                        </v-layout>
+                        <v-layout style="padding-top: 1rem;">
+                            <v-radio color="indigo" label="indigo" value="indigo" style="padding-right: 0.6rem;"></v-radio>
+                            <v-radio color="orange" label="orange" value="orange"></v-radio>
+                        </v-layout>
+                    </v-radio-group>
                 </v-card-text>
                 </v-card>
             </v-expansion-panel-content>
-          <!-- animation selector -->
-          <v-expansion-panel-content>
-            <template v-slot:header>
-              <div><i class="fas fa-image pr-3"></i>Animation</div>
-            </template>
-            <v-card>
-              <v-card-text>
-                <div>
-                  <div>
-                    <button>애니메이션 1</button>
-                  </div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-expansion-panel-content>
-          <!-- contents editor -->
+            <!-- text ditor -->
             <v-expansion-panel-content>
                 <template v-slot:header>
                     <div><i class="fas fa-keyboard pr-3"></i>Contents</div>
                 </template>
                 <v-card>
-                    <v-card-text  v-for="port in portfolios.portfolios">
+                    <v-card-text v-for="port in portfolios.portfolios">
                         <v-hover>
                         <v-card @click="dialog = true; editPort(portfolios.portfolios.indexOf(port))" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" style="height: 15rem; width: 18rem; text-align: center;">
                             <v-img :src="port.imageNames" style="height: 12rem;"></v-img>
@@ -175,10 +163,10 @@
                 <v-simple-table>
                     <thead>
                         <tr>
-                        <th class="text-left pt-3 pb-2">Category</th>
-                        <th class="text-left">File Name</th>
-                        <th class="text-left">Git Path</th>
-                        <th class="texdt-left">Description</th>
+                            <th class="text-left pt-3 pb-2">Category</th>
+                            <th class="text-left">File Name</th>
+                            <th class="text-left">Git Path</th>
+                            <th class="texdt-left">Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -312,28 +300,15 @@ export default {
             // firebase portfolios 컬렉션에서 가져온 데이터
             portfolios:[],
             user: null,
-            mybookmark:false,
-            iscontrol:false,
-            portfolioDrawer:false,
-            tmplayout: null,
-            tmp: {
-                layout: null,
-                color: null,
-            },
-            css:{
-                color:1,
-                modal:false,
-                grid:false,
-                version:'2.0.0',
-            },
-            visitNum:0,
-            toBookMarkNum:0,
-            cssChange:0,
+            PortfolioDrawer:false,
+            listlayout: null,
+            colorchip: 'orange',
             dialog: false,
             idx: null,
             hashtag: null,
             items: ['html', 'css', 'vue', 'js', 'json', 'c', 'c++', 'java', 'python'],
             isDragging: false,
+            btncolor: '#30b7e8',
             imageList: [],
             source: {
                 category: null,
@@ -357,8 +332,31 @@ export default {
     },
     mounted(){
         let __this = this;
-
         this.getPortfolio();
+        this.$EventBus.$on('Portfolio', () => {
+            this.PortfolioDrawer = !this.PortfolioDrawer
+        });
+    },
+    watch: {
+        colorchip: function() {
+            if (this.colorchip === 'green') {
+                document.getElementById('headname').style.backgroundColor = 'rgba(0, 151, 19, 0.05)';
+                document.getElementById('listTitle').style.color = 'rgba(0, 151, 19, 0.6)';
+                this.btncolor = 'rgba(0, 151, 19, 0.6)';
+            } else if (this.colorchip === 'indigo') {
+                document.getElementById('headname').style.backgroundColor = 'rgba(40, 53, 147, 0.05)';
+                document.getElementById('listTitle').style.color = '#283593';
+                this.btncolor = '#283593';
+            } else if (this.colorchip === 'orange') {
+                document.getElementById('headname').style.backgroundColor = 'rgba(251, 140, 0, 0.05)';
+                document.getElementById('listTitle').style.color = '#FB8C00';
+                this.btncolor = '#FB8C00';
+            } else if (this.colorchip === 'blue') {
+                document.getElementById('headname').style.backgroundColor = 'rgba(77,128,153,0.05)';
+                document.getElementById('listTitle').style.color = '#30b7e8';
+                this.btncolor = '#30b7e8';
+            }
+        }
     },
     methods:{
         async getPortfolio(uid) {
@@ -367,7 +365,6 @@ export default {
             var storageRef = storage.ref();
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
-                console.log(__this.user);
                 FirebaseServices.getMyPort(__this.user).then(function(res) {
                     __this.portfolios = res;
                     for (let item in __this.portfolios.portfolios) {
@@ -382,27 +379,23 @@ export default {
                             __this.portfolios.portfolios[item].imageNames = url;
                         })
                     }
+                }).then(function(res) {
                     console.log(__this.portfolios.portfolios)
+                    if (__this.colorchip === 'green') {
+                        document.getElementById('headname').style.backgroundColor = 'rgba(0, 151, 19, 0.05)';
+                        document.getElementById('listTitle').style.color = 'rgba(0, 151, 19, 0.6)';
+                        __this.btncolor = 'rgba(0, 151, 19, 0.6)';
+                    } else if (__this.colorchip === 'indigo') {
+                        document.getElementById('headname').style.backgroundColor = 'rgba(40, 53, 147, 0.05)';
+                        document.getElementById('listTitle').style.color = '#283593';
+                        __this.btncolor = '#283593';
+                    } else if (__this.colorchip === 'orange') {
+                        document.getElementById('headname').style.backgroundColor = 'rgba(251, 140, 0, 0.05)';
+                        document.getElementById('listTitle').style.color = '#FB8C00';
+                        __this.btncolor = '#FB8C00';
+                    }
                 })
             })
-        },
-        changeCss(num,write) {
-            if(num == 0) this.css.color = write
-            else if(num == 1) this.css.modal = !this.css.modal
-            else if(num == 2) this.css.grid = !this.css.grid
-            // let th = this
-            // firebase.auth().onAuthStateChanged(function(user) {
-            //     if (user) {
-            //         FirebaseService.updateUserData(user.uid,th.css,th.visitNum)
-            //     }
-            // })
-
-            this.cssChange = this.cssChange+1
-        },
-        doMybookmark(del){
-            this.mybookmark = !del
-            this.toBookMarkNum += del ? -1:1
-            FirebaseService.setBookMark(this.user.uid,this.uid,del)
         },
         editPort(idx) {
             this.idx = idx;
@@ -579,7 +572,6 @@ export default {
         font-family: "Quicksand",sans-serif;
     }
     .index {
-        color: #30b7e8;
         display: inline-block;
         position: relative;
         left: -0.05em;
@@ -664,9 +656,8 @@ export default {
         border-color: #424242 !important;
     }
 
-    .primary {
+    .primar {
         background-color: #fafafa !important;
-        border-color: #1976d2 !important;
     }
     .section-heading .secondary {
         display: block;
@@ -679,14 +670,14 @@ export default {
         text-align: center;
     }
 
-    .section-heading .primary {
+    .section-heading .primar {
         display: block;
         font-size: 64px;
         padding-bottom: .25em;
         position: relative;
     }
 
-    .section-heading .primary::after {
+    .section-heading .primar::after {
         background: #30b7e8;
         border-radius: .25em;
         display: block;
@@ -744,11 +735,6 @@ export default {
     ul {
         display: block;
         list-style-type: disc;
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-        margin-inline-start: 0px;
-        margin-inline-end: 0px;
-        padding-inline-start: 40px;
     }
 
     .ui-button {
@@ -845,8 +831,8 @@ export default {
         vertical-align: inherit;
     }
 
-    table thead th {
-        background-color: rgba(77,128,153,0.05);
+    table thead tr th {
+        
         border-top-width: 1px;
         color: #94979c;
         padding: 1.2em 1em;
@@ -867,5 +853,11 @@ export default {
     table thead {
         font-family: "Quicksand",sans-serif;
     }
+    #listTitle {
+        color: #30b7e8;
+    }
 
+    #headname {
+        background-color: rgba(77,128,153,0.05);
+    }
 </style>
