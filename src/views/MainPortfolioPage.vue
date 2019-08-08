@@ -2,8 +2,8 @@
 <div>
     <BackBanner>
         <div slot="pageName">
-            <p class="mainBackBanner" v-if="ifsearch">Search Results</p>
-            <p class="mainBackBanner" v-if="!ifsearch">All of portfolio</p>
+            <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
+            <p class="mainBackBanner" v-if="!ifsearch">MAIN Portfolio Page</p>
         </div>
     </BackBanner>
     
@@ -12,12 +12,12 @@
         <div class="sidebar">
             <br>
             <div class="sidebar-part">
-                <h3 class="tag-title">tag</h3>
-                <btn class="open-btn" @click="iftag = !iftag" v-if="!iftag">+</btn>
-                <btn class="open-btn" @click="iftag = !iftag" v-if="iftag">-</btn>
-                <div v-if="iftag">
+                <h3 class="tag-title">hash</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
                     <ul>
-                        <li class="tag-list" v-for="(elem,tag) in taglist" @click="tagcheck(elem,tag)">
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
                             {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
                         </li>
                     </ul>
@@ -25,6 +25,24 @@
             </div>
             <hr>
             <br>
+
+            <span v-for="(SelectMain , mainName) in SelectDictDict">
+                <div class="sidebar-part">
+                    <h3 class="tag-title">{{mainName}}</h3>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="!SelectIfDict[mainName]">+</btn>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
+                    <div v-if="SelectIfDict[mainName]">
+                        <ul>
+                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag)">
+                                {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <br>
+            </span>
+
             <div class="sidebar-part">
                 <h3 class="tag-title">정렬</h3>
                 <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
@@ -43,23 +61,28 @@
 
         </div>
         <!-- ----- list --------------------------- -->
-        <div class="foliolist" v-if="folios.length != 0 && tagout['num'] != 0 || tagout['size'] == 0">
-            <div class="folio" v-for="user in folios" v-if="tagout[user.pk] || !tagout.size">
+        <div class="foliolist" v-if="folios.length != 0 && tagoutList.length != 0 || tagCheckNum == 0">
+            <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
+                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+            </div>
+            <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
                 <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
             </div>
         </div>
 
         <!-- 검색 결과가 없을 때 -->
-        <div v-if="folios.length == 0 || tagout['num'] == 0 && tagout['size'] != 0" style="height: 50vh;">
+        <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
             <div>
                 <p class="resultOut">검색 결과가 없습니다.</p>
             </div>
         </div>
         
     </div>
-    {{me.uid}}
-    <newFooter></newFooter>
+    uid : {{me.uid}}<br>
+    tagCheckNum : {{tagCheckNum}}<br>
+    {{SelectIfDict}}
 </div>
 </template>
 
@@ -82,17 +105,24 @@ export default {
     data(){
         return{
             me:{},
-
             folios:[],
-            iftag:false,
-            taglist:{},
-            tagout:{'size':0,'num':0},
-            tagcnt:0,
+
+            tagCheckNum:0,
+            tagoutList:[],
+
+            ifHash:false,
+            hashDict:{},
+
+            SelectIfDict:{},
+            SelectDictDict:{},
+                      
 
             ifsort:false,
             sortup:false,
 
             ifsearch:false,
+            search_input:'no search',
+
             cardUpdateSignal:0,
 
             prnok:true,
@@ -101,87 +131,145 @@ export default {
     async created(){
         let th = this
 
-        await firebase.auth().onAuthStateChanged(function(user) {
-            if(user && user.uid){
-                Firebase.getUserData(user.uid).then(function(data){
-                    th.me = data
-                    th.me['uid'] = user.uid
-                    th.cardUpdateSignal += 1
-                })
-            }
-        });
+        this.settingMe(th)
 
-        await Firebase.getPortfolios().then(function(data){
-            // console.log(" th.folios data: ", data)
-            th.folios = data
-            th.cardUpdateSignal += 1
-            this.sortPortfolio(this.sortup)
-        })
-        .catch(function(error){
-            console.log("Firebase.getPortfolios() error : ",error)
-        })
-        // console.log("Firebase.getTagAll() start!")
-        Firebase.getTagAll().then(function(datas){
-            for(let i=0;i<datas.length;i++){
-                let elem = datas[i]
-                for(let j=0;j<elem.length;j++){
-                    let tag = elem[j]
-                    if(th.taglist[tag]){
-                        th.taglist[tag].push(elem['id'])
-                    }
-                    else{
-                        th.taglist[tag] = [elem['id']]
-                        th.taglist[tag]['check'] = false
-                    }
-                }
-            }
-        })
+        console.log("route : ",this.$route)
+        if(this.$route.name == "search"){
+            this.search_input = this.$route.params.search_value
+            this.ifsearch = true
+        }
+
+        this.readFolio(th)     
     },
     methods:{
-        tagcheck:function(elem,tag){
-            // console.log("elem: ",elem)
-            // console.log("tag : ",tag)
-            if(elem['check']){
-                elem['check'] = false
-                this.tagout['size'] -= 1
-                for(let i=0;i<elem.length;i++){
-                    let uid = elem[i]
-                    if(this.tagout[uid]){
-                        for(let i=0;i<this.tagout[uid].length;i++){
-                            if(this.tagout[uid][i] == tag){
-                                this.tagout[uid][i] = this.tagout[uid][this.tagout[uid].length-1]
-                                this.tagout[uid].pop()
-                                break
-                            }
-                        }
+        settingMe:async function(th){
+            await firebase.auth().onAuthStateChanged(function(user) {
+                if(user && user.uid){
+                    Firebase.getUserData(user.uid).then(function(data){
+                        th.me = data
+                        th.me['uid'] = user.uid
+                        th.cardUpdateSignal += 1
+                    })
+                }
+            })
+        },
+        readFolio: async function(th){
+            await Firebase.getPortfolios(this.ifsearch, this.search_input).then(function(data){
+                // console.log(" th.folios data: ", data)
+                th.folios = data
 
-                        if(this.tagout[uid].length ==0 ){
-                            delete this.tagout[uid]
-                            this.tagout['num'] -= 1
+                for(let i=0;i<th.folios.length;i++){
+                    let post = th.folios[i]
+                    for(let ii=0;ii<post.portfolios.length;ii++){
+                        let folio = post.portfolios[ii]
+                        for(let j=0;j<folio.hashtags.length;j++){
+                            let tag = folio.hashtags[j]
+
+                            if(th.hashDict[tag]){
+                                th.hashDict[tag].push(post)
+                            }
+                            else{
+                                th.hashDict[tag] = [post]
+                                th.hashDict[tag]['check'] = false
+                                th.hashDict[tag]['name'] = tag
+                            }
                         }
                     }
                 }
+
+                for(let i=0;i<th.folios.length;i++){
+                    let post = th.folios[i]
+                    let seleteDict = th.folios[i].userData.selected
+                    for(let seleter in seleteDict){
+                        if(!th.SelectDictDict[seleter]){
+                            th.SelectDictDict[seleter] = {}
+                            th.SelectIfDict[seleter] = false
+                        }
+                        let selectList = seleteDict[seleter]
+                        for(let j=0; j<selectList.length; j++){
+                            let selectName = selectList[j]
+                            if(th.SelectDictDict[seleter][selectName]){
+                                th.SelectDictDict[seleter][selectName].push(post)
+                            }
+                            else{
+                                th.SelectDictDict[seleter][selectName] = [post]
+                                th.SelectDictDict[seleter][selectName]['check'] = false
+                                th.SelectDictDict[seleter][selectName]['name'] = selectName
+                            }
+                        }
+                    }
+                }
+
+                th.cardUpdateSignal += 1
+                th.sortPortfolio(th.sortup)
+            })
+            .catch(function(error){
+                console.log("Firebase.getPortfolios() error : ",error)
+            })
+        },
+
+        tagcheck:function(tag, tag_name){
+            tag['check'] = !tag['check']
+            this.tagCheckNum += tag['check'] ? 1:-1
+            
+            if(this.tagCheckNum == 0){
+                this.tagoutList = []
             }
-            else{
-                elem['check'] = true
-                this.tagout['size'] += 1
-                for(let i=0;i<elem.length;i++){
-                    let uid = elem[i]
-                    if(this.checkFolioUid(uid)){
-                        if(this.tagout[uid]){
-                            this.tagout[uid].push(tag)
-                        }
-                        else{
-                            this.tagout[uid] = [tag]
-                            this.tagout['num'] += 1
-                        }
-                    } 
+            else if(tag['check'] && this.tagCheckNum == 1){
+                this.tagoutList = []
+                for(let i=0; i<this.folios.length; i++){
+                    let folioTags = this.searchTagInFolio(this.folios[i])
+                    if(this.ifelemInList(tag_name, folioTags)){
+                        this.tagoutList.push(this.folios[i])
+                    }
                 }
             }
-            this.tagcnt+=1
+            else if(tag['check']){
+                for(let i=0; i<this.tagoutList.length; i++){
+                    let len = this.tagoutList.length
+                    let folioTags = this.searchTagInFolio(this.tagoutList[i])
+                    if(!this.ifelemInList(tag_name, folioTags)){
+                        this.tagoutList[i] = this.tagoutList[len-1]
+                        i-=1
+                        this.tagoutList.pop()
+                    }
+                }
+            }
+            else if(!tag['check']){
+                for(let i=0; i<this.folios.length; i++){
+                    if(this.ifelemInList(this.folios[i] ,this.tagoutList )) continue
+                    let inputok = true
+                    let folioTags = this.searchTagInFolio(this.folios[i])
+                    for(let other in this.hashDict){
+                        let otherTag = this.hashDict[other]
+                        if(!otherTag['check']) continue
+                        if(!this.ifelemInList(otherTag.name ,folioTags)){
+                            inputok = false
+                            break 
+                        }
+                    }
+                    if(inputok){
+                        for(let selectMainName in this.SelectDictDict){
+                            let selectMain = this.SelectDictDict[selectMainName]
+                            for(let selectName in selectMain){
+                                let select = selectMain[selectName]
+                                if(!select['check']) continue
+                                if(!this.ifelemInList(select.name ,folioTags)){
+                                    inputok = false
+                                    break 
+                                }
+                                if(!inputok) break 
+                            }
+                        }
+                    }
+
+                    if(inputok) this.tagoutList.push(this.folios[i])
+                }
+            }
+
             this.prnok = false
             this.prnok = true
-            // console.log("this.tagout: ",this.tagout)
+            this.cardUpdateSignal += 1
         },
         checkFolioUid:function(uid){
             for(let i=0;i<this.folios.length;i++){
@@ -190,62 +278,54 @@ export default {
             }
             return false
         },
+        searchUid(uid){
+            for(let j=0;j<this.folios.length;j++){
+                if(this.folios[j].pk == uid) return this.folios[j]
+            }
+            return false
+        },
+        searchTagInFolio(post){
+            let out = []
+            for(let i=0;i<post.portfolios.length;i++){
+                let folio = post.portfolios[i]
+                for(let j=0;j<folio.hashtags.length;j++){
+                    out.push(folio.hashtags[j])
+                }
+            }
+            return out
+        },
+        ifelemInList(elem,list){
+            for(let i=0; i<list.length; i++){
+                if(list[i] == elem) return true
+            }
+            return false
+        },
+        turnSelectIf(dict,name){
+            console.log("turnSelectIf name : ",name)
+            console.log("turnSelectIf  dict : ", dict)
+            dict[name] = !dict[name]
+
+            this.prnok = false
+            this.prnok = true
+        },
         // 이름순 정렬 -------------------------------------------------------
         sortPortfolio:function(up){
             // this.folios[2].id
             // this.folios.sort()
             this.folios.sort(this.comparefolio)
             if(!up) this.folios.reverse()
+            this.cardUpdateSignal += 1
         },
         comparefolio:function(a,b){
             let str1 = a.pk
             let str2 = b.pk
+
             return str1.localeCompare(str2)
         },
 
 
         // search 페이지에서 가져옴 -----------------------------------------
-        // async getItems() {
-        //     // variable routing 통해 넘어온 검색단어를 가져옴
-        //     this.query = this.$route.params.search_value
-        //     var target = this.query
-        //     var tmp = await FirebaseServices.getPortfolios()
-        //     for (let idx in tmp) {
-        //         if (tmp[idx].hashtags.includes(target)) {
-        //             this.resultList.push(tmp[idx])
-        //         }
-        //         else if (tmp[idx].title.includes(target)) {
-        //             this.resultList.push(tmp[idx])
-        //         }
-        //     }
-        //     var user = await FirebaseServices.currentUser();
-        //     this.resultList.forEach(function(result) {
-        //         if (user.bookmark.includes(result.pk)) {
-        //             result.like = true;
-        //         }
-        //     })
-        //     this.likeList = user.bookmark
-        //     this.uid = user.uid
-        // },
 
-        // // 북마크 아이콘의 색깔 표시 및 데이터베이스 저장
-        // enrollLike(pk) {
-        //     for (let result in this.resultList) {
-        //         if (this.resultList[result].pk === pk) {
-        //             if (this.resultList[result].like === true) {
-        //                 this.resultList[result].like = false
-        //                 this.likeList = this.likeList.filter(function(e) { return e !== pk})
-        //                 // var index = user.bookmark.indexOf(pk)
-        //                 // user.bookmark.splice(index, 1)
-        //             } 
-        //             else {
-        //                 this.resultList[result].like = true
-        //                 this.likeList.push(pk)
-        //             }
-        //         }
-        //     }
-        //     FirebaseServices.editUser(this.uid, this.likeList);
-        // },
         // doAjax() {
         //     this.isLoading = true;
         //     // simulate AJAX

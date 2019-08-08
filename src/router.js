@@ -83,7 +83,7 @@ export default new Router({
         {
             path: '/search/:search_value',
             name: 'search',
-            component: SearchResult
+            component: mainPortfolioPage
         },
         {
             path: '/write_portfolio',
