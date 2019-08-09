@@ -1,9 +1,9 @@
 <template lang="html">
 <div class="portfolio">
   <NavPortfolio v-if="this.isotherUid"/>
-  <Header id="customHeader" :uid="uid"/>
-  <AboutMe id="customAbout" :uid="uid"/>
-  <PortfolioList id="customPortfolio" :uid="uid" :css="css"/>
+  <Header id="customHeader" :uid="uid" :portfolio="item"/>
+  <AboutMe id="customAbout" :uid="uid" :portfolio="item" style="height: 100%"/>
+  <PortfolioList id="customPortfolio" :uid="uid" :portfolios="item" :css="css"/>
 </div>
 </template>
 
@@ -44,8 +44,8 @@ export default {
           css:0,
           visitNum:0,
           toBookMarkNum:0,
-
-          isotherUid:false,
+          portfolio: [],
+          isotherUid:false
         }
     },
 
@@ -63,7 +63,7 @@ export default {
 
             FirebaseServices.getMyPort(user.uid).then(function(res) {
                 __this.item = res;
-                console.log(res);
+                console.log(__this.item);
 
                 // 저장된 portfolio 페이지가 없을 때에 포트폴리오 입력 페이지로 redirect
                 if(res==null){
@@ -81,8 +81,7 @@ export default {
                 })
                 console.log("imageurl:" + __this.image);
             })
-        });
-
+        })
       }
     }
 }

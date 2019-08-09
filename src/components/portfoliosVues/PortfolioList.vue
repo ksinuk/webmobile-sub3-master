@@ -419,6 +419,7 @@ export default {
             }
         }
     },
+    props: ['portfolios'],
     mounted(){
         let __this = this;
         this.getPortfolio();
@@ -454,20 +455,18 @@ export default {
             var storageRef = storage.ref();
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
-                FirebaseServices.getMyPort(__this.user).then(function(res) {
-                    __this.portfolios = res;
-                    for (let item in __this.portfolios.portfolios) {
-                        storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
-                            var xhr = new XMLHttpRequest();
-                            xhr.responseType = 'blob';
-                            xhr.onload = function(event) {
-                                var blob = xhr.response;
-                            }
-                            xhr.open('GET', url)
-                            xhr.send();
-                            __this.portfolios.portfolios[item].imageNames = url;
-                        })
-                    }
+                for (let item in __this.portfolios.portfolios) {
+                    storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.responseType = 'blob';
+                        xhr.onload = function(event) {
+                            var blob = xhr.response;
+                        }
+                        xhr.open('GET', url)
+                        xhr.send();
+                        __this.portfolios.portfolios[item].imageNames = url;
+                    })
+                }
                 }).then(function(res) {
                     console.log(__this.portfolios.portfolios)
                     if (__this.colorchip === 'green') {
@@ -484,7 +483,6 @@ export default {
                         __this.btncolor = '#FB8C00';
                     }
                 })
-            })
         },
         editPort(idx) {
             this.idx = idx;

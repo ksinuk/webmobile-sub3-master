@@ -62,7 +62,6 @@
                   <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
                     <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
                   </v-radio-group>
-
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
@@ -97,13 +96,13 @@
                     <!-- title 선택했을 때 -->
                     <v-slider
                       v-if="aboutChoice === 'title'" v-model="aboutTitleS"
-                      step="1" max="20" min="1" thumb-label ticks
+                      step="0.1" max="10" min="1" thumb-label ticks
                       class="px-2"
                     ></v-slider>
                     <!-- subtitle 선택했을 때 -->
                     <v-slider
                       v-else-if="aboutChoice === 'subtitle'" v-model="aboutSubtitleS"
-                      step="1" max="10" min="1" thumb-label ticks
+                      step="0.1" max="5" min="1" thumb-label ticks
                       class="px-2"
                     ></v-slider>
                   </div>
@@ -112,8 +111,134 @@
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
 
                 <!-- color picker -->
-                <ColorPicker v-bind:aboutChoice="aboutChoice"/>
+                <div class="px-1">
+                  <div class="px-1">
+                    <p style="color: lightgrey; letter-spacing: 0.05rem;">Color</p>
+                    <!-- color picker -->
+                    <div v-if="aboutChoice === 'title'">
+                        <div id="aboutTitleColor" class="mx-auto" style="height: 3rem;; width: 15rem; background-color: rgb(255, 255, 255)"></div>
+                        <v-layout
+                            row
+                            wrap
+                        >
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="abouttRed"
+                                :max="255"
+                                label="R"
+                                color="error"
+                                ></v-slider>
+                            </v-flex>
 
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="abouttRed"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="abouttGreen"
+                                :max="255"
+                                label="G"
+                                color="success"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="abouttGreen"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="abouttBlue"
+                                :max="255"
+                                label="B"
+                                color="primary"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="abouttBlue"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </div>
+                  <div v-else-if="aboutChoice === 'subtitle'">
+                    <div id="aboutSubtitleColor" class="mx-auto" style="height: 3rem;; width: 15rem; background-color: rgb(255, 255, 255)"></div>
+                        <v-layout
+                            row
+                            wrap
+                        >
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="aboutsRed"
+                                :max="255"
+                                label="R"
+                                color="error"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="aboutsRed"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="aboutsGreen"
+                                :max="255"
+                                label="G"
+                                color="success"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="aboutsGreen"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs9>
+                                <v-slider
+                                v-model="aboutsBlue"
+                                :max="255"
+                                label="B"
+                                color="primary"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs3>
+                                <v-text-field
+                                v-model="aboutsBlue"
+                                class="mt-0 ml-auto"
+                                style="width: 3.5rem;"
+                                type="number"
+                                ></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </div>
+                  </div>
+                </div>
                 <div style="text-align: center;">
                   <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
                 </div>
@@ -267,14 +392,10 @@ import FirebaseServices from '../../services/FirebaseServices'
 import firebase from 'firebase/app'
 
 // theme 설정을 위해서 store에 저장
-import ColorPicker from './AboutColorPicker'
 import store from '../../store'
 
 export default {
   name: '',
-  components: {
-    ColorPicker
-  },
   data() {
     return {
       user: null,
@@ -348,9 +469,16 @@ export default {
       aboutChoice: 'title',
       aboutTitleS: '1',
       aboutSubtitleS: '1',
-      portfolio: []
+      portfolio: [],
+      abouttRed: "255", 
+      abouttBlue: "255", 
+      abouttGreen: "255",
+      aboutsRed: "255", 
+      aboutsBlue: "255", 
+      aboutsGreen: "255"
     }
   },
+  props: ['portfolio'],
   watch: {
     // fontSize watch
     aboutTitleS: function() {
@@ -360,6 +488,38 @@ export default {
     aboutSubtitleS: function() {
       document.getElementById('aboutSubtitle1').style.fontSize = this.aboutSubtitleS + 'rem';
       document.getElementById('aboutSubtitle2').style.fontSize = this.aboutSubtitleS + 'rem';
+    },
+    // title color
+    abouttRed: function() {
+      let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
+      document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutTitle1').style.color = rgb;
+    },
+    abouttGreen: function() {
+      let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
+      document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutTitle1').style.color = rgb;
+    },
+    abouttBlue: function() {
+      let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
+      document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutTitle1').style.color = rgb;
+    },
+    // subTitle color
+    aboutsRed: function() {
+      let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
+      document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutSubtitle1').style.color = rgb;
+    },
+    aboutsBlue: function() {
+      let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
+      document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutSubtitle1').style.color = rgb;
+    },
+    aboutsGreen: function() {
+      let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
+      document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
+      document.getElementById('aboutSubtitle1').style.color = rgb;
     }
   },
   mounted() {
@@ -373,22 +533,17 @@ export default {
     getAbout: function() {
       let __this = this;
       const tmp = firebase.auth().onAuthStateChanged(function(user) {
-        __this.user = user.uid;
-        console.log(__this.user);
-        FirebaseServices.getMyPort(__this.user).then(function(res) {
-          __this.portfolio = res;
-          __this.portfolio.tmp = []
-          res.skills.forEach(function(skill) {
-            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
-            skill.degree = skill.degree.substring(7, skill.degree.length);
-          })
-          // res.skills.forEach(function(skill) {
-          //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
-          //   console.log(document.getElementById(skill.name));
-          //   document.getElementById(skill.name).style.width = calc(tmp);
-          //   console.log(document.getElementById(skill.name).style);
-          // })
+        __this.portfolio.tmp = []
+        res.skills.forEach(function(skill) {
+          __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
+          skill.degree = skill.degree.substring(7, skill.degree.length);
         })
+        // res.skills.forEach(function(skill) {
+        //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
+        //   console.log(document.getElementById(skill.name));
+        //   document.getElementById(skill.name).style.width = calc(tmp);
+        //   console.log(document.getElementById(skill.name).style);
+        // })
       })
     },
     switchTheme(item, num) {
