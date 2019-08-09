@@ -2,7 +2,7 @@
 <div class="portfolio">
   <NavPortfolio v-if="this.isotherUid"/>
   <Header id="customHeader" :uid="uid"/>
-  <AboutMe id="customAbout" :uid="uid"/>
+  <AboutMe id="customAbout" :uid="uid" style="height: 100%"/>
   <PortfolioList id="customPortfolio" :uid="uid" :css="css"/>
 </div>
 </template>
