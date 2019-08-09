@@ -373,8 +373,7 @@ export default {
     // 0806 view data
     async getVisitView(userID) {
         const userView = db.collection(USERDATA)
-        const viewData = await userView
-            .get()
+        const viewData = await userView.get()
             .then((docSnapshots)=> {
                 let results = docSnapshots.docs.map((doc) => {
                     let data = doc.data()
@@ -427,14 +426,14 @@ export default {
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
             bookmarks: [],
-            visit: {
-            },
+            visit: [],
             selected: {
                 recruit: [],
                 tool: [],
                 career: [],
             },
-            created_at: date
+            created_at: date,
+            photoURL: null,
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
@@ -614,6 +613,9 @@ export default {
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 var user = firebase.auth().currentUser
                 user.updateProfile({
+                    photoURL: downloadURL
+                })
+                db.collection(USERDATA).doc(user.uid).update({
                     photoURL: downloadURL
                 })
             console.log('File available at', downloadURL)

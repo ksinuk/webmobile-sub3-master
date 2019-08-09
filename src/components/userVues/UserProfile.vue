@@ -66,7 +66,7 @@
               <div class="cardIcon">
                 <v-icon>far fa-eye</v-icon>
                 <div class="headline">view</div>
-                <div>{{ this.userData.userData.visitCnt }}</div>
+                <div>{{ this.userData.spark.cnt }}</div>
               </div>
 
               <div class="cardIcon">
@@ -87,6 +87,7 @@
 <script>
 import FirebaseServices from '../../services/FirebaseServices'
 import UserDialog from './UserDialog.vue'
+import { constants } from 'crypto';
 
 export default {
   name: 'UserProfile',
@@ -118,12 +119,17 @@ export default {
     this.getCareer()
     console.log('userProfile load Data')
   },
+  mounted() {
+    this.$EventBus.$on('changePhoto', (URL) => {
+      this.careerData.userImg = URL
+    })
+  },
   methods: {
     setProfile() {
-      if (this.$store.state.firebaseUser.photoURL === null) {
-        this.careerData.userImg = this.$store.state.imgSrc.noImgSrc;
+      if (this.userData.userData.photoURL === null) {
+        this.careerData.userImg = this.$store.state.imgSrc.noImgSrc
       } else {
-        this.careerData.userImg = this.$store.state.firebaseUser.photoURL;
+        this.careerData.userImg = this.userData.userData.photoURL
       }
     },
     setSpark() {
@@ -132,9 +138,17 @@ export default {
       }
     },
     // career 가져오기
-    async getCareer() {
-      let result = await FirebaseServices.getUserCareer(this.$store.state.firebaseUser.uid)
+    getCareer() {
+      // let result = await FirebaseServices.getUserCareer(this.$store.state.firebaseUser.uid)
+      // props 로 받은 데이터 뿌리기
+      let result = this.userData.userData.selected
       this.careerData.selected = result
+      // 다른 유저일 경우 false
+      if (this.userData.userData.inUser == false) {
+        this.careerData.selected.inUser = false
+      } else {
+        this.careerData.selected.inUser = true
+      }
       console.log('get user career success')
     },
   }
