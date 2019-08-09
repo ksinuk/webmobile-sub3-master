@@ -198,22 +198,22 @@ export default {
       // input rules
       email: '',
       emailRules: [
-        v => (v || '').match(/@/) || 'Please enter a valid email',
+        v => !!(v || '').match(/@/) || '@를 포함한 email을 입력해주세요.',
       ],
       displayName: '',
       nameRules: [
-        v => !!v || 'Name is required',
+        v => !!v || '이름을 입력해주세요.',
       ],
       // pw rule
       pwShow: false,
       password: '',
       pwRules: [
-        v => !!v || 'password is Required.',
-        v => v.length >= 8 || 'Min 8 characters',
+        v => !!v || '비밀번호를 입력해주세요.',
+        v => v.length >= 8 || '최소 8자 이상 입력해주세요.',
       ],
       // service rule
       agreeRules: [
-        v => !!v || 'This field is required',
+        v => !!v || '동의가 필요합니다.',
       ],
       // loading button
       loader: null,
@@ -286,9 +286,6 @@ export default {
 }
 .v-divider {
   margin: 20px;
-}
-.v-text-field__details {
-  display: none;
 }
 #loginProvider {
   height: 30px;
