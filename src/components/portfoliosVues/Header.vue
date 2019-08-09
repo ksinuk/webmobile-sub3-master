@@ -321,7 +321,7 @@ export default {
     data() {
         return {
             user: null,
-            headerDrawer: false,
+            headerDrawer: null,
             dialog: false,
             mini: false,
             opacity: 'opacity1',
@@ -353,10 +353,10 @@ export default {
     },
     props: ['portfolio'],
     mounted() {
-        this.getPortfolio().then(this.update());
+        this.getPortfolio();
         this.$EventBus.$on('Header', () => {
             this.headerDrawer = !this.headerDrawer
-        })
+            })
     },
     watch: {
         titleS: function() {
@@ -434,7 +434,7 @@ export default {
             }
         },
         viewImg: function() {
-            document.getElementById('headBanner').style.backgroundImage = "url('" + this.viewImg + "')";
+            document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
         }
     },
     methods: {
@@ -442,6 +442,7 @@ export default {
             let __this = this;
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
+                console.log(__this.user);
                 __this.select = __this.portfolio.banner;
                 __this.layout = __this.portfolio.layout;
                 __this.tmplayout = __this.layout;
@@ -456,26 +457,25 @@ export default {
                 __this.titleAni = __this.portfolio.title.animation;
                 __this.subtitleAni = __this.portfolio.subtitle.animation;
                 __this.opacity = __this.select.opacity;
+            }).then(function(res) {
+                document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
+                if (__this.select.opacity === 'opacity2') {
+                    document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                }
+                // console.log(document.querySelector('#portTitle').classList);
+                // console.log(document.querySelector('#portSubitle').classList);
+                if (__this.titleAni !== 'none') {
+                    document.querySelector('#portTitle').classList.add(__this.titleAni);
+                }
+                if (__this.subtitleAni !== 'none') {
+                    document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
+                }
+                document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
+                document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
+                document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
+                document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
+                console.log('ok');
             })
-        },
-        update: function() {
-            document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
-            if (__this.select.opacity === 'opacity2') {
-                document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
-            }
-            // console.log(document.querySelector('#portTitle').classList);
-            // console.log(document.querySelector('#portSubitle').classList);
-            if (__this.titleAni !== 'none') {
-                document.querySelector('#portTitle').classList.add(__this.titleAni);
-            }
-            if (__this.subtitleAni !== 'none') {
-                document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
-            }
-            document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
-            document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
-            document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
-            document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
-            console.log('ok');
         },
         getBanner: function() {
             var storage = firebase.storage();
