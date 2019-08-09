@@ -17,13 +17,20 @@
         <div>
             <v-btn active-class="active" flat block to="/board">board</v-btn>
             <v-btn active-class="active" flat block to="/portfoliopage">my portfolio</v-btn>
-            <v-btn active-class="active" flat block to="/mainPortfoliopage">other portfolio</v-btn>
+            <v-btn active-class="active" flat block to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
             <v-flex>
                 <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>
             </v-flex>
             <div>
-                <v-btn style="backgroundColor:red;" round depressed small >임베디드</v-btn>
+                <span v-for="(tag, name) in tagDict">
+                    <v-btn style="text-transform:none; backgroundColor:teal;" round depressed small v-if="tag.color == 'teal'">{{name}}</v-btn>
+                    <v-btn style="text-transform:none; backgroundColor:red;" round depressed small v-if="tag.color == 'red'">{{name}}</v-btn> 
+                    <v-btn style="text-transform:none; backgroundColor:blue;" round depressed small v-if="tag.color == 'blue'">{{name}}</v-btn> 
+                    <v-btn style="text-transform:none; backgroundColor:black;" round depressed small v-if="tag.color == 'black'">{{name}}</v-btn>    
+                </span>
+                <!-- <v-btn style="backgroundColor:red;" round depressed small >임베디드</v-btn> -->
+                
             </div>
         </div>
     </v-container>
@@ -37,8 +44,14 @@ export default {
     data() {
         return {
             userImg: null,
-            searchItem: null
+            searchItem: null,
+
+            tagDict: {},
+
         }
+    },
+    async created(){
+        this.tagDict = await FirebaseServices.getTagsAll()
     },
     methods: {
         closeDrawer(trigger) {
