@@ -5,7 +5,6 @@
       ABOUT
       <small>자기 소개와 Skill을 작성하세요.</small>
     </v-stepper-step>
-
     <v-stepper-content step="1" class="px-5">
       <v-card class="mb-3 px-3">
         <v-card-text>

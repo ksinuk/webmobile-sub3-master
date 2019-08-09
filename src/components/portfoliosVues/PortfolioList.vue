@@ -79,7 +79,7 @@
         <div style="margin-top: 5rem;">
             <v-layout style="margin-left: 5rem; margin-right: 5rem;">
                 <v-flex lg6 md6 sm6 v-for="item in portfolios.portfolios" style="padding-left: 0.5rem; padding-right: 0.5rem;">
-                    <div class="container" @click="modal = true;viewPort(portfolios.portfolios.indexOf(item))">
+                    <div class="container" @click="modal = true; viewPort(portfolios.portfolios.indexOf(item))">
                         <img :src="item.imageNames" alt="Avatar" class="image">
                         <div class="overlay">
                             <div class="text" style="font-family: 'Roboto', sans-serif; letter-spacing: 0.08rem;">{{ item.title }}</div>
@@ -147,7 +147,7 @@
                 </v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" dark @click="modal = false" style="margin-right: 43rem; margin-bottom: 3rem;">Close</v-btn>
+                    <v-btn color="green darken-1" dark @click="modal = false" style="margin-right: 54rem; margin-bottom: 3rem;">Close</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -386,11 +386,13 @@ export default {
         return {
             // firebase portfolios 컬렉션에서 가져온 데이터
             portfolios:[],
+            portidx: null,
             user: null,
             PortfolioDrawer:false,
             listlayout: 'template1',
             colorchip: 'orange',
             dialog: false,
+            modal: false,
             idx: null,
             hashtag: null,
             items: ['html', 'css', 'vue', 'js', 'json', 'c', 'c++', 'java', 'python'],
@@ -565,6 +567,22 @@ export default {
             this.portfolio.sources = [];
             this.portfolio.imageNames = [];
             this.portfolio.dumpImg = null;
+        },
+        viewPort(idx) {
+            this.portidx = idx;
+            this.portfolio.title = this.portfolios.portfolios[idx].title;
+            this.portfolio.description = this.portfolios.portfolios[idx].description;
+            this.portfolio.viewport = this.portfolios.portfolios[idx].viewport;
+            this.portfolio.ie = this.portfolios.portfolios[idx].ie;
+            this.portfolio.demo = this.portfolios.portfolios[idx].demo;
+            this.portfolio.hashtags = this.portfolios.portfolios[idx].hashtags;
+            this.portfolio.repository = this.portfolios.portfolios[idx].repository;
+            this.portfolio.sources = this.portfolios.portfolios[idx].sources;
+            this.portfolio.imageNames = this.portfolios.portfolios[idx].imageNames;
+            this.portfolio.dumpImg = this.portfolios.portfolios[idx].imageNames;
+        },
+        saveLayout() {
+
         },
         async save() {
             if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
