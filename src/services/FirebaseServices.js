@@ -7,10 +7,7 @@ import 'firebase/firestore'
 import router from '../router'
 import store from '../store'
 
-const USERS = 'users'
 const POSTS = 'posts'
-const PORTFOLIO = 'portfolio'
-const PORTFOLIOS = 'tportfolio'
 const MYPORT = 'portfolios'
 const USERDATA = 'userData'
 
@@ -216,23 +213,23 @@ export default {
     },
 
     // 포트폴리오 목록 조회
-    getPortfolios(issearch=false , input=''){
-        return new Promise(function(resolve,reject){
-            if(!issearch){
-                db.collection('portfolios').get()
-                .then(async function(snapshot) {
-                    // console.log("getPortfolios(): ",snapshot.docs)
-                    let outlist = snapshot.docs
-                    let out = []
+    // getPortfolios(issearch=false , input=''){
+    //     return new Promise(function(resolve,reject){
+    //         if(!issearch){
+    //             db.collection('portfolios').get()
+    //             .then(async function(snapshot) {
+    //                 // console.log("getPortfolios(): ",snapshot.docs)
+    //                 let outlist = snapshot.docs
+    //                 let out = []
 
-                    for(let i=0;i<outlist.length;i++){
-                        let doc = outlist[i].data()
-                        doc.pk = outlist[i].id
-                        doc.like = false
+    //                 for(let i=0;i<outlist.length;i++){
+    //                     let doc = outlist[i].data()
+    //                     doc.pk = outlist[i].id
+    //                     doc.like = false
 
-                        let user_data = await db.collection('userData').doc(doc.pk).get()
-                        if(user_data.exists){
-                            doc.userData = user_data.data()
+    //                     let user_data = await db.collection('userData').doc(doc.pk).get()
+    //                     if(user_data.exists){
+    //                         doc.userData = user_data.data()
 
                             // doc.userData.selected = {'career':[],'recruit':[],'tool':[]}
                             // if(true){
@@ -259,62 +256,62 @@ export default {
 
                             // db.collection('userData').doc(doc.pk).set(doc.userData)
 
-                            out.push(doc)
-                        }
-                    }
-                    // console.log("getPortfolios() return : ",out)
-                    resolve(out)
-                })
-                .catch(function(res){
-                    console.log("getPortfolios() error : ",res)
-                })
-            }
-            else{
-                db.collection('portfolios').get()
-                .then(async function(snapshot) {
-                    // console.log("getPortfolios(): ",snapshot.docs)
-                    let foliolist = snapshot.docs
-                    let out = []
+    //                         out.push(doc)
+    //                     }
+    //                 }
+    //                 // console.log("getPortfolios() return : ",out)
+    //                 resolve(out)
+    //             })
+    //             .catch(function(res){
+    //                 console.log("getPortfolios() error : ",res)
+    //             })
+    //         }
+    //         else{
+    //             db.collection('portfolios').get()
+    //             .then(async function(snapshot) {
+    //                 // console.log("getPortfolios(): ",snapshot.docs)
+    //                 let foliolist = snapshot.docs
+    //                 let out = []
 
-                    for(let i=0;i<foliolist.length;i++){
-                        let doc = foliolist[i].data()
-                        let folio = doc.portfolios
-                        let tagok = false
+    //                 for(let i=0;i<foliolist.length;i++){
+    //                     let doc = foliolist[i].data()
+    //                     let folio = doc.portfolios
+    //                     let tagok = false
                         
-                        for(let j=0;j<folio.length;j++){
-                            let tags = folio[j].hashtags
-                            for(let k=0;k<tags.length;k++){
-                                if(tags[k] == input){
-                                    tagok = true
-                                    break
-                                }
-                            }
-                            if(tagok) break
-                        }
+    //                     for(let j=0;j<folio.length;j++){
+    //                         let tags = folio[j].hashtags
+    //                         for(let k=0;k<tags.length;k++){
+    //                             if(tags[k] == input){
+    //                                 tagok = true
+    //                                 break
+    //                             }
+    //                         }
+    //                         if(tagok) break
+    //                     }
 
-                        if(tagok){
-                            doc.pk = foliolist[i].id
-                            doc.like = false
+    //                     if(tagok){
+    //                         doc.pk = foliolist[i].id
+    //                         doc.like = false
 
-                            let user_data = await db.collection('userData').doc(doc.pk).get()
-                            if(user_data.exists){
-                                doc.userData = user_data.data()
-                                out.push(doc)
-                            }
-                        } 
-                    }
-                    // console.log("getPortfolios() return : ",out)
-                    resolve(out)
-                })
-                .catch(function(res){
-                    console.log("getPortfolios() error : ",res)
-                })
-            }
+    //                         let user_data = await db.collection('userData').doc(doc.pk).get()
+    //                         if(user_data.exists){
+    //                             doc.userData = user_data.data()
+    //                             out.push(doc)
+    //                         }
+    //                     } 
+    //                 }
+    //                 // console.log("getPortfolios() return : ",out)
+    //                 resolve(out)
+    //             })
+    //             .catch(function(res){
+    //                 console.log("getPortfolios() error : ",res)
+    //             })
+    //         }
 
                 
-        })
+    //     })
               
-    },
+    // },
     getUidPortfolios(uid){
         return new Promise(function(resolve,reject){
             db.collection(PORTFOLIO).where('uid', '==', uid).get()
@@ -415,17 +412,17 @@ export default {
         }).then(console.log('done'))
     },
 
-    getIntroduce(){
-        const intro = db.collection('introduce')
-        return intro
-        .get()
-        .then((docSnapshots)=> {
-            return docSnapshots.docs.map((doc) => {
-                let data = doc.data()
-                return data
-            })
-        })
-    },
+    // getIntroduce(){
+    //     const intro = db.collection('introduce')
+    //     return intro
+    //     .get()
+    //     .then((docSnapshots)=> {
+    //         return docSnapshots.docs.map((doc) => {
+    //             let data = doc.data()
+    //             return data
+    //         })
+    //     })
+    // },
     // userstate 1. onAuthStateChanged
     // auth 개체 관찰자. auth의 변경을 감시함
     userState() {
@@ -646,9 +643,9 @@ export default {
             console.log('error: ', error)
         });
     },
-    updateUser() {
-        // 이미지 올리면 유저 변경
-    },
+    // updateUser() {
+    //     // 이미지 올리면 유저 변경
+    // },
     // 이미지 업로더
     uploadfile(user, loadFile) {
        let filename = loadFile.name
