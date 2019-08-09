@@ -69,7 +69,7 @@
     </section>
     </div>
 
-    <div v-else-if="listlayout === 'template2'">
+    <div v-else-if="listlayout === 'template2'" style="margin-bottom: 8rem;">
         <div id="title_on">
             <div style="background-color: #67ceeb; width: 1px; margin-top: 3rem; height: 10rem; margin-left: 50%; display: block;"></div>
             <h1 style="font-size: 9em; color:#8cddeb;">Work.</h1>
@@ -88,7 +88,6 @@
                 </v-flex>
             </v-layout>
         </div>
-
         <!-- contents 를 보는 모달 -->
         <v-dialog v-model="modal" persistent>
             <v-card>
@@ -219,6 +218,9 @@
                     </v-card>
                 </v-expansion-panel-content>
             </v-expansion-panel>
+            <div style="text-align: center; margin-top: 2rem;">
+                <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+            </div>
         </v-list>
         </v-navigation-drawer>
 
@@ -389,8 +391,10 @@ export default {
             portidx: null,
             user: null,
             PortfolioDrawer:false,
+            // db에 저장해야 할 값
             listlayout: 'template1',
             colorchip: 'orange',
+            //
             dialog: false,
             modal: false,
             idx: null,
@@ -612,6 +616,9 @@ export default {
             }
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
             this.getPortfolio();
+        },
+        async saveAll() {
+            //
         }
     }
 }
