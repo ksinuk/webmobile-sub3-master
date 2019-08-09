@@ -172,7 +172,7 @@ export default {
     },
 
     // 포트폴리오 목록 조회
-    async getPortfolios(issearch=false , input=''){
+    async getPortfolios(issearch=false , inputOrignal=''){
         let userDB_orignal = await db.collection('userData').get()
         userDB_orignal = userDB_orignal.docs
         let userDB = {}
@@ -180,6 +180,9 @@ export default {
             let user = userDB_orignal[i]
             userDB[user.id] = user
         }
+
+        let inputList = inputOrignal.trim().replace(',',' ').split(" ")
+
 
         return new Promise(function(resolve,reject){
             if(!issearch){
@@ -242,17 +245,20 @@ export default {
                     for(let i=0;i<foliolist.length;i++){
                         let doc = foliolist[i].data()
                         let folio = doc.portfolios
-                        let tagok = false
+                        let inputs = inputList.slice()
                         
                         for(let j=0;j<folio.length;j++){
-                            let tags = folio[j].hashtags
-                            for(let k=0;k<tags.length;k++){
-                                if(tags[k] == input){
-                                    tagok = true
-                                    break
+                            let hashtags = folio[j].hashtags
+                            for(let k=0;k<hashtags.length;k++){
+                                for(let ini=0; ini<inputs.length; ini++){
+                                    if(hashtags[k] == inputs[ini]){
+                                        inputs[ini] = inputs[inputs.length-1]
+                                        inputs.pop()
+                                        break
+                                    }
                                 }
                             }
-                            if(tagok) break
+                            if(inputs.length == 0) break
                         }
 
                         doc.pk = foliolist[i].id
@@ -261,20 +267,23 @@ export default {
                         if(user_data && user_data.exists){
                             doc.userData = user_data.data()
                         }
-                        if(!tagok && doc.userData && doc.userData.selected){
+                        if(inputs.length != 0 && doc.userData && doc.userData.selected){
                             for(let mainName in doc.userData.selected){
                                 let main = doc.userData.selected[mainName]
                                 for(let j=0;j<main.length; j++){
-                                    if(main[j] == input){
-                                        tagok = true
-                                        break
+                                    for(let ini=0; ini<inputs.length; ini++){
+                                        if(main[j] == inputs[ini]){
+                                            inputs[ini] = inputs[inputs.length-1]
+                                            inputs.pop()
+                                            break
+                                        }
                                     }
                                 }
-                                if(tagok) break
+                                if(inputs.length == 0) break
                             }
                         }
 
-                        if(tagok){
+                        if(inputs.length == 0){
                             out.push(doc)
                         } 
                     }

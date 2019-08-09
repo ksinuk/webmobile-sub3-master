@@ -23,7 +23,7 @@
                 <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>
             </v-flex>
             <div>
-                <span v-for="(tag, name) in tagDict">
+                <span v-for="(tag, name) in tagDict" @click="writeTag(name)">
                     <v-btn style="text-transform:none; backgroundColor:teal;" round depressed small v-if="tag.color == 'teal'">{{name}}</v-btn>
                     <v-btn style="text-transform:none; backgroundColor:red;" round depressed small v-if="tag.color == 'red'">{{name}}</v-btn> 
                     <v-btn style="text-transform:none; backgroundColor:blue;" round depressed small v-if="tag.color == 'blue'">{{name}}</v-btn> 
@@ -44,7 +44,7 @@ export default {
     data() {
         return {
             userImg: null,
-            searchItem: null,
+            searchItem: '',
 
             tagDict: {},
 
@@ -65,6 +65,9 @@ export default {
             console.log(this.searchItem)
             this.$router.push("/search/" + this.searchItem)
             window.location.reload()
+        },
+        writeTag: function(input){
+            this.searchItem += ' '+input
         }
     }
 };
