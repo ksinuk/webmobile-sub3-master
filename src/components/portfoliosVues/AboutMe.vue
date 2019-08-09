@@ -469,7 +469,6 @@ export default {
       aboutChoice: 'title',
       aboutTitleS: '1',
       aboutSubtitleS: '1',
-      portfolio: [],
       abouttRed: "255", 
       abouttBlue: "255", 
       abouttGreen: "255",

@@ -385,7 +385,6 @@ export default {
     data() {
         return {
             // firebase portfolios 컬렉션에서 가져온 데이터
-            portfolios:[],
             portidx: null,
             user: null,
             PortfolioDrawer:false,
