@@ -478,6 +478,7 @@ export default {
       aboutsGreen: "255"
     }
   },
+  props: ['portfolio'],
   watch: {
     // fontSize watch
     aboutTitleS: function() {
@@ -532,22 +533,17 @@ export default {
     getAbout: function() {
       let __this = this;
       const tmp = firebase.auth().onAuthStateChanged(function(user) {
-        __this.user = user.uid;
-        console.log(__this.user);
-        FirebaseServices.getMyPort(__this.user).then(function(res) {
-          __this.portfolio = res;
-          __this.portfolio.tmp = []
-          res.skills.forEach(function(skill) {
-            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
-            skill.degree = skill.degree.substring(7, skill.degree.length);
-          })
-          // res.skills.forEach(function(skill) {
-          //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
-          //   console.log(document.getElementById(skill.name));
-          //   document.getElementById(skill.name).style.width = calc(tmp);
-          //   console.log(document.getElementById(skill.name).style);
-          // })
+        __this.portfolio.tmp = []
+        res.skills.forEach(function(skill) {
+          __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
+          skill.degree = skill.degree.substring(7, skill.degree.length);
         })
+        // res.skills.forEach(function(skill) {
+        //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
+        //   console.log(document.getElementById(skill.name));
+        //   document.getElementById(skill.name).style.width = calc(tmp);
+        //   console.log(document.getElementById(skill.name).style);
+        // })
       })
     },
     switchTheme(item, num) {
