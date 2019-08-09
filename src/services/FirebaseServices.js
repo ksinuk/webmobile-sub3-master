@@ -34,6 +34,33 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 const db = firebase.firestore()
 
 export default {
+    //make tag DB
+    async setTagsDBall(inputDB){
+        let tagsDB_orignal = await db.collection('tags').get()
+        tagsDB_orignal = tagsDB_orignal.docs
+        for(let i=0;i<tagsDB_orignal.length; i++){
+            await db.collection("tags").doc(tagsDB_orignal[i].id).delete()
+        }
+
+        for(let tagName in inputDB){
+            db.collection("tags").doc(tagName).set(inputDB[tagName])
+        }
+    },
+    getTagsAll(){
+        return new Promise(function(resolve,reject){
+            db.collection('tags').get().then(function(datas){
+                let out = {}
+                if(!datas.exists) resolve(out)
+
+                datas = datas.docs
+                for(let i=0; i<datas.length; i++){
+                    out[datas[i].id] = datas[i].data()
+                }
+
+                resolve(out)
+            })
+        })
+    },
     //read user data
     getUserData(uid) {
         return new Promise(function(resolve,reject){
@@ -115,7 +142,6 @@ export default {
             })
         })
     },
-
     // board_id를 기반으로 하나의 게시글을 불러와 편집
     getPostId(board_id) {
         const postsCollection = db.collection(POSTS)
@@ -136,7 +162,6 @@ export default {
             }
         })
     },
-
     // 포스트 삭제
     deletePost(board_id) {
         db.collection(POSTS).doc(board_id).delete().then(function() {
@@ -230,15 +255,27 @@ export default {
                             if(tagok) break
                         }
 
-                        if(tagok){
-                            doc.pk = foliolist[i].id
-                            doc.like = false
-
-                            let user_data = userDB[doc.pk]
-                            if(user_data && user_data.exists){
-                                doc.userData = user_data.data()
-                                out.push(doc)
+                        doc.pk = foliolist[i].id
+                        doc.like = false
+                        let user_data = userDB[doc.pk]
+                        if(user_data && user_data.exists){
+                            doc.userData = user_data.data()
+                        }
+                        if(!tagok && doc.userData && doc.userData.selected){
+                            for(let mainName in doc.userData.selected){
+                                let main = doc.userData.selected[mainName]
+                                for(let j=0;j<main.length; j++){
+                                    if(main[j] == input){
+                                        tagok = true
+                                        break
+                                    }
+                                }
+                                if(tagok) break
                             }
+                        }
+
+                        if(tagok){
+                            out.push(doc)
                         } 
                     }
                     // console.log("getPortfolios() return : ",out)
@@ -313,18 +350,6 @@ export default {
             userImage: userImage
         }).then(console.log('done'))
     },
-
-    // getIntroduce(){
-    //     const intro = db.collection('introduce')
-    //     return intro
-    //     .get()
-    //     .then((docSnapshots)=> {
-    //         return docSnapshots.docs.map((doc) => {
-    //             let data = doc.data()
-    //             return data
-    //         })
-    //     })
-    // },
     // userstate 1. onAuthStateChanged
     // auth 개체 관찰자. auth의 변경을 감시함
     userState() {

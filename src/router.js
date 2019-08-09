@@ -106,7 +106,7 @@ export default new Router({
             component: PortfolioPage
         },
         {
-            path: '/mainPortfoliopage',
+            path: '/Portfolios',
             name: 'mainportfoliopage',
             component: mainPortfolioPage
         },
