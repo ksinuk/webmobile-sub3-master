@@ -36,6 +36,7 @@
       <v-form
         ref="form"
         v-model="form"
+        v-show="viewSign"
         >
         <!-- email -->
         <v-text-field
@@ -50,7 +51,6 @@
         <!-- 회원가입 폼에서만 보임 -->
         <v-text-field
           v-model="displayName"
-          v-show="viewSign"
           :rules="nameRules"
           filled
           label="name"
@@ -154,7 +154,6 @@
 
         <v-btn
           class="loginBtn"
-          v-show="viewSign"
           :loading="loading"
           :disabled="!form"
           color="success"
@@ -162,12 +161,38 @@
         >
           가입하기
         </v-btn>
+      </v-form>
+      
+      <v-form
+        ref="form"
+        v-model="form"
+        v-show="!viewSign"
+        >
+        <!-- email -->
+        <v-text-field
+          v-model="email"
+          :rules="emailRules"
+          filled
+          label="Email address"
+          type="email"
+          style="width:240px; margin: auto;"
+        ></v-text-field>
+        <!-- password -->
+        <v-text-field
+          v-model="password"
+          :append-icon="pwShow ? 'visibility' : 'visibility_off'"
+          :rules="pwRules"
+          filled
+          label="Password"
+          :type="pwShow ? 'text' : 'password'"
+          @click:append="pwShow = !pwShow"
+          style="width:240px; margin: auto;"
+        ></v-text-field>
 
         <v-btn
           class="loginBtn"
-          v-show="!viewSign"
           :loading="loading"
-          :disabled="loading"
+          :disabled="!form"
           color="success"
           @click="loader = 'loading'"
         >
