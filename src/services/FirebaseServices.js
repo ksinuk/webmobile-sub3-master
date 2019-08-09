@@ -34,6 +34,33 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 const db = firebase.firestore()
 
 export default {
+    //make tag DB
+    async setTagsDBall(inputDB){
+        let tagsDB_orignal = await db.collection('tags').get()
+        tagsDB_orignal = tagsDB_orignal.docs
+        for(let i=0;i<tagsDB_orignal.length; i++){
+            await db.collection("tags").doc(tagsDB_orignal[i].id).delete()
+        }
+
+        for(let tagName in inputDB){
+            db.collection("tags").doc(tagName).set(inputDB[tagName])
+        }
+    },
+    getTagsAll(){
+        return new Promise(function(resolve,reject){
+            db.collection('tags').get().then(function(datas){
+                let out = {}
+                if(!datas.exists) resolve(out)
+
+                datas = datas.docs
+                for(let i=0; i<datas.length; i++){
+                    out[datas[i].id] = datas[i].data()
+                }
+
+                resolve(out)
+            })
+        })
+    },
     //read user data
     getUserData(uid) {
         return new Promise(function(resolve,reject){
@@ -115,7 +142,6 @@ export default {
             })
         })
     },
-
     // board_id를 기반으로 하나의 게시글을 불러와 편집
     getPostId(board_id) {
         const postsCollection = db.collection(POSTS)
@@ -136,7 +162,6 @@ export default {
             }
         })
     },
-
     // 포스트 삭제
     deletePost(board_id) {
         db.collection(POSTS).doc(board_id).delete().then(function() {
@@ -147,7 +172,7 @@ export default {
     },
 
     // 포트폴리오 목록 조회
-    async getPortfolios(issearch=false , input=''){
+    async getPortfolios(issearch=false , inputOrignal=''){
         let userDB_orignal = await db.collection('userData').get()
         userDB_orignal = userDB_orignal.docs
         let userDB = {}
@@ -155,6 +180,9 @@ export default {
             let user = userDB_orignal[i]
             userDB[user.id] = user
         }
+
+        let inputList = inputOrignal.trim().replace(',',' ').split(" ")
+
 
         return new Promise(function(resolve,reject){
             if(!issearch){
@@ -217,28 +245,46 @@ export default {
                     for(let i=0;i<foliolist.length;i++){
                         let doc = foliolist[i].data()
                         let folio = doc.portfolios
-                        let tagok = false
+                        let inputs = inputList.slice()
                         
                         for(let j=0;j<folio.length;j++){
-                            let tags = folio[j].hashtags
-                            for(let k=0;k<tags.length;k++){
-                                if(tags[k] == input){
-                                    tagok = true
-                                    break
+                            let hashtags = folio[j].hashtags
+                            for(let k=0;k<hashtags.length;k++){
+                                for(let ini=0; ini<inputs.length; ini++){
+                                    if(hashtags[k] == inputs[ini]){
+                                        inputs[ini] = inputs[inputs.length-1]
+                                        inputs.pop()
+                                        break
+                                    }
                                 }
                             }
-                            if(tagok) break
+                            if(inputs.length == 0) break
                         }
 
-                        if(tagok){
-                            doc.pk = foliolist[i].id
-                            doc.like = false
-
-                            let user_data = userDB[doc.pk]
-                            if(user_data && user_data.exists){
-                                doc.userData = user_data.data()
-                                out.push(doc)
+                        doc.pk = foliolist[i].id
+                        doc.like = false
+                        let user_data = userDB[doc.pk]
+                        if(user_data && user_data.exists){
+                            doc.userData = user_data.data()
+                        }
+                        if(inputs.length != 0 && doc.userData && doc.userData.selected){
+                            for(let mainName in doc.userData.selected){
+                                let main = doc.userData.selected[mainName]
+                                for(let j=0;j<main.length; j++){
+                                    for(let ini=0; ini<inputs.length; ini++){
+                                        if(main[j] == inputs[ini]){
+                                            inputs[ini] = inputs[inputs.length-1]
+                                            inputs.pop()
+                                            break
+                                        }
+                                    }
+                                }
+                                if(inputs.length == 0) break
                             }
+                        }
+
+                        if(inputs.length == 0){
+                            out.push(doc)
                         } 
                     }
                     // console.log("getPortfolios() return : ",out)
@@ -313,18 +359,6 @@ export default {
             userImage: userImage
         }).then(console.log('done'))
     },
-
-    // getIntroduce(){
-    //     const intro = db.collection('introduce')
-    //     return intro
-    //     .get()
-    //     .then((docSnapshots)=> {
-    //         return docSnapshots.docs.map((doc) => {
-    //             let data = doc.data()
-    //             return data
-    //         })
-    //     })
-    // },
     // userstate 1. onAuthStateChanged
     // auth 개체 관찰자. auth의 변경을 감시함
     userState() {

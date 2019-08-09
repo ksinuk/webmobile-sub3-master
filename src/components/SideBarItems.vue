@@ -17,13 +17,20 @@
         <div>
             <v-btn active-class="active" flat block to="/board">board</v-btn>
             <v-btn active-class="active" flat block to="/portfoliopage">my portfolio</v-btn>
-            <v-btn active-class="active" flat block to="/mainPortfoliopage">other portfolio</v-btn>
+            <v-btn active-class="active" flat block to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
             <v-flex>
                 <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>
             </v-flex>
             <div>
-                <v-btn style="backgroundColor:red;" round depressed small >임베디드</v-btn>
+                <span v-for="(tag, name) in tagDict" @click="writeTag(name)">
+                    <v-btn style="text-transform:none; backgroundColor:teal;" round depressed small v-if="tag.color == 'teal'">{{name}}</v-btn>
+                    <v-btn style="text-transform:none; backgroundColor:red;" round depressed small v-if="tag.color == 'red'">{{name}}</v-btn> 
+                    <v-btn style="text-transform:none; backgroundColor:blue;" round depressed small v-if="tag.color == 'blue'">{{name}}</v-btn> 
+                    <v-btn style="text-transform:none; backgroundColor:black;" round depressed small v-if="tag.color == 'black'">{{name}}</v-btn>    
+                </span>
+                <!-- <v-btn style="backgroundColor:red;" round depressed small >임베디드</v-btn> -->
+                
             </div>
         </div>
     </v-container>
@@ -37,13 +44,18 @@ export default {
     data() {
         return {
             userImg: this.$store.state.firebaseUser.photoURL,
-            searchItem: null
+            searchItem: null,
+
+            tagDict: {},
         }
     },
     mounted() {
         this.$EventBus.$on('changePhoto', (URL) => {
             this.userImg = URL
         })
+    },
+    async created(){
+        this.tagDict = await FirebaseServices.getTagsAll()
     },
     methods: {
         closeDrawer(trigger) {
@@ -57,6 +69,9 @@ export default {
             console.log(this.searchItem)
             this.$router.push("/search/" + this.searchItem)
             window.location.reload()
+        },
+        writeTag: function(input){
+            this.searchItem += ' '+input
         }
     }
 };
