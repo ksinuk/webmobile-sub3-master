@@ -202,43 +202,45 @@ export default {
 
                 // ---------------------------------------------------
                 // make tag DB
-                let inputDB = {}
-                for(let hashName in th.hashDict){
-                    let hash = th.hashDict[hashName]
-                    let outarr = []
-                    for(let i=0; i<hash.length; i++){
-                        outarr.push(hash[i].pk)
-                    }
-                    let out = {color:'teal',addr:'portfolios/portfilios/hashtags',portfolios:outarr}
-                    inputDB[hashName] = out
-                }
-
-                for(let mainName in th.SelectDictDict){
-                    let mainSelect = th.SelectDictDict[mainName]
-                    for(let selectName in mainSelect){
-                        let select = mainSelect[selectName]
+                if(!th.ifsearch){
+                    let inputDB = {}
+                    for(let hashName in th.hashDict){
+                        let hash = th.hashDict[hashName]
                         let outarr = []
-                        for(let i=0; i<select.length; i++){
-                            outarr.push(select[i].pk)
+                        for(let i=0; i<hash.length; i++){
+                            outarr.push(hash[i].pk)
                         }
-
-                        let out = {}
-                        if(mainName == 'career'){
-                            out = {color:'red',addr:'userData/selected/career',portfolios:outarr}
-                        }
-                        else if(mainName == 'recruit'){
-                            out = {color:'blue',addr:'userData/selected/recruit',portfolios:outarr}
-                        }
-                        else if(mainName == 'tool'){
-                            out = {color:'black',addr:'userData/selected/tool',portfolios:outarr}
-                        }
-                        
-                        inputDB[selectName] = out
+                        let out = {color:'teal',addr:'portfolios/portfilios/hashtags',portfolios:outarr}
+                        inputDB[hashName] = out
                     }
+
+                    for(let mainName in th.SelectDictDict){
+                        let mainSelect = th.SelectDictDict[mainName]
+                        for(let selectName in mainSelect){
+                            let select = mainSelect[selectName]
+                            let outarr = []
+                            for(let i=0; i<select.length; i++){
+                                outarr.push(select[i].pk)
+                            }
+
+                            let out = {}
+                            if(mainName == 'career'){
+                                out = {color:'red',addr:'userData/selected/career',portfolios:outarr}
+                            }
+                            else if(mainName == 'recruit'){
+                                out = {color:'blue',addr:'userData/selected/recruit',portfolios:outarr}
+                            }
+                            else if(mainName == 'tool'){
+                                out = {color:'black',addr:'userData/selected/tool',portfolios:outarr}
+                            }
+                            
+                            inputDB[selectName] = out
+                        }
+                    }
+
+                    Firebase.setTagsDBall(inputDB)
                 }
-
-
-                Firebase.setTagsDBall(inputDB)
+                    
                 // ---------------------------------------------------
 
                 th.cardUpdateSignal += 1
