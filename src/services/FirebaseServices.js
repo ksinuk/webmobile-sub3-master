@@ -45,28 +45,28 @@ export default {
             })
         })
     },
-    getUserDataAll() {
-        return new Promise(function(resolve,reject){
-            db.collection('userData').get()
-            .then(function(doc) {
-                if (!doc.empty){
-                    let out = []
-                    for(let i=0;i<doc.size;i++){
-                        let data = doc.docs[i]
-                        let elem = data.data()
-                        elem['id'] = data.id
-                        elem['addr'] = '/portfoliopage/'+data.id
-                        out.push(elem)
-                    }
+    // getUserDataAll() {
+    //     return new Promise(function(resolve,reject){
+    //         db.collection('userData').get()
+    //         .then(function(doc) {
+    //             if (!doc.empty){
+    //                 let out = []
+    //                 for(let i=0;i<doc.size;i++){
+    //                     let data = doc.docs[i]
+    //                     let elem = data.data()
+    //                     elem['id'] = data.id
+    //                     elem['addr'] = '/portfoliopage/'+data.id
+    //                     out.push(elem)
+    //                 }
 
-                    resolve(out)
-                }
-                else{
-                    resolve(null)
-                }
-            })
-        })
-    },
+    //                 resolve(out)
+    //             }
+    //             else{
+    //                 resolve(null)
+    //             }
+    //         })
+    //     })
+    // },
     // getTagAll(){
     //     return new Promise(function(resolve,reject){
     //         db.collection('portfolio').get()
@@ -90,18 +90,18 @@ export default {
     //     })
     // },
     //write user data
-    setUserData(uid, css, visit) {
-        return db.collection('userData').doc(uid).set({
-            css:css,
-            visitNum:visit
-        })
-    },
-    updateUserData(uid, css, visit) {
-        return db.collection('userData').doc(uid).update({
-            css:css,
-            visitNum:visit
-        })
-    },
+    // setUserData(uid, css, visit) {
+    //     return db.collection('userData').doc(uid).set({
+    //         css:css,
+    //         visitNum:visit
+    //     })
+    // },
+    // updateUserData(uid, css, visit) {
+    //     return db.collection('userData').doc(uid).update({
+    //         css:css,
+    //         visitNum:visit
+    //     })
+    // },
     updateUserBookmark(from, to,add){
         if (add) {
             return db.collection('userData').doc(from).update({
@@ -114,18 +114,18 @@ export default {
             })
         }
     },
-    setBookMark(from,to,del){
-        if(!del){
-            return db.collection('userData').doc(to).update({
-                bookmarks: firebase.firestore.FieldValue.arrayUnion(from)
-            })
-        }
-        else{
-            return db.collection('userData').doc(to).update({
-                bookmarks: firebase.firestore.FieldValue.arrayRemove(from)
-            })
-        }
-    },
+    // setBookMark(from,to,del){
+    //     if(!del){
+    //         return db.collection('userData').doc(to).update({
+    //             bookmarks: firebase.firestore.FieldValue.arrayUnion(from)
+    //         })
+    //     }
+    //     else{
+    //         return db.collection('userData').doc(to).update({
+    //             bookmarks: firebase.firestore.FieldValue.arrayRemove(from)
+    //         })
+    //     }
+    // },
     getBookMarkFromUid(uid){
         return new Promise(function(resolve,reject){
             db.collection('userData').where("bookmarks", "array-contains", uid).get()
@@ -311,47 +311,26 @@ export default {
                 
     //     })
               
+    },
+    // getUidPortfolios(uid){
+    //     return new Promise(function(resolve,reject){
+    //         db.collection(PORTFOLIO).where('uid', '==', uid).get()
+    //         .then(function(snapshot) {
+    //             if (snapshot.empty) {
+    //                 resolve(null)
+    //             }
+    //             let out = new Array()
+    //             snapshot.forEach(doc => {
+    //                 out.push(doc.data())
+    //             })
+    //             resolve(out)
+    //         })
+    //         .catch(function(res){
+    //             console.log("error : ",res)
+    //         })
+    //     })
     // },
-    getUidPortfolios(uid){
-        return new Promise(function(resolve,reject){
-            db.collection(PORTFOLIO).where('uid', '==', uid).get()
-            .then(function(snapshot) {
-                if (snapshot.empty) {
-                    resolve(null)
-                }
-                let out = new Array()
-                snapshot.forEach(doc => {
-                    out.push(doc.data())
-                })
-                resolve(out)
-            })
-            .catch(function(res){
-                console.log("error : ",res)
-            })
-        })
-    },
 
-
-    /*
-    async currentUser() {
-        var user = firebase.auth().currentUser;
-        var docRef = db.collection(USERS);
-        const detailedUser = docRef.get().then((docSnapshots) => {
-            let results = docSnapshots.docs.map((doc) => {
-                let data = doc.data()
-                if (data.uid === user.uid) {
-                    return data
-                }
-            })
-            for (var res in results) {
-                if (results[res] !== undefined) {
-                    return results[res]
-                }
-            }
-        })
-        return detailedUser
-    },
-    */
     // 포트폴리오 목록 조회 리뉴얼
     getPortfolio(user_id){
         const portfolios = db.collection(PORTFOLIOS)

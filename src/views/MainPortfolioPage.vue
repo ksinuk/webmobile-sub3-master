@@ -82,6 +82,7 @@
     </div>
     uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
+    folio len : {{folios.length}}
 </div>
 </template>
 
