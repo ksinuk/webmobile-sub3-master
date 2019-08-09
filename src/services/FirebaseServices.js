@@ -45,63 +45,6 @@ export default {
             })
         })
     },
-    // getUserDataAll() {
-    //     return new Promise(function(resolve,reject){
-    //         db.collection('userData').get()
-    //         .then(function(doc) {
-    //             if (!doc.empty){
-    //                 let out = []
-    //                 for(let i=0;i<doc.size;i++){
-    //                     let data = doc.docs[i]
-    //                     let elem = data.data()
-    //                     elem['id'] = data.id
-    //                     elem['addr'] = '/portfoliopage/'+data.id
-    //                     out.push(elem)
-    //                 }
-
-    //                 resolve(out)
-    //             }
-    //             else{
-    //                 resolve(null)
-    //             }
-    //         })
-    //     })
-    // },
-    // getTagAll(){
-    //     return new Promise(function(resolve,reject){
-    //         db.collection('portfolio').get()
-    //         .then(function(doc) {
-    //             // console.log("getTagAll(): ",doc)
-    //             if (!doc.empty){
-    //                 let out = []
-    //                 for(let i=0;i<doc.size;i++){
-    //                     let data = doc.docs[i]
-    //                     let elem = data.data().hashtags
-    //                     elem['id'] = data.id
-    //                     out.push(elem)
-    //                 }
-
-    //                 resolve(out)
-    //             }
-    //             else{
-    //                 resolve(null)
-    //             }
-    //         })
-    //     })
-    // },
-    //write user data
-    // setUserData(uid, css, visit) {
-    //     return db.collection('userData').doc(uid).set({
-    //         css:css,
-    //         visitNum:visit
-    //     })
-    // },
-    // updateUserData(uid, css, visit) {
-    //     return db.collection('userData').doc(uid).update({
-    //         css:css,
-    //         visitNum:visit
-    //     })
-    // },
     updateUserBookmark(from, to,add){
         if (add) {
             return db.collection('userData').doc(from).update({
@@ -114,18 +57,6 @@ export default {
             })
         }
     },
-    // setBookMark(from,to,del){
-    //     if(!del){
-    //         return db.collection('userData').doc(to).update({
-    //             bookmarks: firebase.firestore.FieldValue.arrayUnion(from)
-    //         })
-    //     }
-    //     else{
-    //         return db.collection('userData').doc(to).update({
-    //             bookmarks: firebase.firestore.FieldValue.arrayRemove(from)
-    //         })
-    //     }
-    // },
     getBookMarkFromUid(uid){
         return new Promise(function(resolve,reject){
             db.collection('userData').where("bookmarks", "array-contains", uid).get()
@@ -213,6 +144,24 @@ export default {
     },
 
     // 포트폴리오 목록 조회
+<<<<<<< HEAD
+    async getPortfolios(issearch=false , input=''){
+        let userDB_orignal = await db.collection('userData').get()
+        userDB_orignal = userDB_orignal.docs
+        let userDB = {}
+        for(let i=0;i<userDB_orignal.length; i++){
+            let user = userDB_orignal[i]
+            userDB[user.id] = user
+        }
+
+        return new Promise(function(resolve,reject){
+            if(!issearch){
+                db.collection('portfolios').get()
+                .then(async function(snapshot) {
+                    // console.log("getPortfolios(): ",snapshot.docs)
+                    let outlist = snapshot.docs
+                    let out = []
+=======
     // getPortfolios(issearch=false , input=''){
     //     return new Promise(function(resolve,reject){
     //         if(!issearch){
@@ -221,16 +170,23 @@ export default {
     //                 // console.log("getPortfolios(): ",snapshot.docs)
     //                 let outlist = snapshot.docs
     //                 let out = []
+>>>>>>> c90ea837c8592b1b065636b5a3157354456e0d97
 
     //                 for(let i=0;i<outlist.length;i++){
     //                     let doc = outlist[i].data()
     //                     doc.pk = outlist[i].id
     //                     doc.like = false
 
+<<<<<<< HEAD
+                        let user_data = userDB[doc.pk]
+                        if(user_data && user_data.exists){
+                            doc.userData = userDB[doc.pk].data()
+=======
     //                     let user_data = await db.collection('userData').doc(doc.pk).get()
     //                     if(user_data.exists){
     //                         doc.userData = user_data.data()
 
+>>>>>>> c90ea837c8592b1b065636b5a3157354456e0d97
                             // doc.userData.selected = {'career':[],'recruit':[],'tool':[]}
                             // if(true){
                             //     let temp = Math.floor(Math.random() * 3) 
@@ -293,6 +249,22 @@ export default {
     //                         doc.pk = foliolist[i].id
     //                         doc.like = false
 
+<<<<<<< HEAD
+                            let user_data = userDB[doc.pk]
+                            if(user_data && user_data.exists){
+                                doc.userData = user_data.data()
+                                out.push(doc)
+                            }
+                        } 
+                    }
+                    // console.log("getPortfolios() return : ",out)
+                    resolve(out)
+                })
+                .catch(function(res){
+                    console.log("getPortfolios() error : ",res)
+                })
+            }
+=======
     //                         let user_data = await db.collection('userData').doc(doc.pk).get()
     //                         if(user_data.exists){
     //                             doc.userData = user_data.data()
@@ -307,6 +279,7 @@ export default {
     //                 console.log("getPortfolios() error : ",res)
     //             })
     //         }
+>>>>>>> c90ea837c8592b1b065636b5a3157354456e0d97
 
                 
     //     })
