@@ -45,7 +45,7 @@
                                     <label for="input_file">파일찾기</label>
                                     <input type="file" id="input_file" class="upload-hidden" @change="userImage">
                                 </div>
-                                <v-radio-group v-model="select" item-value="opacity">
+                                <v-radio-group v-model="select.opacity">
                                     <v-radio label="선명하게" value="opacity1" color="primary"></v-radio>
                                     <v-radio label="흐리게" value="opacity2" color="primary"></v-radio>
                                 </v-radio-group>
@@ -55,9 +55,10 @@
                                 <div class="my-3" v-else-if="select.opacity === 'opacity2'" style="margin-right: 0.3rem; height: 12.1rem; background-color: white;">
                                     <img :src="this.select.img" height="170rem;" style="opacity: 0.5; filter: alpha(opacity=50);" width="265rem;"/>
                                 </div>
-                                <!--<div style="text-align: center;">
+                                <div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveImg()">Apply</v-btn>
-                                </div>-->
+                                    <!--<v-btn small color="error">Init</v-btn>-->
+                                </div>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
@@ -321,10 +322,10 @@ export default {
     data() {
         return {
             user: null,
+            portfolio: [],
             headerDrawer: null,
             dialog: false,
             mini: false,
-            opacity: 'opacity1',
             select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
             fileName: null,
             items: [
@@ -347,11 +348,9 @@ export default {
             sGreen: "255",
             animations: ['none', 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'headShake', 'swing', 'tada', 'wobble', 'jello', 'bounceIn'],
             titleAni: 'none',
-            subtitleAni: 'none',
-            viewImg: null
+            subtitleAni: 'none'
         }
     },
-    props: ['portfolio'],
     mounted() {
         this.getPortfolio();
         this.$EventBus.$on('Header', () => {
@@ -421,20 +420,6 @@ export default {
                 elem.classList.add(this.subtitleAni);
             }
             console.log(elem.classList);
-        },
-        select: function() {
-            console.log(this.select);
-            document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
-        },
-        opacity: function() {
-            if (this.select.opacity === 'opacity1') {
-                document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
-            } else if (this.select.opacity === 'opacity2') {
-                document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
-            }
-        },
-        viewImg: function() {
-            document.getElementById('headBanner').style.backgroundImage = "url('" + this.select.img + "')";
         }
     },
     methods: {
@@ -443,38 +428,39 @@ export default {
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
                 console.log(__this.user);
-                __this.select = __this.portfolio.banner;
-                __this.layout = __this.portfolio.layout;
-                __this.tmplayout = __this.layout;
-                __this.titleS = __this.portfolio.title.size;
-                __this.subtitleS = __this.portfolio.subtitle.size;
-                __this.tRed = __this.portfolio.title.color.red;
-                __this.tBlue = __this.portfolio.title.color.blue;
-                __this.tGreen = __this.portfolio.title.color.green;
-                __this.sRed = __this.portfolio.subtitle.color.red;
-                __this.sBlue = __this.portfolio.subtitle.color.blue;
-                __this.sGreen = __this.portfolio.subtitle.color.green;
-                __this.titleAni = __this.portfolio.title.animation;
-                __this.subtitleAni = __this.portfolio.subtitle.animation;
-                __this.opacity = __this.select.opacity;
-            }).then(function(res) {
-                document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
-                if (__this.select.opacity === 'opacity2') {
-                    document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
-                }
-                // console.log(document.querySelector('#portTitle').classList);
-                // console.log(document.querySelector('#portSubitle').classList);
-                if (__this.titleAni !== 'none') {
-                    document.querySelector('#portTitle').classList.add(__this.titleAni);
-                }
-                if (__this.subtitleAni !== 'none') {
-                    document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
-                }
-                document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
-                document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
-                document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
-                document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
-                console.log('ok');
+                FirebaseServices.getMyPort(user.uid).then(function(res) {
+                    __this.portfolio = res;
+                    __this.select = __this.portfolio.banner;
+                    __this.layout = __this.portfolio.layout;
+                    __this.tmplayout = __this.layout;
+                    __this.titleS = __this.portfolio.title.size;
+                    __this.subtitleS = __this.portfolio.subtitle.size;
+                    __this.tRed = __this.portfolio.title.color.red;
+                    __this.tBlue = __this.portfolio.title.color.blue;
+                    __this.tGreen = __this.portfolio.title.color.green;
+                    __this.sRed = __this.portfolio.subtitle.color.red;
+                    __this.sBlue = __this.portfolio.subtitle.color.blue;
+                    __this.sGreen = __this.portfolio.subtitle.color.green;
+                    __this.titleAni = __this.portfolio.title.animation;
+                    __this.subtitleAni = __this.portfolio.subtitle.animation;
+                }).then(function(res) {
+                    document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
+                    if (__this.select.opacity === 'opacity2') {
+                        document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                    }
+                    // console.log(document.querySelector('#portTitle').classList);
+                    // console.log(document.querySelector('#portSubitle').classList);
+                    if (__this.titleAni !== 'none') {
+                        document.querySelector('#portTitle').classList.add(__this.titleAni);
+                    }
+                    if (__this.subtitleAni !== 'none') {
+                        document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
+                    }
+                    document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
+                    document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
+                    document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
+                    document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
+                })
             })
         },
         getBanner: function() {
@@ -513,8 +499,6 @@ export default {
                     for (let j=0; j < files.length; j++) {
                     }
                     _this.select.img = e.target.result;
-                    _this.viewImg = e.target.result;
-                    console.log(_this.viewImg);
                 }
                 reader.readAsDataURL(file)
                 _this.select.theme = file.name;
