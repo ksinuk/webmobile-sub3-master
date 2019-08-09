@@ -11,7 +11,7 @@
         </div>
         <div v-show="!this.$store.state.firebaseUser.inUser">
             <!-- 로그인 되어 있으면 가림 -->
-            <v-btn small color="info" to="/login">Login</v-btn>
+            <v-btn small color="info" to="/login">Sign in</v-btn>
             <v-divider/>
         </div>
         <div>
