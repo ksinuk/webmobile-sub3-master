@@ -168,9 +168,6 @@
                                 <v-radio label="List" value="template1" color="primary"></v-radio>
                                 <v-radio label="Dialog" value="template2" color="primary"></v-radio>
                             </v-radio-group>
-                            <div style="text-align: center;">
-                                <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
-                            </div>
                         </v-card-text>
                     </v-card>
                 </v-expansion-panel-content>
@@ -585,9 +582,6 @@ export default {
             this.portfolio.imageNames = this.portfolios.portfolios[idx].imageNames;
             this.portfolio.dumpImg = this.portfolios.portfolios[idx].imageNames;
         },
-        saveLayout() {
-
-        },
         async save() {
             if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
                 this.portfolio.sources.push(JSON.parse(JSON.stringify(this.source)))
@@ -618,7 +612,9 @@ export default {
             this.getPortfolio();
         },
         async saveAll() {
-            //
+            this.portfolios.foliotheme.color = this.colorchip;
+            this.portfolios.foliotheme.layout = this.listlayout;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
         }
     }
 }

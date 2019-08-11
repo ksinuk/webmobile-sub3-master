@@ -541,13 +541,19 @@ export default {
       let __this = this;
       const tmp = firebase.auth().onAuthStateChanged(function(user) {
         __this.user = user.uid;
-        console.log(__this.user);
         FirebaseServices.getMyPort(__this.user).then(function(res) {
           __this.portfolio = res;
+          __this.cssArr = __this.portfolio.aboutMe.layout;
+          __this.themeArr = __this.portfolio.aboutMe.theme;
+          __this.fontItems.items[0].value = __this.portfolio.aboutMe.title.size;
+          __this.fontItems.items[1].value = __this.portfolio.aboutMe.subtitle.size;
+          if (__this.portfolio.userImage !== '') {
+            __this.userImage = __this.portfolio.userImage;
+          }
           __this.portfolio.tmp = []
           res.skills.forEach(function(skill) {
-            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
             skill.degree = skill.degree.substring(7, skill.degree.length);
+            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
           })
           // res.skills.forEach(function(skill) {
           //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";

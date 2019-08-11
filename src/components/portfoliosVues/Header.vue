@@ -549,7 +549,7 @@ export default {
             this.portfolio.subtitle.color.green = this.sGreen;
             this.portfolio.title.animation = this.titleAni;
             this.portfolio.subtitle.animation = this.subtitleAni;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         }
     }
 }
