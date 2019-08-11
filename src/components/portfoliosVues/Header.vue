@@ -445,13 +445,11 @@ export default {
             let __this = this;
             const tmp = firebase.auth().onAuthStateChanged(function(user) {
                 __this.user = user.uid;
-                console.log(__this.user);
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
                     __this.portfolio = res;
                     __this.select = __this.portfolio.banner;
                     __this.opacity = __this.select.opacity;
-                    __this.layout = __this.portfolio.layout;
-                    __this.tmplayout = __this.layout;
+                    __this.layout = __this.select.layout;
                     __this.titleS = __this.portfolio.title.size;
                     __this.subtitleS = __this.portfolio.subtitle.size;
                     __this.tRed = __this.portfolio.title.color.red;
@@ -462,6 +460,7 @@ export default {
                     __this.sGreen = __this.portfolio.subtitle.color.green;
                     __this.titleAni = __this.portfolio.title.animation;
                     __this.subtitleAni = __this.portfolio.subtitle.animation;
+                    console.log(__this.portfolio);
                 }).then(function(res) {
                     document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
                     if (__this.select.opacity === 'opacity2') {
