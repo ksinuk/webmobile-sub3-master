@@ -12,7 +12,7 @@
                 <v-card-text role="article" id="work1" class="gallery-item is-init is-animated" data-animation="fade-left">
                     <figure role="group" class="gallery-figure">
                         <div class="gallery-image">
-                        <img class="gallery-image-thumb" :src="item.imageNames" :alt="item.title" aria-describedby="work1Description" style="width: 65rem;">
+                        <img class="gallery-image-thumb" :src="item.imageNames" :alt="item.title" aria-describedby="work1Description" style="width: 100%;">
 
                         </div>
                         <figcaption class="gallery-caption">
@@ -110,7 +110,7 @@
                         </figcaption>
                     </figure>
                     <div class="gallery-image">
-                        <img class="gallery-image-thumb" :src="portfolio.imageNames" :alt="portfolio.title" aria-describedby="work1Description" style="width: 65rem;">
+                        <img class="gallery-image-thumb" :src="portfolio.imageNames" :alt="portfolio.title" aria-describedby="work1Description" style="width: 100%;">
                     </div>
                     <table class="gallery-table">
                         <thead>
@@ -144,10 +144,12 @@
                         </tbody>
                     </table>
                 </v-card-text>
-                <v-card-actions>
                 <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" dark @click="modal = false" style="margin-right: 54rem; margin-bottom: 3rem;">Close</v-btn>
-                </v-card-actions>
+                <v-layout style = "margin-bottom: 3rem;">
+                    <v-flex>
+                        <v-btn class="mx-auto" color="green darken-1" dark @click="modal = false">Close</v-btn>
+                    </v-flex>
+                </v-layout>
             </v-card>
         </v-dialog>
     </div>
@@ -390,7 +392,7 @@ export default {
             PortfolioDrawer:false,
             // db에 저장해야 할 값
             listlayout: 'template1',
-            colorchip: 'orange',
+            colorchip: 'blue',
             //
             dialog: false,
             modal: false,
@@ -457,6 +459,8 @@ export default {
                 __this.user = user.uid;
                 FirebaseServices.getMyPort(__this.user).then(function(res) {
                     __this.portfolios = res;
+                    __this.colorchip = __this.portfolios.foliotheme.color;
+                    __this.listlayout = __this.portfolios.foliotheme.layout;
                     for (let item in __this.portfolios.portfolios) {
                         storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
                             var xhr = new XMLHttpRequest();
