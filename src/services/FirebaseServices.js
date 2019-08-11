@@ -345,7 +345,7 @@ export default {
 
     // 파이어베이스에 포트폴리오를 입력하는 함수
     // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-    postPortfolios(user, aboutMe, layout, banner, portfolios, skills, subtitle, title, userImage) {
+    postPortfolios(user, aboutMe, foliotheme, banner, portfolios, skills, subtitle, title, userImage) {
         return db.collection(MYPORT).doc(user).set({
             uid: user,
             title: title,
@@ -354,7 +354,7 @@ export default {
             skills: skills,
             portfolios: portfolios,
             created_at: firebase.firestore.FieldValue.serverTimestamp(),
-            layout: layout,
+            foliotheme: foliotheme,
             banner: banner,
             userImage: userImage
         }).then(console.log('done'))
