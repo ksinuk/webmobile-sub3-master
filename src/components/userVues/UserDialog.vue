@@ -35,7 +35,7 @@
                   </div>
                   <!-- 채용 -->
                   <div>
-                    <p>채용</p>
+                    <p>직군</p>
                     <v-combobox
                       v-model="careerData.selected.recruit" :items="selectItems.채용분야"
                       label="Add some tags" multiple small-chips hide-selected
@@ -43,7 +43,7 @@
                   </div>
                   <!-- 활동 -->
                   <div>
-                    <p>활동</p>
+                    <p>기술</p>
                     <v-combobox
                       v-model="careerData.selected.tool" :items="selectItems.활동분야"
                       label="Add some tags" multiple small-chips hide-selected
