@@ -131,6 +131,12 @@ export default {
     this.$EventBus.$on('changePhoto', (URL) => {
       this.careerData.userImg = URL
     })
+    this.$watch('userData', userData => {
+      this.setProfile()
+      this.setSpark()
+      this.getCareer()
+    }, {immediate:true})
+    console.log(this.userData.userData)
   },
   methods: {
     setProfile() {

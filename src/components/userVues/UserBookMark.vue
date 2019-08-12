@@ -15,8 +15,11 @@
                             <div>
                                 <div class="headline">
                                   {{ bookmark.title.content }}
-                                  <v-icon v-if="bookmark.like" class="mx-2" color="warning" @click="enrollLike(bookmark.pk)">star</v-icon>
-                                  <v-icon v-else class="mx-2" @click="enrollLike(bookmark.pk)">star</v-icon>
+                                  
+                                  <div v-show="inUser"> 
+                                    <v-icon v-if="bookmark.like" class="mx-2" color="warning" @click="enrollLike(bookmark.pk)">star</v-icon>
+                                    <v-icon v-else class="mx-2" @click="enrollLike(bookmark.pk)">star</v-icon>
+                                  </div>
                                 </div>
                                 <div>
                                     <tr>
@@ -67,6 +70,8 @@ export default {
   },
   data () {
     return {
+      // 
+      inUser: false,
       // loading
       inMark: false,
       pageNum: 3,
@@ -80,15 +85,20 @@ export default {
   created() {
     this.getBookmarks()
   },
+  watch: {
+    $route() {
+      this.getBookmarks()
+    }
+  },
   methods: {
     // 북마크한 포트폴리오 가져오기
     getBookmarks: function() {
       let __this = this
       firebase.auth().onAuthStateChanged(async function(user){
-        __this.user = user.uid
+        __this.user = __this.$route.params.userId
         var portfolios = await FirebaseServices.getPortfolios();
-        __this.userData = await FirebaseServices.getUserData(user.uid);
-        console.log(__this.userData)
+        __this.userData = await FirebaseServices.getUserData(__this.user);
+        console.log('__this.userData', __this.userData)
         // 저장된 북마크 array 이름이 bookmarks일 때 => 
         __this.myList = __this.userData.bookmarks;
 
@@ -122,7 +132,13 @@ export default {
           }
         }
       }
-      
+    },
+    viewBookMarks() {
+      if (this.$store.state.firebaseUser.uid === this.$route.params.userId) {
+        this.inUser = true
+      } else {
+        this.inUser = false
+      }
     }
   }
 }
