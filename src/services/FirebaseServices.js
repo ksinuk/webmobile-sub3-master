@@ -515,6 +515,7 @@ export default {
         let _this = this
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(function(result) {
+            store.commit('setPhotoURL', result.user.photoURL)
         })
         .catch(function(error) {
             console.log(error)

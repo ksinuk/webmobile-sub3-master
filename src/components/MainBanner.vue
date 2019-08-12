@@ -25,11 +25,6 @@ export default {
       timer : null
     }
   },
-  mounted() {
-    // 0729 error 주석처리
-    this.startRotation();
-  },
-
   methods : {
     // aboutFunction: function() {
     //   // 723.2000122070312
