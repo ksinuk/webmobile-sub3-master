@@ -9,8 +9,8 @@
             <div>
                 <div style="font-weight: 600;">
                     {{ result.pk }}
-                    <v-icon v-if="islike" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
-                    <v-icon v-else class="mx-2" @click="enrollLike()">star</v-icon>
+                    <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
+                    <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
                 <div>
                     <span v-for="hashtag in taglist">
@@ -84,6 +84,7 @@ export default {
         return{
             islike:false,
             isshow:true,
+            isbookmark:true,
 
             taglist:[],
             userAddr:'/portfoliopage/'
@@ -94,6 +95,9 @@ export default {
     },
     methods: {
         reboot:function(){
+            console.log("card route : ",this.$route)
+            if(this.$route.name == 'home') this.isbookmark = false
+
             this.checkme()
             this.makeTagList()
             this.makeAddr()

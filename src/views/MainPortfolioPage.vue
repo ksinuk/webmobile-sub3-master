@@ -291,14 +291,14 @@ export default {
             tag['check'] = !tag['check'] //테그의 체크 아이콘 출력 변경
             this.tagCheckNum += tag['check'] ? 1:-1 //지금까지 선택한 테그의 갯수 계산
             
-            if(this.tagCheckNum == 0){
+            if(this.tagCheckNum == 0){ //선택한 테그가 없으면 테그 출력 리스트 제거
                 this.tagoutList = []
             }
-            else if(tag['check'] && this.tagCheckNum == 1){
+            else if(tag['check'] && this.tagCheckNum == 1){ // 선택한 테그가 1개이면 테그 목록 출력
                 // console.log("solo tag : ",tag)
                 this.tagoutList = tag
             }
-            else if(tag['check']){
+            else if(tag['check']){ // 해당 테그가 없는 포트폴리오를 출력 목록에서 제거
                 for(let i=0; i<this.tagoutList.length; i++){
                     let nowUser = this.tagoutList[i]
                     let len = this.tagoutList.length
@@ -309,7 +309,7 @@ export default {
                     }
                 }
             }
-            else if(!tag['check']){
+            else if(!tag['check']){ 
                 for(let i=0; i<this.folios.length; i++){
                     if(this.ifelemInList(this.folios[i] ,this.tagoutList )) continue
                     let inputok = true
