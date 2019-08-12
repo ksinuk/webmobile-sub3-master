@@ -76,8 +76,7 @@ export default {
                             'selected': {'career':[], 'recruit':[], 'tool':[]},
                         }
                     db.collection('userData').doc(uid).set(out)
-
-
+                    
                     resolve(out)
                 }
             })
