@@ -8,7 +8,7 @@
     <div style="display: flex;">
       <UserProfile v-if="loaded" v-bind:userData="{userData: userData, spark: spark}"/>
     </div>
-    <!-- <UserBookMark/> -->
+    <UserBookMark/>
   </div>
 </template>
 

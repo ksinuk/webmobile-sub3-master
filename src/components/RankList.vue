@@ -31,21 +31,21 @@
 </template>
 
 <script>
-    import { Carousel, Slide } from 'vue-carousel';
+import { Carousel, Slide } from 'vue-carousel';
 
-    export default {
-        name: 'RankList',
-        components: {
-            Carousel,
-            Slide
-        },
-        data() {
-            return {
-                pageNum: 4,
-                images: ["https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300"]
-            }
+export default {
+    name: 'RankList',
+    components: {
+        Carousel,
+        Slide
+    },
+    data() {
+        return {
+            pageNum: 4,
+            images: ["https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300", "https://picsum.photos/200/300"]
         }
     }
+}
 </script>
 
 
