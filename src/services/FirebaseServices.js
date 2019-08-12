@@ -76,7 +76,7 @@ export default {
                             'selected': {'career':[], 'recruit':[], 'tool':[]},
                         }
                     db.collection('userData').doc(uid).set(out)
-                    
+
                     resolve(out)
                 }
             })
@@ -261,7 +261,7 @@ export default {
                             let hashtags = folio[j].hashtags
                             for(let k=0;k<hashtags.length;k++){
                                 for(let ini=0; ini<inputs.length; ini++){
-                                    if(hashtags[k] == inputs[ini]){
+                                    if(hashtags[k].replace(' ','_') == inputs[ini]){
                                         inputs[ini] = inputs[inputs.length-1]
                                         inputs.pop()
                                         break
@@ -282,7 +282,7 @@ export default {
                                 let main = doc.userData.selected[mainName]
                                 for(let j=0;j<main.length; j++){
                                     for(let ini=0; ini<inputs.length; ini++){
-                                        if(main[j] == inputs[ini]){
+                                        if(main[j].replace(' ','_') == inputs[ini]){
                                             inputs[ini] = inputs[inputs.length-1]
                                             inputs.pop()
                                             break

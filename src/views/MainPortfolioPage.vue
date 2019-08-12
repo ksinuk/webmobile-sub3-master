@@ -133,7 +133,7 @@ export default {
 
         this.settingMe(th)
 
-        console.log("route : ",this.$route)
+        // console.log("route : ",this.$route)
         if(this.$route.name == "search"){
             this.search_input = this.$route.params.search_value
             this.ifsearch = true
@@ -217,6 +217,7 @@ export default {
                             outarr.push(hash[i].pk)
                         }
                         let out = {color:'teal',addr:'portfolios/portfilios/hashtags',portfolios:outarr}
+                        // hashName = hashName.replace(' ','_')
                         inputDB[hashName] = out
                     }
 
@@ -240,10 +241,12 @@ export default {
                                 out = {color:'black',addr:'userData/selected/tool',portfolios:outarr}
                             }
                             
+                            // selectName = selectName.replace(' ','_')
                             inputDB[selectName] = out
                         }
                     }
 
+                    console.log("tag DB : ",inputDB)
                     Firebase.setTagsDBall(inputDB)
                 }
                     
