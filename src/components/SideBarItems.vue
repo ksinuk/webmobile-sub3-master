@@ -57,6 +57,8 @@ export default {
         this.$EventBus.$on('changePhoto', (URL) => {
             this.userImg = URL
         })
+
+        // console.log("this.$store : ", this.$store)
     },
     methods: {
         closeDrawer(trigger) {
@@ -67,7 +69,7 @@ export default {
             this.closeDrawer('Logout')
         },
         findItem: function() {
-            console.log(this.searchItem)
+            // console.log(this.searchItem)
             this.$router.push("/search/" + this.searchItem)
             window.location.reload()
         },

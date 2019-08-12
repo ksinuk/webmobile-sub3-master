@@ -80,9 +80,13 @@
         </div>
         
     </div>
-    <!-- uid : {{me.uid}}<br>
+    uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
-    folio len : {{folios.length}} -->
+    folio len : {{folios.length}}<br>
+    ifsearch : {{ifsearch}}<br>
+    search_input : {{search_input}}
+
+
 </div>
 </template>
 
@@ -134,6 +138,8 @@ export default {
         this.settingMe(th)
 
         // console.log("route : ",this.$route)
+
+        //검색 여부 확인
         if(this.$route.name == "search"){
             this.search_input = this.$route.params.search_value
             this.ifsearch = true
@@ -142,6 +148,7 @@ export default {
         this.readFolio(th)     
     },
     methods:{
+        // user 정보 불러 오기
         settingMe:async function(th){
             await firebase.auth().onAuthStateChanged(function(user) {
                 if(user && user.uid){
@@ -159,18 +166,25 @@ export default {
                 }
             })
         },
+        // portfolio 목록, tag 목록 불러오기
         readFolio: async function(th){
             await Firebase.getPortfolios(this.ifsearch, this.search_input).then(function(data){
                 // console.log(" th.folios data: ", data)
+                // portfolio 목록 생성
                 th.folios = data
 
+                // hash 태그 목록 생성
                 for(let i=0;i<th.folios.length;i++){
+                    //portfolio 데이터 추출
                     let post = th.folios[i]
                     for(let ii=0;ii<post.portfolios.length;ii++){
+                        //portfolio 안에 있는 portfolios 데이터 추출
                         let folio = post.portfolios[ii]
                         for(let j=0;j<folio.hashtags.length;j++){
+                            //hash tag 추출 
                             let tag = folio.hashtags[j]
 
+                            //hash tag 사전에 각각의 portfolio 저장
                             if(th.hashDict[tag]){
                                 th.hashDict[tag].push(post)
                             }
@@ -183,17 +197,20 @@ export default {
                     }
                 }
 
+                // selected 태그 사전 작성
                 for(let i=0;i<th.folios.length;i++){
                     let post = th.folios[i]
-                    let seleteDict = th.folios[i].userData.selected
+                    let seleteDict = th.folios[i].userData.selected // selected 분류 추출
+
                     for(let seleter in seleteDict){
-                        if(!th.SelectDictDict[seleter]){
+                        if(!th.SelectDictDict[seleter]){ //새로운 selected 분류 발견
                             th.SelectDictDict[seleter] = {}
                             th.SelectIfDict[seleter] = false
                         }
                         let selectList = seleteDict[seleter]
                         for(let j=0; j<selectList.length; j++){
                             let selectName = selectList[j]
+                            // selected 사전에 해당하는 portfolio 저장
                             if(th.SelectDictDict[seleter][selectName]){
                                 th.SelectDictDict[seleter][selectName].push(post)
                             }
@@ -208,22 +225,27 @@ export default {
 
                 // ---------------------------------------------------
                 // make tag DB
-                if(!th.ifsearch){
+                if(!th.ifsearch){ // main portfolio page에서만 DB 제작
                     let inputDB = {}
-                    for(let hashName in th.hashDict){
+
+                    for(let hashName in th.hashDict){// server 전송용 hasg tag DB 제작
                         let hash = th.hashDict[hashName]
                         let outarr = []
                         for(let i=0; i<hash.length; i++){
-                            outarr.push(hash[i].pk)
+                            outarr.push(hash[i].pk) // 각각의 tag에 해당하는 포트올리오의 id 저장
                         }
-                        let out = {color:'teal',addr:'portfolios/portfilios/hashtags',portfolios:outarr}
+                        //출력할 색상, 테그의 실제 위치, 테그가 저장된 portfolio 저장
+                        let out = {color:'teal',addr:'portfolios/portfilios/hashtags',portfolios:outarr} 
                         // hashName = hashName.replace(' ','_')
                         inputDB[hashName] = out
                     }
 
+                    // selected 테그 DB 생성
                     for(let mainName in th.SelectDictDict){
+                        // selected 분류 추출
                         let mainSelect = th.SelectDictDict[mainName]
                         for(let selectName in mainSelect){
+                            // sleected 테그 추출
                             let select = mainSelect[selectName]
                             let outarr = []
                             for(let i=0; i<select.length; i++){
@@ -246,13 +268,17 @@ export default {
                         }
                     }
 
-                    console.log("tag DB : ",inputDB)
+                    // console.log("tag DB : ",inputDB)
+
+                    //firebase DB에 테그 DB 전송
                     Firebase.setTagsDBall(inputDB)
                 }
                     
                 // ---------------------------------------------------
 
+                //각각의 portfolio card 컴포넌트에 완성 신호 전송
                 th.cardUpdateSignal += 1
+                // portfolio card 이름 순 정렬
                 th.sortPortfolio(th.sortup)
             })
             .catch(function(error){
@@ -260,9 +286,10 @@ export default {
             })
         },
 
-        tagcheck:function(tag, tag_name, whereSelect = false){
-            tag['check'] = !tag['check']
-            this.tagCheckNum += tag['check'] ? 1:-1
+        // 각각의 테그에 해당하는 portfolio만 화면애 출력
+        tagcheck:function(tag, tag_name){ //선택한 테그와 테그의 이름
+            tag['check'] = !tag['check'] //테그의 체크 아이콘 출력 변경
+            this.tagCheckNum += tag['check'] ? 1:-1 //지금까지 선택한 테그의 갯수 계산
             
             if(this.tagCheckNum == 0){
                 this.tagoutList = []
@@ -318,7 +345,7 @@ export default {
             this.prnok = false
             this.prnok = true
             this.cardUpdateSignal += 1
-            console.log("tag : ",tag)
+            // console.log("tag : ",tag)
         },
         checkFolioUid:function(uid){
             for(let i=0;i<this.folios.length;i++){
