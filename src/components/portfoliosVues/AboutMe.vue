@@ -1,5 +1,5 @@
 <template>
-  <v-container :class="{css1:cssArr[0], xs6:cssArr[0], css2:cssArr[1], xs12:cssArr[1]}">
+  <v-container v-if="tempView" :class="{css1:cssArr[0], xs6:cssArr[0], css2:cssArr[1], xs12:cssArr[1]}">
     <div :themeColor="this.$store.state.theme" class="aboutMeBody">
       <!-- about my self -->
       <div class="contentSize aboutMe_about">
@@ -405,6 +405,7 @@ export default {
   },
   data() {
     return {
+      tempView: false,
       user: null,
       aboutLayout: 'css1',
       aboutDrawer: false,
@@ -502,32 +503,38 @@ export default {
       let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
       document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutTitle1').style.color = rgb;
+      document.getElementById('aboutTitle2').style.color = rgb;
     },
     abouttGreen: function() {
       let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
       document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutTitle1').style.color = rgb;
+      document.getElementById('aboutTitle2').style.color = rgb;
     },
     abouttBlue: function() {
       let rgb = 'rgb(' + this.abouttRed + ',' + this.abouttGreen + ',' + this.abouttBlue + ')';
       document.getElementById('aboutTitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutTitle1').style.color = rgb;
+      document.getElementById('aboutTitle2').style.color = rgb;
     },
     // subTitle color
     aboutsRed: function() {
       let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
       document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutSubtitle1').style.color = rgb;
+      document.getElementById('aboutSubtitle2').style.color = rgb;
     },
     aboutsBlue: function() {
       let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
       document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutSubtitle1').style.color = rgb;
+      document.getElementById('aboutSubtitle2').style.color = rgb;
     },
     aboutsGreen: function() {
       let rgb = 'rgb(' + this.aboutsRed + ',' + this.aboutsGreen + ',' + this.aboutsBlue + ')';
       document.getElementById('aboutSubtitleColor').style.backgroundColor = rgb;
       document.getElementById('aboutSubtitle1').style.color = rgb;
+      document.getElementById('aboutSubtitle2').style.color = rgb;
     }
   },
   mounted() {
@@ -544,11 +551,35 @@ export default {
         __this.user = user.uid;
         FirebaseServices.getMyPort(__this.user).then(function(res) {
           __this.portfolio = res;
+          // 0812 / theme select
+          for (let i=0; i < __this.themeArr.length; i++) {
+            if (__this.portfolio.aboutMe.theme[i] === true) {
+              __this.themeItems[0].items[i].selected = i+1
+              store.commit('changeTheme', __this.themeItems[0].items[i].title)
+            } else {
+              __this.themeItems[0].items[i].selected = false
+            }
+          }
           __this.themeArr = __this.portfolio.aboutMe.theme;
           __this.aboutTitleS = __this.portfolio.aboutMe.title.size;
           __this.aboutSubtitleS = __this.portfolio.aboutMe.subtitle.size;
+          // 0812 / btn select
+          if (__this.portfolio.aboutMe.layout[0] === true) {
+            __this.layoutItems[0].items[0].selected = 1
+            __this.layoutItems[0].items[1].selected = false
+          } else {
+            __this.layoutItems[0].items[0].selected = false
+            __this.layoutItems[0].items[1].selected = 2
+          }
+          __this.abouttRed = __this.portfolio.aboutMe.title.color.red
+          __this.abouttGreen = __this.portfolio.aboutMe.title.color.green
+          __this.abouttBlue = __this.portfolio.aboutMe.title.color.blue
+
+          __this.aboutsRed = __this.portfolio.aboutMe.subtitle.color.red
+          __this.aboutsGreen = __this.portfolio.aboutMe.subtitle.color.green
+          __this.aboutsBlue = __this.portfolio.aboutMe.subtitle.color.blue
+
           __this.cssArr = __this.portfolio.aboutMe.layout;
-          __
           if (__this.portfolio.userImage !== '') {
             __this.userImage = __this.portfolio.userImage;
           }
@@ -557,18 +588,41 @@ export default {
             skill.degree = skill.degree.substring(7, skill.degree.length);
             __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
           })
+
+          console.log('test')
+
+          console.log('1', __this.tempView)
+          
+          __this.tempView = true
+          console.log('2', __this.tempView)
+
+
+        }).then(function(res) {
+          document.getElementById('aboutTitle1').style.fontSize = __this.aboutTitleS + 'rem';
+          document.getElementById('aboutTitle2').style.fontSize = __this.aboutTitleS + 'rem';
+          document.getElementById('aboutTitle1').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
+          document.getElementById('aboutTitle2').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
+          
+          document.getElementById('aboutSubtitle1').style.fontSize = __this.aboutSubtitleS + 'rem';
+          document.getElementById('aboutSubtitle2').style.fontSize = __this.aboutSubtitleS + 'rem';
+          document.getElementById('aboutSubtitle1').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
+          document.getElementById('aboutSubtitle2').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
         })
       })
     },
     switchTheme(item, num) {
+      let boolArr = []
       for (let i=0; i < this.themeArr.length; i++) {
         if (num == (i+1)) {
+          boolArr.push(true)
           item.items[i].selected = true
           store.commit('changeTheme', item.items[i].title)
         } else {
+          boolArr.push(false)
           item.items[i].selected = false
         }
       }
+      this.themeArr = boolArr
     },
     // switchPortfolio(theme,out) {
     //     if(theme == 'Modal'){
@@ -598,9 +652,6 @@ export default {
       }
       this.cssArr = boolArr
     },
-    checkLog(n, m) {
-      console.log(n, m)
-    },
     addSkill: function() {
       // 깊은 복사
       if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
@@ -620,10 +671,33 @@ export default {
         this.skill.degree = 'Level. ' + this.skill.degree
         this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
       }
-      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.tmp, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
     },
-    saveAll() {
-      //
+    async saveAll() {
+      let fixContent = {
+        animation: 'none',
+        content: this.portfolio.aboutMe.content,
+        layout: this.cssArr,
+        theme: this.themeArr,
+        title: {
+          color: {
+            red: this.abouttRed,
+            green: this.abouttGreen,
+            blue: this.abouttBlue
+          },
+          size: this.aboutTitleS
+        },
+        subtitle: {
+          color: {
+            red: this.aboutsRed,
+            green: this.aboutsGreen,
+            blue: this.aboutsBlue
+          },
+          size: this.aboutSubtitleS
+        }
+      }
+      this.portfolio.aboutMe = fixContent
+      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
     }
   }
 }
