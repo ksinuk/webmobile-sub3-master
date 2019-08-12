@@ -465,9 +465,10 @@ export default {
     },
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
-    async createdbForNewUser(userID, date) {
+    async createdbForNewUser(userID, date, name) {
         console.log(date)
         await db.collection(USERDATA).doc(userID).set({
+            displayName: name,
             uid: userID,
             bookmarks: [],
             visit: [],
@@ -508,7 +509,7 @@ export default {
         let _this = this
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function(user) {
-            _this.createdbForNewUser(user.user.uid, date)
+            _this.createdbForNewUser(user.user.uid, date, userName)
             // 유저 생성하면서 입력받은 이름 설정
             let _user = firebase.auth().currentUser
             _user.updateProfile({
@@ -538,7 +539,7 @@ export default {
         firebase.auth().signInWithPopup(provider)
         .then(function(result) {
             if (result.additionalUserInfo.isNewUser) {
-                _this.createdbForNewUser(result.user.uid)
+                _this.createdbForNewUser(result.user.uid, '20190813', result.user.displayName)
             }
         })
         .catch(function(error) {
@@ -552,7 +553,7 @@ export default {
         firebase.auth().signInWithPopup(provider)
         .then(function(result) {
             if (result.additionalUserInfo.isNewUser) {
-                _this.createdbForNewUser(result.user.uid)
+                _this.createdbForNewUser(result.user.uid, '20190813', result.user.displayName)
             }
             console.log(result)
         })
