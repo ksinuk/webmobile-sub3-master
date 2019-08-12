@@ -566,19 +566,19 @@ export default {
           layout: [true, false],
           theme: [true, false, false],
           title: {
-            size: '10',
+            size: '5',
             color: {
-              red: '255',
-              green: '255',
-              blue: '255'
+              red: 255,
+              green: 255,
+              blue: 255
             }
           },
           subtitle: {
-            size: '10',
+            size: '2',
             color: {
-              red: '255',
-              green: '255',
-              blue: '255'
+              red: 255,
+              green: 255,
+              blue: 255
             }
           },
           animation: 'none'
