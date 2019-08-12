@@ -200,7 +200,12 @@ export default {
     },
     // career 저장
     async updateCareer() {
-      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, this.careerData.selected)
+      let fixCareer = {
+        career: this.careerData.selected.career,
+        recruit: this.careerData.selected.recruit,
+        tool: this.careerData.selected.tool,
+      }
+      let result = await FirebaseServices.updateUserCareer(this.$store.state.firebaseUser.uid, fixCareer)
       console.log('save career')
     },
     // 유저 프로필 이미지 바꾸기, 패스워드 바꾸기
