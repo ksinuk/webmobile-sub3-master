@@ -36,6 +36,12 @@ export default {
     this.setDate()
     this.getView()
   },
+  watch:{
+    $route() {
+      this.loaded = false
+      this.getView()
+    }
+  },
   methods: {
     // get user view data
     setDate() {
@@ -54,18 +60,26 @@ export default {
     },
     getData() {
       let data = this.userData.visit.sort()
+      // view 카운트 초기화
+      this.spark = {
+        labels: [],
+        value: [],
+        cnt: 0,
+      }
+      // 길이 7로 slice
       let i = 0
       if (data.length < 7) {
         i = 0
       } else {
         i = data.length - 7
       }
+      // view setting
       for (i; i < data.length; i++) {
         this.spark.labels.push(data[i].split('.')[0].substring(4, 8))
         this.spark.value.push(Number(data[i].split('.')[1]))
         this.spark.cnt += Number(data[i].split('.')[1])
       }
-      console.log(this.spark)
+      console.log('spark', this.spark)
     },
     async getView() {
       this.userData = await FirebaseServices.getVisitView(this.$route.params.userId)
@@ -78,8 +92,8 @@ export default {
         this.cntView(this.userData.visit)
       }
       // 하위 컴포넌트에 전달할 데이터
-      this.loaded = true
       this.getData()
+      this.loaded = true
     },
     // view counting
     cntView(data) {
