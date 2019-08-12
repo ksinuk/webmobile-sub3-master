@@ -1,14 +1,22 @@
 <template>
 <div v-if="isshow">
     <v-card class="card-body">
-        <div style="height:200px; margin:5px;">
-            <img :src="result.banner.img" class="card-img" :alt="result.pk">
+        <div>
+            <v-img class="white--text" :src="result.banner.img" :alt="result.pk" style="width: 100%; height: 100%;">
+                <v-container fill-height fluid>
+                    <v-layout fill-height>
+                    <v-flex xs12 align-end flexbox>
+                        <span class="headline">{{ result.title.content }}</span>
+                    </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-img>
         </div>
 
         <v-card-title primary-title>
             <div>
                 <div style="font-weight: 600;">
-                    {{ result.pk }}
+                    <p style="color: ">{{ userData.displayName }}</p>
                     <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                     <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
@@ -87,17 +95,19 @@ export default {
             isbookmark:true,
 
             taglist:[],
-            userAddr:'/portfoliopage/'
+            userAddr:'/portfoliopage/',
+            userData: null
         }
     },
     created(){
         this.reboot()
     },
     methods: {
-        reboot:function(){
+        async reboot(){
             console.log("card route : ",this.$route)
             if(this.$route.name == 'home') this.isbookmark = false
-
+            this.userData = await FirebaseServices.getVisitView(this.result.uid)
+            console.log(this.userData.displayName);
             this.checkme()
             this.makeTagList()
             this.makeAddr()

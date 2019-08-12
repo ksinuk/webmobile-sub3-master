@@ -10,13 +10,8 @@
       class="dark white--text text-xs-center"
     >
       <v-card-text>
-        <v-btn
-          v-for="(icon,index) in icons"
-          :key="icon"
-          class="mx-3 white--text"
-          icon
-        >
-          <a :href="location[index]" target="_blank"><v-icon size="24px">{{ icon }}</v-icon></a>
+        <v-btn class="mx-3 white--text">
+          <a href="https://lab.ssafy.com/kimsuhan/webmobile-sub3" target="_blank"><i class="fab fa-github"></i></a>
         </v-btn>
       </v-card-text>
 
