@@ -151,6 +151,10 @@ export default {
                             th.me['uid'] = user.uid
                             th.cardUpdateSignal += 1
                         }
+                        else{
+                            th.me = {'uid':user.uid}
+                            th.cardUpdateSignal += 1
+                        }
                     })
                 }
             })

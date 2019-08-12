@@ -120,7 +120,7 @@ export default {
         checkme(){
             this.islike = false
             if(this.me){
-                let mybook = this.me.myBookmark
+                let mybook = this.me.bookmarks
                 if(mybook){
                     for(let i=0; i<mybook.length; i++){
                         let to = mybook[i]
