@@ -10,7 +10,7 @@
           </v-flex>
           <!-- 수정페이지 -->
           <v-flex style="margin-bottom: 1rem; text-align: left;">
-            <p style="color: #2c3e50; font-size: 3.5rem; font-family: 'Jua', sans-serif;">{{ user }}</p>
+            <p style="color: #2c3e50; font-size: 3.5rem; font-family: 'Jua', sans-serif;">{{ this.userData.userData.displayName }}</p>
             <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">경력</span><span style="color: white;">{{ careerData.selected.career[0] }}</span></p>
             <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">직군</span><span style="color: white;">{{ careerData.selected.recruit[0] }}</span></p>
             <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">기술</span><span style="color: white;">{{ careerData.selected.tool[0] }}</span></p>
@@ -104,7 +104,6 @@ export default {
   props: ['userData'],
   data () {
     return {
-      user: this.$store.state.firebaseUser.name,
       careerData: {
         userImg: null,
         selected: {
@@ -126,12 +125,12 @@ export default {
     this.setSpark()
     this.getCareer()
     console.log('userProfile load Data')
+    console.log(this.userData.userData)
   },
   mounted() {
     this.$EventBus.$on('changePhoto', (URL) => {
       this.careerData.userImg = URL
     })
-    console.log(this.user);
   },
   methods: {
     setProfile() {
