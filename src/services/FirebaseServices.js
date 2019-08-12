@@ -345,7 +345,7 @@ export default {
 
     // 파이어베이스에 포트폴리오를 입력하는 함수
     // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-    postPortfolios(user, aboutMe, layout, banner, portfolios, skills, subtitle, title, userImage) {
+    postPortfolios(user, aboutMe, foliotheme, banner, portfolios, skills, subtitle, title, userImage) {
         return db.collection(MYPORT).doc(user).set({
             uid: user,
             title: title,
@@ -354,7 +354,7 @@ export default {
             skills: skills,
             portfolios: portfolios,
             created_at: firebase.firestore.FieldValue.serverTimestamp(),
-            layout: layout,
+            foliotheme: foliotheme,
             banner: banner,
             userImage: userImage
         }).then(console.log('done'))
@@ -407,8 +407,7 @@ export default {
     // 0806 view data
     async getVisitView(userID) {
         const userView = db.collection(USERDATA)
-        const viewData = await userView
-            .get()
+        const viewData = await userView.get()
             .then((docSnapshots)=> {
                 let results = docSnapshots.docs.map((doc) => {
                     let data = doc.data()
@@ -461,14 +460,14 @@ export default {
         await db.collection(USERDATA).doc(userID).set({
             uid: userID,
             bookmarks: [],
-            visit: {
-            },
+            visit: [],
             selected: {
                 recruit: [],
                 tool: [],
                 career: [],
             },
-            created_at: date
+            created_at: date,
+            photoURL: null,
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
@@ -648,6 +647,9 @@ export default {
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 var user = firebase.auth().currentUser
                 user.updateProfile({
+                    photoURL: downloadURL
+                })
+                db.collection(USERDATA).doc(user.uid).update({
                     photoURL: downloadURL
                 })
             console.log('File available at', downloadURL)

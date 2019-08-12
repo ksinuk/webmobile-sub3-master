@@ -158,7 +158,7 @@ export default {
             this.isshow = true
         },
         makeAddr:function(){
-            this.userAddr = '/portfoliopage/' + this.result.pk
+            this.userAddr = '/user/' + this.result.pk
             this.isshow = false
             this.isshow = true
         },

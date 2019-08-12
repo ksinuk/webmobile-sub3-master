@@ -2,14 +2,14 @@
     <v-container id="sideCtn">
         <!-- vuex에서 유저 이름을 가져와서 router로 연결 -->
         <!-- 로그인 상태확인 해서 보여줌 -->
-        <div v-show="this.$store.state.firebaseUser.inUser">
-            <img :src="this.$store.state.firebaseUser.photoURL" style="border-radius: 50%; height: 8rem; width: 8rem;">
+        <div v-if="this.$store.state.firebaseUser.inUser">
+            <img :src="userImg" style="border-radius: 50%; height: 8rem; width: 8rem;">
             <h1 style="padding-top: 1rem; color: white;">{{ this.$store.state.firebaseUser.name }}</h1>
             <v-btn small @click="logoutUser" color="error">Logout</v-btn>
             <v-divider/>
-            <v-btn active-class="active" flat block :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.name }}">My Page</v-btn>
+            <v-btn active-class="active" flat block :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.uid }}">My Page</v-btn>
         </div>
-        <div v-show="!this.$store.state.firebaseUser.inUser">
+        <div v-if="!this.$store.state.firebaseUser.inUser">
             <!-- 로그인 되어 있으면 가림 -->
             <v-btn small color="info" to="/login">Sign in</v-btn>
             <v-divider/>
@@ -43,12 +43,16 @@ export default {
     name: "sideBarItems",
     data() {
         return {
-            userImg: null,
-            searchItem: '',
+            userImg: this.$store.state.firebaseUser.photoURL,
+            searchItem: null,
 
             tagDict: {},
-
         }
+    },
+    mounted() {
+        this.$EventBus.$on('changePhoto', (URL) => {
+            this.userImg = URL
+        })
     },
     async created(){
         this.tagDict = await FirebaseServices.getTagsAll()

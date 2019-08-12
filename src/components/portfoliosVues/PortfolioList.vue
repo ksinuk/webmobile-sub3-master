@@ -12,7 +12,7 @@
                 <v-card-text role="article" id="work1" class="gallery-item is-init is-animated" data-animation="fade-left">
                     <figure role="group" class="gallery-figure">
                         <div class="gallery-image">
-                        <img class="gallery-image-thumb" :src="item.imageNames" :alt="item.title" aria-describedby="work1Description" style="width: 65rem;">
+                        <img class="gallery-image-thumb" :src="item.imageNames" :alt="item.title" aria-describedby="work1Description" style="width: 100%;">
 
                         </div>
                         <figcaption class="gallery-caption">
@@ -69,7 +69,7 @@
     </section>
     </div>
 
-    <div v-else-if="listlayout === 'template2'">
+    <div v-else-if="listlayout === 'template2'" style="margin-bottom: 8rem;">
         <div id="title_on">
             <div style="background-color: #67ceeb; width: 1px; margin-top: 3rem; height: 10rem; margin-left: 50%; display: block;"></div>
             <h1 style="font-size: 9em; color:#8cddeb;">Work.</h1>
@@ -88,7 +88,6 @@
                 </v-flex>
             </v-layout>
         </div>
-
         <!-- contents 를 보는 모달 -->
         <v-dialog v-model="modal" persistent>
             <v-card>
@@ -111,7 +110,7 @@
                         </figcaption>
                     </figure>
                     <div class="gallery-image">
-                        <img class="gallery-image-thumb" :src="portfolio.imageNames" :alt="portfolio.title" aria-describedby="work1Description" style="width: 65rem;">
+                        <img class="gallery-image-thumb" :src="portfolio.imageNames" :alt="portfolio.title" aria-describedby="work1Description" style="width: 100%;">
                     </div>
                     <table class="gallery-table">
                         <thead>
@@ -145,10 +144,12 @@
                         </tbody>
                     </table>
                 </v-card-text>
-                <v-card-actions>
                 <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" dark @click="modal = false" style="margin-right: 54rem; margin-bottom: 3rem;">Close</v-btn>
-                </v-card-actions>
+                <v-layout style = "margin-bottom: 3rem;">
+                    <v-flex>
+                        <v-btn class="mx-auto" color="green darken-1" dark @click="modal = false">Close</v-btn>
+                    </v-flex>
+                </v-layout>
             </v-card>
         </v-dialog>
     </div>
@@ -169,9 +170,6 @@
                                 <v-radio label="List" value="template1" color="primary"></v-radio>
                                 <v-radio label="Dialog" value="template2" color="primary"></v-radio>
                             </v-radio-group>
-                            <div style="text-align: center;">
-                                <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
-                            </div>
                         </v-card-text>
                     </v-card>
                 </v-expansion-panel-content>
@@ -219,6 +217,9 @@
                     </v-card>
                 </v-expansion-panel-content>
             </v-expansion-panel>
+            <div style="text-align: center; margin-top: 2rem;">
+                <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+            </div>
         </v-list>
         </v-navigation-drawer>
 
@@ -389,8 +390,10 @@ export default {
             portidx: null,
             user: null,
             PortfolioDrawer:false,
+            // db에 저장해야 할 값
             listlayout: 'template1',
-            colorchip: 'orange',
+            colorchip: 'blue',
+            //
             dialog: false,
             modal: false,
             idx: null,
@@ -456,6 +459,8 @@ export default {
                 __this.user = user.uid;
                 FirebaseServices.getMyPort(__this.user).then(function(res) {
                     __this.portfolios = res;
+                    __this.colorchip = __this.portfolios.foliotheme.color;
+                    __this.listlayout = __this.portfolios.foliotheme.layout;
                     for (let item in __this.portfolios.portfolios) {
                         storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
                             var xhr = new XMLHttpRequest();
@@ -581,9 +586,6 @@ export default {
             this.portfolio.imageNames = this.portfolios.portfolios[idx].imageNames;
             this.portfolio.dumpImg = this.portfolios.portfolios[idx].imageNames;
         },
-        saveLayout() {
-
-        },
         async save() {
             if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
                 this.portfolio.sources.push(JSON.parse(JSON.stringify(this.source)))
@@ -612,6 +614,11 @@ export default {
             }
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
             this.getPortfolio();
+        },
+        async saveAll() {
+            this.portfolios.foliotheme.color = this.colorchip;
+            this.portfolios.foliotheme.layout = this.listlayout;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
         }
     }
 }

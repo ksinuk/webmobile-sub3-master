@@ -6,9 +6,9 @@
       </div>
     </BackBanner>
     <div style="display: flex;">
-      <UserProfile v-bind:userData="{userData: userData, spark: spark}"/>
+      <UserProfile v-if="loaded" v-bind:userData="{userData: userData, spark: spark}"/>
     </div>
-    <UserBookMark/>
+    <!-- <UserBookMark/> -->
   </div>
 </template>
 
@@ -27,12 +27,14 @@ export default {
   },
   data () {
     return {
-      // firestore
+      // firestore load wait
+      loaded: false,
       // bookmark, uid, visit, visitCnt, created_at
       userData: [],
       spark: {
         labels: [],
-        value: []
+        value: [],
+        cnt: 0,
       },
       date: null,
     }
@@ -68,16 +70,22 @@ export default {
       for (i; i < data.length; i++) {
         this.spark.labels.push(data[i].split('.')[0].substring(4, 8))
         this.spark.value.push(Number(data[i].split('.')[1]))
+        this.spark.cnt += Number(data[i].split('.')[1])
       }
+      console.log(this.spark)
     },
     async getView() {
-      this.userData = await FirebaseServices.getVisitView(this.$store.state.firebaseUser.uid)
+      this.userData = await FirebaseServices.getVisitView(this.$route.params.userId)
+      console.log('call', this.userData)
       if (this.userData.uid === this.$store.state.firebaseUser.uid) {
+        this.userData.inUser = true
       } else {
         // 유저가 다를경우 view 카운트
+        this.userData.inUser = false
         this.cntView(this.userData.visit)
       }
       // 하위 컴포넌트에 전달할 데이터
+      this.loaded = true
       this.getData()
     },
     // view counting
@@ -89,17 +97,18 @@ export default {
           _target = true
           let visitCnt = Number(data[i].split('.')[1]) + 1
           this.userData.visit[i] = data[i].split('.')[0] + '.' + visitCnt
-          // this.updateView(this.userData.visit)
+          this.updateView(this.userData.visit)
         }
       }
       // 날짜 없는 경우
       if(!_target) {
         this.userData.visit.push(this.date + '.' + 1)
+        this.updateView(this.userData.visit)
       }
     },
     // view count update
     async updateView(viewResult) {
-      await FirebaseServices.updateUserView(this.$store.state.firebaseUser.uid, viewResult)
+      await FirebaseServices.updateUserView(this.$route.params.userId, viewResult)
     },
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="600px">
-      <template v-slot:activator="{ on }">
+      <template v-if="careerData.selected.inUser == true" v-slot:activator="{ on }">
         <v-btn color="primary" dark v-on="on">Edit</v-btn>
       </template>
       <v-card>
@@ -232,6 +232,7 @@ export default {
     },
     async changePhoto() {
       let result = await FirebaseServices.uploadImage(this.$store.state.firebaseUser.uid, this.saveImage, 'profilePhoto')
+      this.$EventBus.$emit('changePhoto', this.viewImage)
     }
   }
 }

@@ -44,7 +44,6 @@ export default {
           css:0,
           visitNum:0,
           toBookMarkNum:0,
-
           isotherUid:false,
         }
     },
