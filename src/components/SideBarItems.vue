@@ -7,7 +7,7 @@
             <h1 style="padding-top: 1rem; color: white;">{{ this.$store.state.firebaseUser.name }}</h1>
             <v-btn small @click="logoutUser" color="error">Logout</v-btn>
             <v-divider/>
-            <v-btn active-class="active" flat block :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.uid }}">My Page</v-btn>
+            <v-btn active-class="active" flat block @click="gotoBtn('userpage')" :to="{name: 'userpage', params: { userId: this.$store.state.firebaseUser.uid }}">My Page</v-btn>
         </div>
         <div v-if="!this.$store.state.firebaseUser.inUser">
             <!-- 로그인 되어 있으면 가림 -->
@@ -15,9 +15,9 @@
             <v-divider/>
         </div>
         <div>
-            <v-btn active-class="active" flat block to="/board">board</v-btn>
-            <v-btn active-class="active" flat block to="/portfoliopage">my portfolio</v-btn>
-            <v-btn active-class="active" flat block to="/Portfolios">other portfolio</v-btn>
+            <v-btn active-class="active" flat block @click="gotoBtn('/board')" to="/board">board</v-btn>
+            <v-btn active-class="active" flat block @click="gotoBtn('/portfoliopage')" to="/portfoliopage">my portfolio</v-btn>
+            <v-btn active-class="active" flat block @click="gotoBtn('/Portfolios')" to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
             <v-flex>
                 <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>
@@ -43,19 +43,20 @@ export default {
     name: "sideBarItems",
     data() {
         return {
-            searchItem: null,
+            searchItem: '',
 
             tagDict: {},
         }
     },
     mounted() {
-        console.log('mounted', this.userImg)
-        this.$EventBus.$on('changePhoto', (URL) => {
-            this.userImg = URL
-        })
+        
     },
     async created(){
         this.tagDict = await FirebaseServices.getTagsAll()
+
+        this.$EventBus.$on('changePhoto', (URL) => {
+            this.userImg = URL
+        })
     },
     methods: {
         closeDrawer(trigger) {
@@ -71,7 +72,11 @@ export default {
             window.location.reload()
         },
         writeTag: function(input){
-            this.searchItem += ' '+input
+            this.searchItem += ' '+input.trim().replace(' ','_')
+        },
+        gotoBtn: function(gotoPage){
+            if(gotoPage == 'userpage') gotoPage += '/' + this.$store.state.firebaseUser.uid
+            window.location.replace(gotoPage)
         }
     }
 };
