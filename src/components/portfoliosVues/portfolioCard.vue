@@ -106,13 +106,13 @@ export default {
             // console.log("islike: ",this.islike)
             // console.log("enrollLike result: ",this.result)
 
-            if(this.me){
+            if(this.me && this.me.uid != this.result.pk){
                 FirebaseServices.updateUserBookmark(this.me.uid, this.result.pk,!this.islike)
                 this.islike = !this.islike
-            }
 
-            this.isshow = false
-            this.isshow = true
+                this.isshow = false
+                this.isshow = true
+            }
         },
         onCancel() {
             console.log('User cancelled the loader.')
