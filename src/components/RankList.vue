@@ -70,6 +70,7 @@
                             // console.log("rank user data : ",data)
                             if(data){
                                 th.me = data
+                                console.log(user.displayName)
                                 th.me['uid'] = user.uid
                                 th.cardUpdateSignal += 1
                             }
