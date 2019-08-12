@@ -80,9 +80,9 @@
         </div>
         
     </div>
-    uid : {{me.uid}}<br>
+    <!-- uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
-    folio len : {{folios.length}}
+    folio len : {{folios.length}} -->
 </div>
 </template>
 
@@ -146,9 +146,15 @@ export default {
             await firebase.auth().onAuthStateChanged(function(user) {
                 if(user && user.uid){
                     Firebase.getUserData(user.uid).then(function(data){
-                        th.me = data
-                        th.me['uid'] = user.uid
-                        th.cardUpdateSignal += 1
+                        if(data){
+                            th.me = data
+                            th.me['uid'] = user.uid
+                            th.cardUpdateSignal += 1
+                        }
+                        else{
+                            th.me = {'uid':user.uid}
+                            th.cardUpdateSignal += 1
+                        }
                     })
                 }
             })

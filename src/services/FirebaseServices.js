@@ -70,8 +70,18 @@ export default {
                     resolve(doc.data())
                 }
                 else{
-                    resolve(null)
+                    out = {
+                            'bookmarks': [],
+                            'uid': uid,
+                            'selected': {'career':[], 'recruit':[], 'tool':[]},
+                        }
+                    db.collection('userData').doc(uid).set(out)
+                    
+                    resolve(out)
                 }
+            })
+            .catch(function(doc){
+                console.log("error getUserData: ",doc)
             })
         })
     },
