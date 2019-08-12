@@ -57,12 +57,11 @@
             </template>
             <v-card>
               <v-card-text>
-                <div>
+                <div v-for="items in this.layoutItems">
                   <!-- swtich btn -->
                   <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
                     <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
                   </v-radio-group>
-
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
