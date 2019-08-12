@@ -44,7 +44,6 @@ export default {
     name: "sideBarItems",
     data() {
         return {
-            userImg: this.$store.state.firebaseUser.photoURL,
             searchItem: null,
 
             tagDict: {},
@@ -52,6 +51,7 @@ export default {
         }
     },
     mounted() {
+        console.log('mounted', this.userImg)
         this.$EventBus.$on('changePhoto', (URL) => {
             this.userImg = URL
         })

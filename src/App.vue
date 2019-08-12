@@ -21,7 +21,7 @@ export default {
   components:{
       Header,
       TopButton,
-  }
+  },
 }
 
 window.onscroll = function() {scrollFunction()};

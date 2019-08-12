@@ -10,7 +10,7 @@
             <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
           <div id="aboutSubtitle1">
-            <p v-for="item in (portfolio.aboutMe || '').split('.')" >{{ item }}</p>
+            <p v-for="item in (portfolio.aboutMe.content || '').split('.')" >{{ item }}</p>
           </div>
         </v-container>
       </div>
@@ -62,7 +62,6 @@
                   <v-radio-group row v-model="subItem.selected" v-for="subItem in items.items">
                     <v-radio :label="subItem.title" :value="subItem.value" @change="switchCss(items, subItem.value)"></v-radio>
                   </v-radio-group>
-
                 </div>
                 <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
                 <div class="px-1">
@@ -97,13 +96,13 @@
                     <!-- title 선택했을 때 -->
                     <v-slider
                       v-if="aboutChoice === 'title'" v-model="aboutTitleS"
-                      step="1" max="20" min="1" thumb-label ticks
+                      step="0.5" max="10" min="1" thumb-label ticks
                       class="px-2"
                     ></v-slider>
                     <!-- subtitle 선택했을 때 -->
                     <v-slider
                       v-else-if="aboutChoice === 'subtitle'" v-model="aboutSubtitleS"
-                      step="1" max="10" min="1" thumb-label ticks
+                      step="0.5" max="5" min="1" thumb-label ticks
                       class="px-2"
                     ></v-slider>
                   </div>
@@ -317,7 +316,7 @@
             <span class="headline">ABOUT</span>
         </v-card-title>
         <v-card-text>
-            <v-text-field v-model="portfolio.aboutMe" label="About My Self" rows=15></v-text-field>
+            <v-text-field v-model="portfolio.aboutMe.content" label="About My Self" rows=15></v-text-field>
             <v-card v-for="item in portfolio.skills" class="mb-3">
               <v-card-text>
                 <v-layout>
@@ -483,7 +482,9 @@ export default {
       aboutChoice: 'title',
       aboutTitleS: '1',
       aboutSubtitleS: '1',
-      portfolio: []
+      portfolio: [],
+      tmpcss: null,
+      tmptheme: null
     }
   },
   watch: {
@@ -543,10 +544,11 @@ export default {
         __this.user = user.uid;
         FirebaseServices.getMyPort(__this.user).then(function(res) {
           __this.portfolio = res;
-          __this.cssArr = __this.portfolio.aboutMe.layout;
           __this.themeArr = __this.portfolio.aboutMe.theme;
-          __this.fontItems.items[0].value = __this.portfolio.aboutMe.title.size;
-          __this.fontItems.items[1].value = __this.portfolio.aboutMe.subtitle.size;
+          __this.aboutTitleS = __this.portfolio.aboutMe.title.size;
+          __this.aboutSubtitleS = __this.portfolio.aboutMe.subtitle.size;
+          __this.cssArr = __this.portfolio.aboutMe.layout;
+          __
           if (__this.portfolio.userImage !== '') {
             __this.userImage = __this.portfolio.userImage;
           }
@@ -555,12 +557,6 @@ export default {
             skill.degree = skill.degree.substring(7, skill.degree.length);
             __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
           })
-          // res.skills.forEach(function(skill) {
-          //   let tmp = skill.degree.substring(7, skill.degree.length) + "0% - 10px";
-          //   console.log(document.getElementById(skill.name));
-          //   document.getElementById(skill.name).style.width = calc(tmp);
-          //   console.log(document.getElementById(skill.name).style);
-          // })
         })
       })
     },

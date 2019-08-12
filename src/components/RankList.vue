@@ -63,26 +63,27 @@
         },
         methods:{
             settingMe:async function(th){
-            await firebase.auth().onAuthStateChanged(function(user) {
-                // console.log("rank me : ",user)
-                if(user && user.uid){
-                    FirebaseFunc.getUserData(user.uid).then(function(data){
-                        // console.log("rank user data : ",data)
-                        if(data){
-                            th.me = data
-                            th.me['uid'] = user.uid
-                            th.cardUpdateSignal += 1
-                        }
-                        else{
-                            th.me = {'uid':user.uid}
-                            th.cardUpdateSignal += 1
-                        }
-                    })
-                }
-            })
-        },
+                await firebase.auth().onAuthStateChanged(function(user) {
+                    // console.log("rank me : ",user)
+                    if(user && user.uid){
+                        FirebaseFunc.getUserData(user.uid).then(function(data){
+                            // console.log("rank user data : ",data)
+                            if(data){
+                                th.me = data
+                                th.me['uid'] = user.uid
+                                th.cardUpdateSignal += 1
+                            }
+                            else{
+                                th.me = {'uid':user.uid}
+                                th.cardUpdateSignal += 1
+                            }
+                        })
+                    }
+                })
+            },
         }
     }
+
 </script>
 
 
