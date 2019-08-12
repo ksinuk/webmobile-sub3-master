@@ -1,9 +1,9 @@
 <template>
   
   <v-container class="my-5">
+    <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif; margin-bottom: 0;">BOOKMARKS</p>
     <v-card>
-    <h1>Bookmark List</h1>
-    <v-layout row wrap class="mt-5" v-show="inMark">
+    <v-layout row wrap class="mt-3" v-show="inMark">
         <v-flex>
             <carousel :per-page="pageNum">
                 <slide v-for="bookmark in bookmarkList" class="px-2">
@@ -45,7 +45,7 @@
     </v-layout>
     
     <!-- no bookmark -->
-    <v-layout class="mt-5 noMark" v-show="!inMark">
+    <v-layout class="mt-3 noMark" v-show="!inMark">
       <p class="display-2 noMarkText">북마크가 없어요<v-icon class="iconSize">fas fa-exclamation-circle</v-icon></p>
     </v-layout>
     </v-card>

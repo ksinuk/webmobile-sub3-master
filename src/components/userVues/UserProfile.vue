@@ -1,87 +1,94 @@
 <template>
-  <v-container>
-    <v-flex xs12>
-      <!-- 투명색 지정 -->
-      <v-card flat color="rgb(0, 0, 0, 0)">
-        <v-layout row>
+  <div>
+    <v-layout id="userBanner">
+      <v-container>
+        <v-layout style="margin-top: 9rem; margin-bottom: 1rem;">
           <v-flex>
-            <v-layout my-3>
-                <div style="margin: auto;">
-                  <v-avatar tile size="256" class="profileImg">
-                    <img :src="careerData.userImg" alt="avatar">
-                  </v-avatar>
-                </div>
-            </v-layout>
-            <!-- 수정페이지 -->
-            <div>
-              {{ careerData.selected.career }}
-              {{ careerData.selected.recruit }}
-              {{ careerData.selected.tool }}
-            </div>
-            <UserDialog v-bind:careerData="careerData"/>
+            <v-avatar tile size="256" class="profileImg">
+              <img :src="careerData.userImg" alt="avatar" style="border-radius: 50%;">
+            </v-avatar>
           </v-flex>
-          
-          <v-flex xs8>
-            <!-- 뷰 길이가 3 이상 -->
-            <v-layout v-show="spark" my-3>
-              <v-card flat>
-                <v-sheet
-                  color="green"
-                  max-width="calc(100%)"
-                >
-                  <v-sparkline
-                    :labels="this.userData.spark.labels"
-                    :value="this.userData.spark.value"
-                    color="white"
-                    line-width="1"
-                    padding="16"
-                  ></v-sparkline>
-                </v-sheet>
-              </v-card>
-            </v-layout>
-            <!-- 뷰 길이가 3 이하 -->
-            <v-layout v-show="!spark" my-3>
-              <v-card flat>
-                <v-sheet
-                  color="green"
-                  max-width="calc(100%)"
-                >
-                  <v-sparkline
-                    :labels="this.examSpark.labels"
-                    :value="this.examSpark.value"
-                    color="white"
-                    line-width="1"
-                    padding="16"
-                  ></v-sparkline>
-                </v-sheet>
-                <div id="sparkOverlay">
-                  <p class="sparkP">정보가 없어요</p>
-                </div>
-              </v-card>
-              
-            </v-layout>
-
-            <!-- icon group -->
-            <div class="userCard">
-              <div class="cardIcon">
-                <v-icon>far fa-eye</v-icon>
-                <div class="headline">view</div>
-                <div>{{ this.userData.spark.cnt }}</div>
-              </div>
-
-              <div class="cardIcon">
-                <v-icon>far fa-calendar-check</v-icon>
-                <div class="headline">created_at</div>
-                <div>{{ this.userData.userData.created_at }}</div>
-              </div>
-            </div>
-          
+          <!-- 수정페이지 -->
+          <v-flex style="margin-bottom: 1rem; text-align: left;">
+            <p style="color: #2c3e50; font-size: 3.5rem; font-family: 'Jua', sans-serif;">{{ user }}</p>
+            <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">경력</span><span style="color: white;">{{ careerData.selected.career[0] }}</span></p>
+            <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">직군</span><span style="color: white;">{{ careerData.selected.recruit[0] }}</span></p>
+            <p style="font-size: 1.5rem; font-family: 'Jua', sans-serif;"><span style="color: #D3D3D3; padding-right: 1rem;">기술</span><span style="color: white;">{{ careerData.selected.tool[0] }}</span></p>
           </v-flex>
-          
         </v-layout>
+        <v-layout class="my-4" style="padding-bottom: 3rem;">
+          <UserDialog v-bind:careerData="careerData"/>
+        </v-layout>
+      </v-container>
+    </v-layout>
+    <v-container>
+      <v-card elevation="15" style="margin-top: -5.5rem;">
+        <v-card-text>
+          <v-layout>
+            <v-flex>
+              <v-icon>far fa-eye</v-icon>
+              <p>페이지 조회수</p>
+              <p style="color: #7883B2; font-size: 2rem; margin-bottom: 0; font-weight: bolder;">{{ this.userData.spark.cnt }}</p>
+            </v-flex>
+            <v-flex>
+              <v-icon>far fa-calendar-check</v-icon>
+              <p>계정 생성</p>
+              <p style="color: #7883B2; font-size: 2rem; margin-bottom: 0; font-weight: bolder;">{{ this.userData.userData.created_at }}</p>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
       </v-card>
-    </v-flex>
-  </v-container>
+    </v-container>
+    <v-container>
+      <v-flex>
+        <!-- 투명색 지정 -->
+        <v-card flat color="rgb(0, 0, 0, 0)">
+          <v-layout row style="margin-top: 3rem;">
+            <v-flex>
+              <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif;">ACTIVITIES</p>
+              <!-- 뷰 길이가 3 이상 -->
+              <v-layout v-show="spark" my-3>
+                <v-card flat>
+                  <v-sheet
+                    color="green"
+                    max-width="calc(100%)"
+                  >
+                    <v-sparkline
+                      :labels="this.userData.spark.labels"
+                      :value="this.userData.spark.value"
+                      color="white"
+                      line-width="1"
+                      padding="16"
+                    ></v-sparkline>
+                  </v-sheet>
+                </v-card>
+              </v-layout>
+              <!-- 뷰 길이가 3 이하 -->
+              <v-layout v-show="!spark" my-3>
+                <v-card flat>
+                  <v-sheet
+                    color="green"
+                    max-width="calc(100%)"
+                  >
+                    <v-sparkline
+                      :labels="this.examSpark.labels"
+                      :value="this.examSpark.value"
+                      color="white"
+                      line-width="1"
+                      padding="16"
+                    ></v-sparkline>
+                  </v-sheet>
+                  <div id="sparkOverlay">
+                    <p class="sparkP" style="margin-top: 2.5rem; font-size: 3rem; font-family: 'Jua', sans-serif;">아직 활동 정보가 없어요 :(</p>
+                  </div>
+                </v-card>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -97,6 +104,7 @@ export default {
   props: ['userData'],
   data () {
     return {
+      user: this.$store.state.firebaseUser.name,
       careerData: {
         userImg: null,
         selected: {
@@ -123,6 +131,7 @@ export default {
     this.$EventBus.$on('changePhoto', (URL) => {
       this.careerData.userImg = URL
     })
+    console.log(this.user);
   },
   methods: {
     setProfile() {
@@ -156,6 +165,13 @@ export default {
 </script>
 
 <style scoped>
+#userBanner {
+  min-height: 50vh;
+  position: relative;
+  background-size: cover;
+  background-position: 50% 30%;
+  background-image: url('../../../public/img/background.png');
+}
 .userCard {
   display: flex;
 }
