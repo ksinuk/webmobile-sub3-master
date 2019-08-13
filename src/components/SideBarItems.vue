@@ -15,7 +15,7 @@
             <v-divider/>
         </div>
         <div>
-            <v-btn active-class="active" flat block @click="gotoBtn('/board')" to="/board">board</v-btn>
+            <!-- <v-btn active-class="active" flat block @click="gotoBtn('/board')" to="/board">board</v-btn> -->
             <v-btn active-class="active" flat block @click="gotoBtn('/portfoliopage')" to="/portfoliopage">my portfolio</v-btn>
             <v-btn active-class="active" flat block @click="gotoBtn('/Portfolios')" to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
