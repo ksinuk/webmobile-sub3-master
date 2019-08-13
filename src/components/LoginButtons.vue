@@ -157,7 +157,7 @@
           :loading="loading"
           :disabled="!form"
           color="success"
-          @click="loader = 'loading'"
+          @click="loader()"
         >
           가입하기
         </v-btn>
@@ -257,7 +257,28 @@ export default {
       this.loading = true
     },
     async createUserWithEmail() {
-      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName, this.$store.state.today)
+      let _this = this
+      await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then(function(user) {
+          FirebaseServices.createdbForNewUser(user.user.uid, _this.$store.state.today, _this.displayName)
+          // 유저 생성하면서 입력받은 이름 설정
+          let _user = firebase.auth().currentUser
+          _user.updateProfile({
+              displayName: _this.displayName,
+              photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg'
+          })
+          setTimeout(function () {
+            router.push('/')
+          }, 2000)
+        })
+        .catch(function(err) {
+            if (err.code == 'auth/email-already-in-use') {
+              alert('이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.')
+              _this.email = ''
+            }
+            _this.loading = false
+            _this.agreement = false
+        })
     },
     async emailLogin() {
       let _this = this
@@ -265,7 +286,7 @@ export default {
         .then(function(result) {
           store.commit('setPhotoURL', result.user.photoURL)
           setTimeout(function () {
-          router.push('/')
+            router.push('/')
           }, 2000)
         })
         .catch(function(err) {

@@ -504,23 +504,6 @@ export default {
             store.commit('setPhotoURL', null)
         }
     },
-    // login 2-1.1 create user with e-mail
-    createUserWithEmail(email, password, userName, date) {
-        let _this = this
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(function(user) {
-            _this.createdbForNewUser(user.user.uid, date, userName)
-            // 유저 생성하면서 입력받은 이름 설정
-            let _user = firebase.auth().currentUser
-            _user.updateProfile({
-                displayName: userName,
-                photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg'
-            })
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-    },
     // login 2-2. login google
     loginUserWithGoogle() {
         let _this = this
