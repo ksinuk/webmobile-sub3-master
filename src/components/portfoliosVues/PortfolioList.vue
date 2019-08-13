@@ -612,7 +612,7 @@ export default {
                 this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));
                 console.log(this.portfolios.portfolios);
             }
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
             this.getPortfolio();
             alert('저장 완료!');
             
@@ -620,7 +620,7 @@ export default {
         async saveAll() {
             this.portfolios.foliotheme.color = this.colorchip;
             this.portfolios.foliotheme.layout = this.listlayout;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
             alert('저장 완료!');
         }
     }

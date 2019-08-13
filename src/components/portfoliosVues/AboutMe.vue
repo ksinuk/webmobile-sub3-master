@@ -451,28 +451,6 @@ export default {
           ]
         }
       ],
-      // ifPortfolioModal:true,
-      // ifPortfolioGrid:false,
-      // nowPortfolioColor:1,
-      // PortfolioListColors: [
-      //   {
-      //     action: 'fas fa-palette',
-      //     title: 'Color',
-      //     items: [
-      //       { title: 'White', value: 1, selected: true},
-      //       { title: 'Black', value: 2, selected: false},
-      //       { title: 'Blue' , value: 3, selected: false},
-      //     ]
-      //   },
-      // ],
-      // firebase insert
-      // userAbout: {
-      //   url: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
-      //   // myIntro
-      //   mySelf: null,
-      //   // mySkills
-      //   mySkill: []
-      // },
       userImage: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
       skill: {
         name: null,
@@ -547,67 +525,64 @@ export default {
     // firebase db 가져오기
     getAbout: function() {
       let __this = this;
-      const tmp = firebase.auth().onAuthStateChanged(function(user) {
-        __this.user = user.uid;
-        FirebaseServices.getMyPort(__this.user).then(function(res) {
-          __this.portfolio = res;
-          // 0812 / theme select
-          for (let i=0; i < __this.themeArr.length; i++) {
-            if (__this.portfolio.aboutMe.theme[i] === true) {
-              __this.themeItems[0].items[i].selected = i+1
-              store.commit('changeTheme', __this.themeItems[0].items[i].title)
-            } else {
-              __this.themeItems[0].items[i].selected = false
-            }
-          }
-          __this.themeArr = __this.portfolio.aboutMe.theme;
-          __this.aboutTitleS = __this.portfolio.aboutMe.title.size;
-          __this.aboutSubtitleS = __this.portfolio.aboutMe.subtitle.size;
-          // 0812 / btn select
-          if (__this.portfolio.aboutMe.layout[0] === true) {
-            __this.layoutItems[0].items[0].selected = 1
-            __this.layoutItems[0].items[1].selected = false
+      FirebaseServices.getMyPort(__this.user).then(function(res) {
+        __this.portfolio = res;
+        // 0812 / theme select
+        for (let i=0; i < __this.themeArr.length; i++) {
+          if (__this.portfolio.aboutMe.theme[i] === true) {
+            __this.themeItems[0].items[i].selected = i+1
+            store.commit('changeTheme', __this.themeItems[0].items[i].title)
           } else {
-            __this.layoutItems[0].items[0].selected = false
-            __this.layoutItems[0].items[1].selected = 2
+            __this.themeItems[0].items[i].selected = false
           }
-          __this.abouttRed = __this.portfolio.aboutMe.title.color.red
-          __this.abouttGreen = __this.portfolio.aboutMe.title.color.green
-          __this.abouttBlue = __this.portfolio.aboutMe.title.color.blue
+        }
+        __this.themeArr = __this.portfolio.aboutMe.theme;
+        __this.aboutTitleS = __this.portfolio.aboutMe.title.size;
+        __this.aboutSubtitleS = __this.portfolio.aboutMe.subtitle.size;
+        // 0812 / btn select
+        if (__this.portfolio.aboutMe.layout[0] === true) {
+          __this.layoutItems[0].items[0].selected = 1
+          __this.layoutItems[0].items[1].selected = false
+        } else {
+          __this.layoutItems[0].items[0].selected = false
+          __this.layoutItems[0].items[1].selected = 2
+        }
+        __this.abouttRed = __this.portfolio.aboutMe.title.color.red
+        __this.abouttGreen = __this.portfolio.aboutMe.title.color.green
+        __this.abouttBlue = __this.portfolio.aboutMe.title.color.blue
 
-          __this.aboutsRed = __this.portfolio.aboutMe.subtitle.color.red
-          __this.aboutsGreen = __this.portfolio.aboutMe.subtitle.color.green
-          __this.aboutsBlue = __this.portfolio.aboutMe.subtitle.color.blue
+        __this.aboutsRed = __this.portfolio.aboutMe.subtitle.color.red
+        __this.aboutsGreen = __this.portfolio.aboutMe.subtitle.color.green
+        __this.aboutsBlue = __this.portfolio.aboutMe.subtitle.color.blue
 
-          __this.cssArr = __this.portfolio.aboutMe.layout;
-          if (__this.portfolio.userImage !== '') {
-            __this.userImage = __this.portfolio.userImage;
-          }
-          __this.portfolio.tmp = []
-          res.skills.forEach(function(skill) {
-            skill.degree = skill.degree.substring(7, skill.degree.length);
-            __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
-          })
-
-          console.log('test')
-
-          console.log('1', __this.tempView)
-          
-          __this.tempView = true
-          console.log('2', __this.tempView)
-
-
-        }).then(function(res) {
-          document.getElementById('aboutTitle1').style.fontSize = __this.aboutTitleS + 'rem';
-          document.getElementById('aboutTitle2').style.fontSize = __this.aboutTitleS + 'rem';
-          document.getElementById('aboutTitle1').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
-          document.getElementById('aboutTitle2').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
-          
-          document.getElementById('aboutSubtitle1').style.fontSize = __this.aboutSubtitleS + 'rem';
-          document.getElementById('aboutSubtitle2').style.fontSize = __this.aboutSubtitleS + 'rem';
-          document.getElementById('aboutSubtitle1').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
-          document.getElementById('aboutSubtitle2').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
+        __this.cssArr = __this.portfolio.aboutMe.layout;
+        if (__this.portfolio.userImage !== '') {
+          __this.userImage = __this.portfolio.userImage;
+        }
+        __this.portfolio.tmp = []
+        res.skills.forEach(function(skill) {
+          skill.degree = skill.degree.substring(7, skill.degree.length);
+          __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
         })
+
+        console.log('test')
+
+        console.log('1', __this.tempView)
+        
+        __this.tempView = true
+        console.log('2', __this.tempView)
+
+
+      }).then(function(res) {
+        document.getElementById('aboutTitle1').style.fontSize = __this.aboutTitleS + 'rem';
+        document.getElementById('aboutTitle2').style.fontSize = __this.aboutTitleS + 'rem';
+        document.getElementById('aboutTitle1').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
+        document.getElementById('aboutTitle2').style.color = 'rgb(' + __this.abouttRed + ',' + __this.abouttGreen + ',' + __this.abouttBlue + ')';
+        
+        document.getElementById('aboutSubtitle1').style.fontSize = __this.aboutSubtitleS + 'rem';
+        document.getElementById('aboutSubtitle2').style.fontSize = __this.aboutSubtitleS + 'rem';
+        document.getElementById('aboutSubtitle1').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
+        document.getElementById('aboutSubtitle2').style.color = 'rgb(' + __this.aboutsRed + ',' + __this.aboutsGreen + ',' + __this.aboutsBlue + ')';
       })
     },
     switchTheme(item, num) {
@@ -671,7 +646,7 @@ export default {
         this.skill.degree = 'Level. ' + this.skill.degree
         this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
       }
-      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+      const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
     },
     async saveAll() {
       let fixContent = {
@@ -697,7 +672,7 @@ export default {
         }
       }
       this.portfolio.aboutMe = fixContent
-      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
       alert('저장 완료!');
     }
   }
