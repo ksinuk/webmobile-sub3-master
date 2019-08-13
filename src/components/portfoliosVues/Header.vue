@@ -291,7 +291,7 @@
                     </v-expansion-panel-content>
                 </v-expansion-panel>
                 <div style="text-align: center; margin-top: 2rem;">
-                    <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+                    <v-btn small color="primary" @click="headerDrawer = false; saveAll();">Save</v-btn>
                 </div>
             </v-list>
         </v-navigation-drawer>
@@ -326,7 +326,7 @@ export default {
             user: null,
             portfolio: [],
             fileOb: null,
-            headerDrawer: null,
+            headerDrawer: false,
             viewImg: null,
             opacity: 'opacity1',
             dialog: false,
@@ -550,6 +550,7 @@ export default {
             this.portfolio.title.animation = this.titleAni;
             this.portfolio.subtitle.animation = this.subtitleAni;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+            alert('저장 완료!');
         }
     }
 }

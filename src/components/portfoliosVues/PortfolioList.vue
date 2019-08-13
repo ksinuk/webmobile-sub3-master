@@ -16,14 +16,14 @@
 
                         </div>
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span><span>{{ item.title }}</span></h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span><span style="font-size: 2rem; padding-left: 1rem;">{{ item.title }}</span></h3>
                             <ul class="gallery-spec">
                                 <li v-if="item.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ item.viewport }}</span></li>
                                 <li v-if="item.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ item.ie }}</span></li>
 
                             </ul>
-                            <div id="work1Description">
-                                <p>{{ item.description }}</p>
+                            <div id="work1Description" style="text-align: center;">
+                                <p style="font-size: 1.5rem;">{{ item.description }}</p>
                             </div>
                             <div class="ui-group text-xs-center ml-5" >
                                 <v-btn round class="listbutton" :color="btncolor" :href="item.demo" style="height: 3rem;  width: 8rem;" target="_blank" dark>Demo</v-btn>
@@ -218,7 +218,7 @@
                 </v-expansion-panel-content>
             </v-expansion-panel>
             <div style="text-align: center; margin-top: 2rem;">
-                <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+                <v-btn small color="primary" @click="saveAll(); PortfolioDrawer = false;">Save</v-btn>
             </div>
         </v-list>
         </v-navigation-drawer>
@@ -614,11 +614,14 @@ export default {
             }
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
             this.getPortfolio();
+            alert('저장 완료!');
+            
         },
         async saveAll() {
             this.portfolios.foliotheme.color = this.colorchip;
             this.portfolios.foliotheme.layout = this.listlayout;
             const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            alert('저장 완료!');
         }
     }
 }
