@@ -356,10 +356,12 @@ export default {
     },
     props: ['userData'],
     mounted() {
-        this.getPortfolio();
         this.$EventBus.$on('Header', () => {
             this.headerDrawer = !this.headerDrawer
-            })
+        })
+        this.$watch('userData', userData => {
+            this.getPortfolio()
+        })
     },
     watch: {
         titleS: function() {
@@ -442,6 +444,7 @@ export default {
     },
     methods: {
         getPortfolio() {
+            console.log(this.userData);
             let __this = this;
             FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
                 __this.portfolio = res;

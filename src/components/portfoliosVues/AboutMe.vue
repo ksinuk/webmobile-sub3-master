@@ -23,9 +23,10 @@
             <span class="aboutMe_title" style="color: white; opacity: 0.5; font-size: 1.7rem; font-family: 'Nanum Gothic', sans-serif;">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <div id="aboutSubtitle2" v-for="item in portfolio.tmp">
-              <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;">{{ item.name }}</p>
-              <div :id="item.name" class="bar back" :data-skill="item.degree"></div>
+          <div id="aboutSubtitle2" v-for="item in portfolio.skills">
+              <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;"><span>{{ item.name }}</span><span>{{ item.degree }}</span></p>
+              <!--<div :id="item.name" class="bar back" :data-skill="item.degree"></div>-->
+              <p><i class="far fa-check-circle"></i><span>{{ item.description }}</span></p>
           </div>
         </v-container>
       </div>
@@ -39,8 +40,8 @@
             <span class="aboutMe_subTitle">profile</span>
           </h4>
         </v-container>
-        <v-img class="aboutMe_image" :src="portfolio.userImage"
-          lazy-src="https://static.wixstatic.com/media/2a925f_a902eb9026754fc4911fb781ac5f885f~mv2.gif"
+        <v-img class="aboutMe_image" :src="userData.photoURL"
+          lazy-src="https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2015/10/designer-developer-1200x616.jpg"
         ></v-img>
       </div>
 
@@ -72,9 +73,6 @@
                     </v-radio-group>
                   </div>
                 </div>
-                <!--<div style="text-align: center;">
-                  <v-btn small color="primary" @click="">Apply</v-btn>
-                </div>-->
               </v-card-text>
             </v-card>
           </v-expansion-panel-content>
@@ -239,10 +237,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!--<div style="text-align: center;">
-                  <v-btn small color="primary" @click="saveSize()">Apply</v-btn>
-                </div>-->
               </v-card-text>
             </v-card>
           </v-expansion-panel-content>
@@ -273,36 +267,6 @@
             </template>
           </v-expansion-panel-content>
 
-          <!-- <v-expansion-panel-content>
-            <template v-slot:header>
-              <div><i class="fas fa-image pr-3"></i>PortfolioList</div>
-            </template>
-            <v-card>
-              <v-card-text>
-                <div style="position: relative;">
-                  <v-btn flat @click="switchPortfolio('Modal',true)">Modal</v-btn>
-                  <div v-if="ifPortfolioModal" class="isok"></div>
-                </div>
-                <div style="position: relative;">
-                  <v-btn flat @click="switchPortfolio('Grid',true)">Grid</v-btn>
-                  <div v-if="ifPortfolioGrid" class="isok"></div>
-                </div>
-                <v-divider style="width: 20rem; margin-left: 0;"></v-divider>
-                <div class="px-1">
-                  <p style="font-weight: bold; font-size: 1.2rem; letter-spacing: 0.05rem;">Color</p>
-                  <div v-for="items in this.PortfolioListColors">
-                    <div v-for="subItem in items.items" style="position: relative;">
-                      <v-btn flat @click="switchPortfolio('Color',subItem.value)">{{ subItem.title }}</v-btn>
-                      <div v-if="subItem.selected" class="isok"></div>
-                    </div>
-                  </div>
-                </div>
-                <div style="text-align: center;">
-                  <v-btn small color="primary" @click="">Apply</v-btn>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-expansion-panel-content> -->
         </v-expansion-panel>
         <div style="text-align: center; margin-top: 2rem;">
           <v-btn small color="primary" @click="saveAll(); aboutDrawer = false;">Save</v-btn>
@@ -406,7 +370,6 @@ export default {
   data() {
     return {
       tempView: false,
-      user: null,
       aboutLayout: 'css1',
       aboutDrawer: false,
       dialog: false,
@@ -451,7 +414,6 @@ export default {
           ]
         }
       ],
-      userImage: 'https://www.opticalexpress.co.uk/media/1065/lady-with-glasses-smiling.jpg',
       skill: {
         name: null,
         degree: null,
@@ -466,6 +428,7 @@ export default {
       tmptheme: null
     }
   },
+  props: ['userData'],
   watch: {
     // fontSize watch
     aboutTitleS: function() {
@@ -516,17 +479,22 @@ export default {
     }
   },
   mounted() {
-    this.getAbout();
     this.$EventBus.$on('About', () => {
       this.aboutDrawer = !this.aboutDrawer
+    })
+    this.$watch('userData', userData => {
+      this.getAbout()
     })
   },
   methods: {
     // firebase db 가져오기
     getAbout: function() {
+      console.log(this.userData);
+      console.log('ok');
       let __this = this;
-      FirebaseServices.getMyPort(__this.user).then(function(res) {
+      FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
         __this.portfolio = res;
+        console.log(__this.portfolio);
         // 0812 / theme select
         for (let i=0; i < __this.themeArr.length; i++) {
           if (__this.portfolio.aboutMe.theme[i] === true) {
@@ -556,14 +524,9 @@ export default {
         __this.aboutsBlue = __this.portfolio.aboutMe.subtitle.color.blue
 
         __this.cssArr = __this.portfolio.aboutMe.layout;
-        if (__this.portfolio.userImage !== '') {
-          __this.userImage = __this.portfolio.userImage;
+        if (__this.userData.photoURL === null) {
+          __this.userData.photoURL = "https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2015/10/designer-developer-1200x616.jpg";
         }
-        __this.portfolio.tmp = []
-        res.skills.forEach(function(skill) {
-          skill.degree = skill.degree.substring(7, skill.degree.length);
-          __this.portfolio.tmp.push(JSON.parse(JSON.stringify(skill)));
-        })
 
         console.log('test')
 
@@ -599,20 +562,6 @@ export default {
       }
       this.themeArr = boolArr
     },
-    // switchPortfolio(theme,out) {
-    //     if(theme == 'Modal'){
-    //         this.ifPortfolioModal = !this.ifPortfolioModal
-    //     }
-    //     else if(theme == 'Grid'){
-    //         this.ifPortfolioGrid = !this.ifPortfolioGrid
-    //     }
-    //     else if(theme == 'Color'){
-    //         let idx = this.nowPortfolioColor-1
-    //         this.PortfolioListColors[0].items[idx].selected = false
-    //         this.PortfolioListColors[0].items[out-1].selected = true
-    //         this.nowPortfolioColor = out
-    //     }
-    // },
     // CSS 변환시 배열 교체용
     switchCss(item, num) {
       let boolArr = []
@@ -672,7 +621,7 @@ export default {
         }
       }
       this.portfolio.aboutMe = fixContent
-      const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+      const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
       alert('저장 완료!');
     }
   }

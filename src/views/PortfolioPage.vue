@@ -24,8 +24,8 @@ export default {
       PortfolioList,
       NavPortfolio
   },
-  mounted(){
-    this.getUserID();
+  created(){
+    this.getUserID()
   },
   data() {
     return {
