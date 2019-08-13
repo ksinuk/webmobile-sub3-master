@@ -59,10 +59,10 @@ export default {
             comments: firebase.firestore.FieldValue.arrayUnion(data)
         })
     },
-    deleteComments(uid,comment){
-        return db.collection('comments').doc(uid).update({
-            bookmarks: firebase.firestore.FieldValue.arrayRemove(comment)
-        })
+    deleteComments(uid, comment){
+        return db.collection('comments').doc(uid).set({
+            comments: comment.reverse()
+        }).then(console.log('done'))
     },
     //make tag DB
     async setTagsDBall(inputDB){
