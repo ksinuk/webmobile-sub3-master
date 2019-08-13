@@ -15,7 +15,7 @@
         <v-card-text>
             <div class="text-center">
                 <div style="font-weight: 600;" class="text-center">
-                    <p style="font-family: 'Jua', sans-serif; font-size: 1.5rem;" v-if="userData">{{ userData.displayName }}</p>
+                    <span style="font-family: 'Jua', sans-serif; font-size: 1.5rem;" v-if="userData">{{ userData.displayName }}</span>
                     <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                     <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
