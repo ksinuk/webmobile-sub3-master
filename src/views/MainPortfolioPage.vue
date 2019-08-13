@@ -6,64 +6,70 @@
             <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
         </div>
     </BackBanner>
-    <!-- <v-navigation-drawer permanent>
-        <v-toolbar flat>
-            <v-list>
-                <v-list-tile>
-                    <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
-                </v-list-tile>
-            </v-list>
-        </v-toolbar>
-        <v-list dense class="pt-0">
-            <v-expansion-panel>
-                <v-expansion-panel-content>
-                    <template v-slot:header>
-                        <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
-                    </template>
-                    <v-card>
-                        <v-card-text>
-                            <span v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                                <v-checkbox  :label="tag" :id="tag"></v-checkbox>
-                            </span>
-                        </v-card-text>
-                    </v-card>
-                </v-expansion-panel-content>
-
-                <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
-                    <template v-slot:header>
-                        <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
-                    </template>
-                    <v-card>
-                        <v-card-text>
-                            <v-container fluid>
-                                <v-checkbox v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)" :label="tag"></v-checkbox>
-                            </v-container>
-                        </v-card-text>
-                    </v-card>
-                </v-expansion-panel-content>
-
-                <v-expansion-panel-content>
-                    <template v-slot:header>
-                        <div><i class="fas fa-filter pr-3"></i>Sort</div>
-                    </template>
-                    <v-card>
-                        <v-card-text>
-                            <v-radio-group v-model="radios" :mandatory="false">
-                                <v-radio label="Radio 1" value="radio-1"></v-radio>
-                                <v-radio label="Radio 2" value="radio-2"></v-radio>
-                            </v-radio-group>
-                        </v-card-text>
-                    </v-card>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-list>
-    </v-navigation-drawer> -->
-
-
 
     <div style="display:flex; position:relative;" v-if="prnok">
+        <v-navigation-drawer permanent>
+            <v-toolbar flat>
+                <v-list>
+                    <v-list-tile>
+                        <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
+                    </v-list-tile>
+                </v-list>
+            </v-toolbar>
+            <v-list dense class="pt-0">
+                <v-expansion-panel>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)" :id="tag">
+                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                </li>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+
+                    <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
+                        <template v-slot:header>
+                            <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
+                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                </li>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-filter pr-3"></i>Sort</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-radio-group v-model="radios" :mandatory="false">
+                                    <li class="tag-list" @click="sortup = true">
+                                        오름차순&nbsp&nbsp<span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    </li>
+                                    <li class="tag-list" @click="sortup = false">
+                                        내림차순&nbsp&nbsp<span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    </li>
+                                </v-radio-group>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-list>
+        </v-navigation-drawer>
+
+
+
+    
         <!-- ---- side bar ---------------------------- -->
-        <div class="sidebar">
+        <!-- <div class="sidebar">
             <br>
             <div class="sidebar-part">
                 <h3 class="tag-title">hash</h3>
@@ -125,7 +131,7 @@
                 <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
                 <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
             </div>
-        </div>
+        </div> -->
 
         <!-- 검색 결과가 없을 때 -->
         <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
