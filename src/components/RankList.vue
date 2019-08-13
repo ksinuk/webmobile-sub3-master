@@ -1,6 +1,6 @@
 <template>
     <v-layout row wrap>
-        <v-flex>
+        <v-flex class="mx-5">
             <!-- 0729 err fix -->
             <carousel :per-page="pageNum">
                 <slide v-for="folio in folios" class="px-2">
@@ -46,7 +46,7 @@
         },
         data() {
             return {
-                pageNum: 4,
+                pageNum: 3,
                 folios: [],
                 cardUpdateSignal:0,
                 me:null
