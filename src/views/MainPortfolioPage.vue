@@ -3,10 +3,88 @@
     <BackBanner>
         <div slot="pageName">
             <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
-            <p class="mainBackBanner" v-if="!ifsearch">MAIN Portfolio Page</p>
+            <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
         </div>
     </BackBanner>
-    
+    <v-navigation-drawer permanent>
+    <v-toolbar flat>
+      <v-list>
+        <v-list-tile>
+            <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
+        </v-list-tile>
+      </v-list>
+    </v-toolbar>
+    <v-list dense class="pt-0">
+      <v-expansion-panel>
+        <v-expansion-panel-content>
+            <template v-slot:header>
+                <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content>
+            <template v-slot:header>
+                <div><i class="fas fa-briefcase pr-3"></i>Career</div>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <v-container fluid>
+                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                    </v-container>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content>
+            <template v-slot:header>
+                <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <v-container fluid>
+                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                    </v-container>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content>
+            <template v-slot:header>
+                <div><i class="fas fa-wrench pr-3"></i>Tool</div>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <v-container fluid>
+                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                    </v-container>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content>
+            <template v-slot:header>
+                <div><i class="fas fa-filter pr-3"></i>Sort</div>
+            </template>
+            <v-card>
+                <v-card-text>
+                    <v-radio-group v-model="radios" :mandatory="false">
+                        <v-radio label="Radio 1" value="radio-1"></v-radio>
+                        <v-radio label="Radio 2" value="radio-2"></v-radio>
+                    </v-radio-group>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-list>
+  </v-navigation-drawer>
+
+
+
     <div style="display:flex; position:relative;" v-if="prnok">
         <!-- ---- side bar ---------------------------- -->
         <div class="sidebar">
