@@ -107,7 +107,8 @@ export default new Router({
         {
             path: '/portfoliopage',
             name: 'portfoliopage',
-            component: PortfolioPage
+            component: PortfolioPage,
+            beforeEnter: requireAuth()
         },
         {
             path: '/portfoliopage/:uid',

@@ -47,7 +47,7 @@ export default {
           if (__this.$route.params.uid === undefined) {
             // 포트폴리오가 없을 경우
             let result = await FirebaseServices.getMyPort(user.uid)
-            if (result == undefined) {
+            if (result === undefined) {
               router.push('/write_portfolio')
               alert('포트폴리오가 없어요.')
             }

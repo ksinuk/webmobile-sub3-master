@@ -506,7 +506,7 @@ export default {
                 career: [],
             },
             created_at: date,
-            photoURL: null,
+            photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg',
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트
