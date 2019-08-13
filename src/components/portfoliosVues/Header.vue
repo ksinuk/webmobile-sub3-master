@@ -450,8 +450,27 @@ export default {
                 __this.portfolio = res;
                 console.log(__this.portfolio);
                 __this.select = __this.portfolio.banner;
-                __this.opacity = __this.select.opacity;
-                __this.layout = __this.select.layout;
+                if (__this.select.img.substring(0, 8) !== 'https://') {
+                    var storage = firebase.storage();
+                    var storageRef = storage.ref();
+                    storageRef.child('users/' + __this.userData.uid + '/' + __this.select.theme).getDownloadURL().then(function(url) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.responseType = 'blob';
+                        xhr.onload = function(event) {
+                            var blob = xhr.response;
+                        }
+                        xhr.open('GET', url)
+                        xhr.send();
+                        __this.select.img = url;
+                    }).then(function(res) {
+                        document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
+                        if (__this.select.opacity === 'opacity2') {
+                            document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                        }
+                    })
+                }
+                __this.opacity = __this.portfolio.banner.opacity;
+                __this.layout = __this.portfolio.banner.layout;
                 __this.titleS = __this.portfolio.title.size;
                 __this.subtitleS = __this.portfolio.subtitle.size;
                 __this.tRed = __this.portfolio.title.color.red;
@@ -468,8 +487,6 @@ export default {
                 if (__this.select.opacity === 'opacity2') {
                     document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
                 }
-                // console.log(document.querySelector('#portTitle').classList);
-                // console.log(document.querySelector('#portSubitle').classList);
                 if (__this.titleAni !== 'none') {
                     document.querySelector('#portTitle').classList.add(__this.titleAni);
                 }
@@ -482,22 +499,22 @@ export default {
                 document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
             })
         },
-        getBanner: function() {
-            var storage = firebase.storage();
-            var storageRef = storage.ref();
-            storageRef.child('users/' + this.userData.uid + '/' + this.select.theme).getDownloadURL().then(function(url) {
-                var xhr = new XMLHttpRequest();
-                xhr.responseType = 'blob';
-                xhr.onload = function(event) {
-                    var blob = xhr.response;
-                }
-                xhr.open('GET', url)
-                xhr.send();
-                this.select.img = url;
-            }).catch(function(error) {
-                console.log(error);
-            })
-        },
+        // getBanner: function() {
+        //     var storage = firebase.storage();
+        //     var storageRef = storage.ref();
+        //     storageRef.child('users/' + this.userData.uid + '/' + this.select.theme).getDownloadURL().then(function(url) {
+        //         var xhr = new XMLHttpRequest();
+        //         xhr.responseType = 'blob';
+        //         xhr.onload = function(event) {
+        //             var blob = xhr.response;
+        //         }
+        //         xhr.open('GET', url)
+        //         xhr.send();
+        //         this.select.img = url;
+        //     }).catch(function(error) {
+        //         console.log(error);
+        //     })
+        // },
         userImage: function (file) {
             let loadFile = file.target.files || file.dataTransfer.files
 
@@ -524,7 +541,7 @@ export default {
                 _this.select.theme = file.name;
                 _this.fileOb = file;
                 _this.select.img = file;
-                console.log(_this.select.img);
+                console.log(_this.select);
                 } else {
                 alert('이미지 파일만 올려주세요.')
                 }
@@ -532,14 +549,11 @@ export default {
         },
         async saveAll() {
             let __this = this;
-            if (this.select.img.substring(0, 4) === 'data') {
+            if (__this.select.img.substring(0, 8) !== 'https://') {
                 FirebaseServices.uploadfile(this.userData.uid, this.fileOb)
-                // download url 가져오기
-                setTimeout(function() {__this.getBanner()}, 1000);
             }
-            console.log(__this.select);
             this.portfolio.banner = this.select;
-            this.portfolio.layout = this.layout;
+            this.portfolio.banner.layout = this.layout;
             this.portfolio.title.size = this.titleS;
             this.portfolio.subtitle.size = this.subtitleS;
             this.portfolio.title.color.red = this.tRed;

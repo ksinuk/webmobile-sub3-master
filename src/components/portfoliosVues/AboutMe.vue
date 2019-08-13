@@ -489,8 +489,6 @@ export default {
   methods: {
     // firebase db 가져오기
     getAbout: function() {
-      console.log(this.userData);
-      console.log('ok');
       let __this = this;
       FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
         __this.portfolio = res;
