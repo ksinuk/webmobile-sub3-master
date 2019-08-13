@@ -25,7 +25,9 @@
                         <v-card>
                             <v-card-text>
                                 <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)" :id="tag">
-                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color:Crimson;"></i></span>
+                                    <span v-show="!elem['check']"><i class="fas fa-square" style="color:Crimson;"></i></span>
+                                    &nbsp&nbsp{{tag}}
                                 </li>
                             </v-card-text>
                         </v-card>
@@ -38,7 +40,9 @@
                         <v-card>
                             <v-card-text>
                                 <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
-                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color:Crimson;"></i></span>
+                                    <span v-show="!elem['check']"><i class="fas fa-square" style="color:Crimson;"></i></span>
+                                    &nbsp&nbsp{{tag}}
                                 </li>
                             </v-card-text>
                         </v-card>
@@ -52,10 +56,14 @@
                             <v-card-text>
                                 <v-radio-group v-model="radios" :mandatory="false">
                                     <li class="tag-list" @click="sortup = true">
-                                        오름차순&nbsp&nbsp<span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                        <span v-show="sortup"><i class="fas fa-check-circle" style="color:Crimson;"></i></span>                                       
+                                        <span v-show="!sortup"><i class="fas fa-circle" style="color:Crimson;"></i></span>
+                                        &nbsp&nbsp오름차순
                                     </li>
                                     <li class="tag-list" @click="sortup = false">
-                                        내림차순&nbsp&nbsp<span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                        <span v-show="!sortup"><i class="fas fa-check-circle" style="color:Crimson;"></i></span>                                       
+                                        <span v-show="sortup"><i class="fas fa-circle" style="color:Crimson;"></i></span>
+                                        &nbsp&nbsp내림차순
                                     </li>
                                 </v-radio-group>
                             </v-card-text>
