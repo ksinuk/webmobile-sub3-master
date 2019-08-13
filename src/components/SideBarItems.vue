@@ -71,6 +71,7 @@ export default {
             // console.log(this.searchItem)
             this.$router.push("/search/" + this.searchItem)
             window.location.reload()
+            this.searchItem = '';
         },
         writeTag: function(input){
             this.searchItem += ' '+input.trim().replace(' ','_')

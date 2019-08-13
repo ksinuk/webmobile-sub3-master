@@ -16,7 +16,7 @@
 
                         </div>
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span>{{ item.title }}</h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span><span>{{ item.title }}</span></h3>
                             <ul class="gallery-spec">
                                 <li v-if="item.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ item.viewport }}</span></li>
                                 <li v-if="item.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ item.ie }}</span></li>
