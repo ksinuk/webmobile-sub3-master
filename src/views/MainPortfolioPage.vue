@@ -22,49 +22,26 @@
                     </template>
                     <v-card>
                         <v-card-text>
-                            <v-checkbox v-for="(elem,tag) in hashDict" :label="tag" @click="tagcheck(elem,tag)"></v-checkbox>
+                            <span v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                                <v-checkbox  :label="tag" :id="tag"></v-checkbox>
+                            </span>
                         </v-card-text>
                     </v-card>
                 </v-expansion-panel-content>
-                <v-expansion-panel-content>
+
+                <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
                     <template v-slot:header>
-                        <div><i class="fas fa-briefcase pr-3"></i>Career</div>
+                        <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
                     </template>
                     <v-card>
                         <v-card-text>
                             <v-container fluid>
-                                <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                                <v-checkbox v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)" :label="tag"></v-checkbox>
                             </v-container>
                         </v-card-text>
                     </v-card>
                 </v-expansion-panel-content>
-                <v-expansion-panel-content>
-                    <template v-slot:header>
-                        <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
-                    </template>
-                    <v-card>
-                        <v-card-text>
-                            <v-container fluid>
-                                <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                            </v-container>
-                        </v-card-text>
-                    </v-card>
-                </v-expansion-panel-content>
-                <v-expansion-panel-content>
-                    <template v-slot:header>
-                        <div><i class="fas fa-wrench pr-3"></i>Tool</div>
-                    </template>
-                    <v-card>
-                        <v-card-text>
-                            <v-container fluid>
-                                <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                            </v-container>
-                        </v-card-text>
-                    </v-card>
-                </v-expansion-panel-content>
+
                 <v-expansion-panel-content>
                     <template v-slot:header>
                         <div><i class="fas fa-filter pr-3"></i>Sort</div>
@@ -96,7 +73,6 @@
                     <ul>
                         <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
                             {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                            {{elem.length}}
                         </li>
                     </ul>
                 </div>
