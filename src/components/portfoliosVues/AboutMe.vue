@@ -23,10 +23,12 @@
             <span class="aboutMe_title" style="color: white; opacity: 0.5; font-size: 1.7rem; font-family: 'Nanum Gothic', sans-serif;">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <div id="aboutSubtitle2" v-for="item in portfolio.skills" style="margin-bottom: 1rem;">
+          <div id="aboutSubtitle2">
+            <div v-for="item in portfolio.skills" style="margin-bottom: 1rem;">
               <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;"><i class="far fa-check-circle"></i><span style="margin-left: 1rem;">{{ item.name }}</span><span style="font-size: 70%; margin-left: 0.8rem;">/ {{ item.degree }}</span></p>
               <!--<div :id="item.name" class="bar back" :data-skill="item.degree"></div>-->
               <p style="font-size: 90%;"><span style="margin-left: 3rem;">{{ item.description }}</span></p>
+            </div>
           </div>
         </v-container>
       </div>
@@ -280,9 +282,9 @@
         <v-card-title>
             <span class="headline">ABOUT</span>
         </v-card-title>
-        <v-card-text>
-            <v-text-field v-model="portfolio.aboutMe.content" label="About My Self" rows=15></v-text-field>
-            <v-card v-for="item in portfolio.skills" class="mb-3">
+        <v-card-text style="padding-left: 2rem; padding-right: 2rem;">
+            <v-text-field v-model="portfolio.aboutMe.content" label="About My Self" rows=15 style="margin-bottom: 1rem;"></v-text-field>
+            <v-card v-for="item in portfolio.tmp" class="mb-3">
               <v-card-text>
                 <v-layout>
                   <v-flex lg3 class="px-3">
@@ -493,7 +495,6 @@ export default {
       let __this = this;
       FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
         __this.portfolio = res;
-        console.log(__this.portfolio);
         // 0812 / theme select
         for (let i=0; i < __this.themeArr.length; i++) {
           if (__this.portfolio.aboutMe.theme[i] === true) {
@@ -526,15 +527,14 @@ export default {
         if (__this.userData.photoURL === null) {
           __this.userData.photoURL = "https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2015/10/designer-developer-1200x616.jpg";
         }
+        __this.portfolio.tmp = []
 
-        console.log('test')
-
-        console.log('1', __this.tempView)
-        
+        res.skills.forEach(function(skill) {
+          let temp = JSON.parse(JSON.stringify(skill));
+          temp.degree = temp.degree.substring(7, temp.degree.length);
+          __this.portfolio.tmp.push(JSON.parse(JSON.stringify(temp)));
+        })
         __this.tempView = true
-        console.log('2', __this.tempView)
-
-
       }).then(function(res) {
         document.getElementById('aboutTitle1').style.fontSize = __this.aboutTitleS + 'rem';
         document.getElementById('aboutTitle2').style.fontSize = __this.aboutTitleS + 'rem';
@@ -578,8 +578,6 @@ export default {
     addSkill: function() {
       // 깊은 복사
       if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
-        this.portfolio.skills.push(JSON.parse(JSON.stringify(this.skill)))
-        this.skill = 'Level. ' + this.skill
         this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
         this.skill.name = null
         this.skill.degree = null
@@ -590,11 +588,14 @@ export default {
     },
     async saveMe() {
       if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
-        this.portfolio.skills.push(JSON.parse(JSON.stringify(this.skill)))
-        this.skill.degree = 'Level. ' + this.skill.degree
         this.portfolio.tmp.push(JSON.parse(JSON.stringify(this.skill)))
       }
+      for (let idx in this.portfolio.tmp) {
+        this.portfolio.tmp[idx].degree = 'Level. ' + this.portfolio.tmp[idx].degree;
+      }
+      this.portfolio.skills = this.portfolio.tmp;
       const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+      window.location.reload()
     },
     async saveAll() {
       let fixContent = {
