@@ -162,8 +162,8 @@
     tagCheckNum : {{tagCheckNum}}<br>
     folio len : {{folios.length}}<br>
     ifsearch : {{ifsearch}}<br>
-    search_input : {{search_input}}
-
+    search_input : {{search_input}}<br>
+    route : {{this.$route.name}}<br>
 
 </div>
 </template>
@@ -212,6 +212,7 @@ export default {
     },
     async created(){
         let th = this
+        this.routeName = this.$route.name
 
         this.settingMe(th)
 
@@ -488,6 +489,9 @@ export default {
     watch:{
          sortup:function(){
              this.sortPortfolio(this.sortup)
+         },
+         '$route.name':function(){
+             window.location.reload()
          }
     }
 
