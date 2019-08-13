@@ -16,14 +16,14 @@
 
                         </div>
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span><span>{{ item.title }}</span></h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ index+1 }}</p></span><span style="font-size: 2rem; padding-left: 1rem;">{{ item.title }}</span></h3>
                             <ul class="gallery-spec">
                                 <li v-if="item.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ item.viewport }}</span></li>
                                 <li v-if="item.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ item.ie }}</span></li>
 
                             </ul>
-                            <div id="work1Description">
-                                <p>{{ item.description }}</p>
+                            <div id="work1Description" style="text-align: center;">
+                                <p style="font-size: 1.5rem;">{{ item.description }}</p>
                             </div>
                             <div class="ui-group text-xs-center ml-5" >
                                 <v-btn round class="listbutton" :color="btncolor" :href="item.demo" style="height: 3rem;  width: 8rem;" target="_blank" dark>Demo</v-btn>
@@ -218,7 +218,7 @@
                 </v-expansion-panel-content>
             </v-expansion-panel>
             <div style="text-align: center; margin-top: 2rem;">
-                <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+                <v-btn small color="primary" @click="saveAll(); PortfolioDrawer = false;">Save</v-btn>
             </div>
         </v-list>
         </v-navigation-drawer>
@@ -388,7 +388,6 @@ export default {
             // firebase portfolios 컬렉션에서 가져온 데이터
             portfolios:[],
             portidx: null,
-            user: null,
             PortfolioDrawer:false,
             // db에 저장해야 할 값
             listlayout: 'template1',
@@ -422,12 +421,12 @@ export default {
             }
         }
     },
+    props: ['userData'],
     mounted(){
-        let __this = this;
-        this.getPortfolio();
-        this.$EventBus.$on('Portfolio', () => {
-            this.PortfolioDrawer = !this.PortfolioDrawer
-        });
+        this.$watch('userData', userData => {
+            this.getPortfolio()
+        })
+        
     },
     watch: {
         colorchip: function() {
@@ -451,44 +450,41 @@ export default {
         }
     },
     methods:{
-        async getPortfolio(uid) {
+        async getPortfolio() {
             let __this = this;
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            const tmp = firebase.auth().onAuthStateChanged(function(user) {
-                __this.user = user.uid;
-                FirebaseServices.getMyPort(__this.user).then(function(res) {
-                    __this.portfolios = res;
-                    __this.colorchip = __this.portfolios.foliotheme.color;
-                    __this.listlayout = __this.portfolios.foliotheme.layout;
-                    for (let item in __this.portfolios.portfolios) {
-                        storageRef.child('users/' + __this.user + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
-                            var xhr = new XMLHttpRequest();
-                            xhr.responseType = 'blob';
-                            xhr.onload = function(event) {
-                                var blob = xhr.response;
-                            }
-                            xhr.open('GET', url)
-                            xhr.send();
-                            __this.portfolios.portfolios[item].imageNames = url;
-                        })
-                    }
-                }).then(function(res) {
-                    console.log(__this.portfolios.portfolios)
-                    if (__this.colorchip === 'green') {
-                        document.getElementById('headname').style.backgroundColor = 'rgba(0, 151, 19, 0.05)';
-                        document.getElementById('listTitle').style.color = 'rgba(0, 151, 19, 0.6)';
-                        __this.btncolor = 'rgba(0, 151, 19, 0.6)';
-                    } else if (__this.colorchip === 'indigo') {
-                        document.getElementById('headname').style.backgroundColor = 'rgba(40, 53, 147, 0.05)';
-                        document.getElementById('listTitle').style.color = '#283593';
-                        __this.btncolor = '#283593';
-                    } else if (__this.colorchip === 'orange') {
-                        document.getElementById('headname').style.backgroundColor = 'rgba(251, 140, 0, 0.05)';
-                        document.getElementById('listTitle').style.color = '#FB8C00';
-                        __this.btncolor = '#FB8C00';
-                    }
-                })
+            FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
+                __this.portfolios = res;
+                __this.colorchip = __this.portfolios.foliotheme.color;
+                __this.listlayout = __this.portfolios.foliotheme.layout;
+                for (let item in __this.portfolios.portfolios) {
+                    storageRef.child('users/' + __this.userData.uid + '/' + __this.portfolios.portfolios[item].imageNames).getDownloadURL().then(function(url) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.responseType = 'blob';
+                        xhr.onload = function(event) {
+                            var blob = xhr.response;
+                        }
+                        xhr.open('GET', url)
+                        xhr.send();
+                        __this.portfolios.portfolios[item].imageNames = url;
+                    })
+                }
+            }).then(function(res) {
+                console.log(__this.portfolios.portfolios)
+                if (__this.colorchip === 'green') {
+                    document.getElementById('headname').style.backgroundColor = 'rgba(0, 151, 19, 0.05)';
+                    document.getElementById('listTitle').style.color = 'rgba(0, 151, 19, 0.6)';
+                    __this.btncolor = 'rgba(0, 151, 19, 0.6)';
+                } else if (__this.colorchip === 'indigo') {
+                    document.getElementById('headname').style.backgroundColor = 'rgba(40, 53, 147, 0.05)';
+                    document.getElementById('listTitle').style.color = '#283593';
+                    __this.btncolor = '#283593';
+                } else if (__this.colorchip === 'orange') {
+                    document.getElementById('headname').style.backgroundColor = 'rgba(251, 140, 0, 0.05)';
+                    document.getElementById('listTitle').style.color = '#FB8C00';
+                    __this.btncolor = '#FB8C00';
+                }
             })
         },
         editPort(idx) {
@@ -606,19 +602,22 @@ export default {
                 this.portfolios.portfolios[this.idx].sources = this.portfolio.sources;
                 this.portfolios.portfolios[this.idx].imageNames = this.portfolio.imageNames;
                 this.portfolios.portfolios[this.idx].dumpImg = this.portfolio.dumpImg;
-                this.upload(this.user);
+                this.upload(this.userData.uid);
                 this.imageList = [];
             } else {
                 this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));
                 console.log(this.portfolios.portfolios);
             }
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
             this.getPortfolio();
+            alert('저장 완료!');
+            
         },
         async saveAll() {
             this.portfolios.foliotheme.color = this.colorchip;
             this.portfolios.foliotheme.layout = this.listlayout;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title, this.portfolios.userImage);
+            const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
+            alert('저장 완료!');
         }
     }
 }
