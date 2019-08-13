@@ -147,7 +147,7 @@
               </v-list-tile>
             </v-card-actions>
           </v-card>
-     
+          {{ this.commentList}}
           
         </v-container>
       </v-tab-item>
@@ -200,6 +200,9 @@ export default {
     tab() {
       this.getComment()
       this.comment = null
+    },
+    commentList() {
+      this.getComment()
     }
   },
   created() {
@@ -227,7 +230,12 @@ export default {
       } else {
         this.careerData.userImg = this.userData.userData.photoURL
       }
-      this.portAddr = '/portfoliopage/' + this.userData.userData.uid;
+      if (this.$store.state.firebaseUser.uid === this.$route.params.userId) {
+        this.portAddr = '/portfoliopage'
+      } else {
+        this.portAddr = '/portfoliopage/' + this.userData.userData.uid;
+      }
+      
       console.log(this.portAddr);
     },
     setSpark() {
@@ -261,6 +269,7 @@ export default {
         photoURL: this.$store.state.firebaseUser.photoURL,
         date: this.$store.state.today
       }
+      this.commentList.push({comment: this.comment, writer})
       FirebaseServices.writeComments(this.$route.params.userId, writer, this.comment)
       // 초기화
       this.comment = null
