@@ -1,19 +1,20 @@
 <template>
-    <div>
-        <BackBanner>
-            <div slot="pageName">
-                <p class="mainBackBanner" v-if="ifsearch" style="font-family: 'Jua', sans-serif;">Search Results</p>
-                <p class="mainBackBanner" v-if="!ifsearch" style="font-family: 'Jua', sans-serif;">Portfolio Explorer</p>
-            </div>
-        </BackBanner>
-        <v-layout>
-            <v-navigation-drawer permanent height="70vh">
+<div>
+    <BackBanner>
+        <div slot="pageName">
+            <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
+            <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
+        </div>
+    </BackBanner>
+
+    <div style="display:flex; position:relative;" v-if="prnok">
+        <v-navigation-drawer permanent>
             <v-toolbar flat>
-            <v-list>
-                <v-list-tile>
-                    <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
-                </v-list-tile>
-            </v-list>
+                <v-list>
+                    <v-list-tile>
+                        <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
+                    </v-list-tile>
+                </v-list>
             </v-toolbar>
             <v-list dense class="pt-0">
                 <v-expansion-panel>
@@ -23,50 +24,26 @@
                         </template>
                         <v-card>
                             <v-card-text>
-                                <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                                <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)" :id="tag">
+                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                </li>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
-                    <v-expansion-panel-content>
+
+                    <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
                         <template v-slot:header>
-                            <div><i class="fas fa-briefcase pr-3"></i>Career</div>
+                            <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
                         </template>
                         <v-card>
                             <v-card-text>
-                                <v-container fluid>
-                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                                </v-container>
+                                <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
+                                    {{tag}}&nbsp&nbsp<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                </li>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
-                    <v-expansion-panel-content>
-                        <template v-slot:header>
-                            <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
-                        </template>
-                        <v-card>
-                            <v-card-text>
-                                <v-container fluid>
-                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                                </v-container>
-                            </v-card-text>
-                        </v-card>
-                    </v-expansion-panel-content>
-                    <v-expansion-panel-content>
-                        <template v-slot:header>
-                            <div><i class="fas fa-wrench pr-3"></i>Tool</div>
-                        </template>
-                        <v-card>
-                            <v-card-text>
-                                <v-container fluid>
-                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                                </v-container>
-                            </v-card-text>
-                        </v-card>
-                    </v-expansion-panel-content>
+
                     <v-expansion-panel-content>
                         <template v-slot:header>
                             <div><i class="fas fa-filter pr-3"></i>Sort</div>
@@ -74,34 +51,104 @@
                         <v-card>
                             <v-card-text>
                                 <v-radio-group v-model="radios" :mandatory="false">
-                                    <v-radio label="Radio 1" value="radio-1"></v-radio>
-                                    <v-radio label="Radio 2" value="radio-2"></v-radio>
+                                    <li class="tag-list" @click="sortup = true">
+                                        오름차순&nbsp&nbsp<span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    </li>
+                                    <li class="tag-list" @click="sortup = false">
+                                        내림차순&nbsp&nbsp<span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                    </li>
                                 </v-radio-group>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
-                </v-list>
-            </v-navigation-drawer>
-            <!-- list -->
-            <div class="foliolist" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
-                <p>"{{search_input}}" 의 검색 결과입니다.</p>
-                <v-layout class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
-                    <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
-                </v-layout>
-                <v-layout class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
-                    <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
-                </v-layout>
+            </v-list>
+        </v-navigation-drawer>
+
+
+
+    
+        <!-- ---- side bar ---------------------------- -->
+        <!-- <div class="sidebar">
+            <br>
+            <div class="sidebar-part">
+                <h3 class="tag-title">hash</h3>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
+                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
+                <div v-if="ifHash">
+                    <ul>
+                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <br>
+
+            <span v-for="(SelectMain , mainName) in SelectDictDict">
+                <div class="sidebar-part">
+                    <h3 class="tag-title">{{mainName}}</h3>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="!SelectIfDict[mainName]">+</btn>
+                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
+                    <div v-if="SelectIfDict[mainName]">
+                        <ul>
+                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
+                                {{tag}}<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <br>
+            </span>
+
+            <div class="sidebar-part">
+                <h3 class="tag-title">정렬</h3>
+                <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
+                <btn class="open-btn" @click="ifsort = !ifsort" v-if="ifsort">-</btn>
+                <div v-if="ifsort">
+                    <ul>
+                        <li class="tag-list" @click="sortup = true">
+                            이름 : 오름차순 <span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                        <li class="tag-list" @click="sortup = false">
+                            이름 : 내림차순 <span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- 검색 결과가 없을 때 -->
-            <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
+        </div>
+        <!-- ----- list --------------------------- -->
+        <div class="foliolist" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
+            <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
+                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
+            </div>
+            <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
+                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+            </div>
+        </div> -->
+
+        <!-- 검색 결과가 없을 때 -->
+        <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
+            <div>
                 <p class="resultOut">검색 결과가 없습니다.</p>
             </div>
-        </v-layout>
+        </div>
+        
     </div>
+    uid : {{me.uid}}<br>
+    tagCheckNum : {{tagCheckNum}}<br>
+    folio len : {{folios.length}}<br>
+    ifsearch : {{ifsearch}}<br>
+    search_input : {{search_input}}<br>
+    route : {{this.$route.name}}<br>
+
+</div>
 </template>
 
 <script>
@@ -148,6 +195,7 @@ export default {
     },
     async created(){
         let th = this
+        this.routeName = this.$route.name
 
         this.settingMe(th)
 
@@ -303,6 +351,10 @@ export default {
 
         // 각각의 테그에 해당하는 portfolio만 화면애 출력
         tagcheck:function(tag, tag_name){ //선택한 테그와 테그의 이름
+            console.log("tagcheck this.tagoutList : ",this.tagoutList)
+            console.log("tagcheck this.hashDict : ",this.hashDict)
+            // console.log("tagcheck this.SelectDictDict : ",this.SelectDictDict)
+
             tag['check'] = !tag['check'] //테그의 체크 아이콘 출력 변경
             this.tagCheckNum += tag['check'] ? 1:-1 //지금까지 선택한 테그의 갯수 계산
             
@@ -311,16 +363,20 @@ export default {
             }
             else if(tag['check'] && this.tagCheckNum == 1){ // 선택한 테그가 1개이면 테그 목록 출력
                 // console.log("solo tag : ",tag)
-                this.tagoutList = tag
+                for(let i=0; i<tag.length; i++){
+                    this.tagoutList.push(tag[i])
+                }
             }
             else if(tag['check']){ // 해당 테그가 없는 포트폴리오를 출력 목록에서 제거
                 for(let i=0; i<this.tagoutList.length; i++){
                     let nowUser = this.tagoutList[i]
                     let len = this.tagoutList.length
                     if(!this.ifelemInList(nowUser, tag)){
+                        console.log("tag check this.hashDict : ",this.hashDict)
                         this.tagoutList[i] = this.tagoutList[len-1]
                         i-=1
                         this.tagoutList.pop()
+                        if(this.tagoutList.length == 0) return 0
                     }
                 }
             }
@@ -424,6 +480,9 @@ export default {
     watch:{
          sortup:function(){
              this.sortPortfolio(this.sortup)
+         },
+         '$route.name':function(){
+             window.location.reload()
          }
     }
 

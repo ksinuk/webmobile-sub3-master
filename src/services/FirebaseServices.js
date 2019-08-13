@@ -34,6 +34,33 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 const db = firebase.firestore()
 
 export default {
+    getComments(uid){
+        return new Promise(function(resolve, reject){
+            db.collection('comments').doc(uid).get().then(function(data){
+                if(data && data.exists){
+                    resolve(data.data().comments)
+                }
+                else{
+                    db.collection('comments').doc(uid).set({
+                        'uid':uid,
+                        'comments':[]
+                    })
+                    resolve([])
+                }
+            })
+        })
+    },
+    writeComments(uid, writeUid, content){
+        data = {'writer':writeUid, 'content':content, time:firebase.database.ServerValue.TIMESTAMP}
+        return db.collection('comments').doc(uid).update({
+            comments: firebase.firestore.FieldValue.arrayUnion(data)
+        })
+    },
+    deleteComments(uid,comment){
+        return db.collection('userData').doc(uid).update({
+            bookmarks: firebase.firestore.FieldValue.arrayRemove(comment)
+        })
+    },
     //make tag DB
     async setTagsDBall(inputDB){
         let tagsDB_orignal = await db.collection('tags').get()
