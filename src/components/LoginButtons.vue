@@ -36,6 +36,7 @@
       <v-form
         ref="form"
         v-model="form"
+        v-show="viewSign"
         >
         <!-- email -->
         <v-text-field
@@ -50,7 +51,6 @@
         <!-- 회원가입 폼에서만 보임 -->
         <v-text-field
           v-model="displayName"
-          v-show="viewSign"
           :rules="nameRules"
           filled
           label="name"
@@ -154,22 +154,47 @@
 
         <v-btn
           class="loginBtn"
-          v-show="viewSign"
           :loading="loading"
           :disabled="!form"
           color="success"
-          @click="loader = 'loading'"
+          @click="loader()"
         >
-          가입
+          가입하기
         </v-btn>
+      </v-form>
+      
+      <v-form
+        ref="form"
+        v-model="form"
+        v-show="!viewSign"
+        >
+        <!-- email -->
+        <v-text-field
+          v-model="email"
+          :rules="emailRules"
+          filled
+          label="Email address"
+          type="email"
+          style="width:240px; margin: auto;"
+        ></v-text-field>
+        <!-- password -->
+        <v-text-field
+          v-model="password"
+          :append-icon="pwShow ? 'visibility' : 'visibility_off'"
+          :rules="pwRules"
+          filled
+          label="Password"
+          :type="pwShow ? 'text' : 'password'"
+          @click:append="pwShow = !pwShow"
+          style="width:240px; margin: auto;"
+        ></v-text-field>
 
         <v-btn
           class="loginBtn"
-          v-show="!viewSign"
           :loading="loading"
-          :disabled="loading"
+          :disabled="!form"
           color="success"
-          @click="loader = 'loading'"
+          @click="loader()"
         >
           로그인
         </v-btn>
@@ -182,6 +207,7 @@
 import FirebaseServices from '../services/FirebaseServices'
 import firebase from 'firebase'
 import router from '../router'
+import store from '../store'
 
 export default {
   name: 'Loginbuttons',
@@ -198,54 +224,83 @@ export default {
       // input rules
       email: '',
       emailRules: [
-        v => (v || '').match(/@/) || 'Please enter a valid email',
+        v => !!(v || '').match(/@/) || '@를 포함한 email을 입력해주세요.',
       ],
       displayName: '',
       nameRules: [
-        v => !!v || 'Name is required',
+        v => !!v || '이름을 입력해주세요.',
       ],
       // pw rule
       pwShow: false,
       password: '',
       pwRules: [
-        v => !!v || 'password is Required.',
-        v => v.length >= 8 || 'Min 8 characters',
+        v => !!v || '비밀번호를 입력해주세요.',
+        v => v.length >= 8 || '최소 8자 이상 입력해주세요.',
       ],
       // service rule
       agreeRules: [
-        v => !!v || 'This field is required',
+        v => !!v || '동의가 필요합니다.',
       ],
       // loading button
-      loader: null,
       loading: false,
     }
   },
-  watch: {
-    loader () {
-      if (this.loader === 'loading') {
-        if(this.viewSign == true) {
-          this.createUserWithEmail()
-        } else {
-          this.emailLogin()
-        }
-        
-      }
-      const thisCopy = this
-      const l = thisCopy.loader
-      thisCopy[l] = !thisCopy[l]
-      setTimeout(function () {
-        thisCopy[l] = false
-        thisCopy.goHome()
-        }, 3000)
-      thisCopy.loader = null
-    }
-  },
   methods: {
-    async createUserWithEmail() {
-      await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName)
+    loader() {
+      // btn 클릭에 맞는 func
+      if(this.viewSign == true) {
+        this.createUserWithEmail()
+      } else {
+        this.emailLogin()
+      }
+      // 로딩활성화
+      this.loading = true
     },
-    emailLogin(){
-      FirebaseServices.loginUserWithEmail(this.email, this.password)
+    async createUserWithEmail() {
+      let _this = this
+      await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then(function(user) {
+          FirebaseServices.createdbForNewUser(user.user.uid, _this.$store.state.today, _this.displayName)
+          // 유저 생성하면서 입력받은 이름 설정
+          let _user = firebase.auth().currentUser
+          _user.updateProfile({
+              displayName: _this.displayName,
+              photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg'
+          })
+          setTimeout(function () {
+            router.push('/')
+          }, 2000)
+        })
+        .catch(function(err) {
+            if (err.code == 'auth/email-already-in-use') {
+              alert('이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.')
+              _this.email = ''
+            }
+            _this.loading = false
+            _this.agreement = false
+        })
+    },
+    async emailLogin() {
+      let _this = this
+      await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then(function(result) {
+          store.commit('setPhotoURL', result.user.photoURL)
+          setTimeout(function () {
+            router.push('/')
+          }, 2000)
+        })
+        .catch(function(err) {
+          if (err.code == 'auth/user-not-found') {
+            alert('존재하지 않는 유저 입니다.')
+            _this.email = ''
+            _this.password = ''
+          }
+          else if (err.code == 'auth/wrong-password') {
+            alert ('비밀번호가 틀렸습니다. 다시 입력해주세요.')
+            _this.password = ''
+          }
+          _this.loading = false
+        })
     },
     async googleLogin() {
       await FirebaseServices.loginUserWithGoogle()
@@ -262,9 +317,6 @@ export default {
           router.push('/')
         }
       })
-    },
-    goHome() {
-      this.$router.push('/')
     },
     // 유저네임 특수문자 제한
     characterCheck() {
@@ -286,9 +338,6 @@ export default {
 }
 .v-divider {
   margin: 20px;
-}
-.v-text-field__details {
-  display: none;
 }
 #loginProvider {
   height: 30px;

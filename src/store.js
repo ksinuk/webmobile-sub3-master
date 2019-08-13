@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -19,7 +18,8 @@ export default new Vuex.Store({
     theme: 'default',
     imgSrc: {
       noImgSrc: 'http://dy.gnch.or.kr/img/no-image.jpg',
-    }
+    },
+    today: null
   },
   mutations: {
     changeItem : function(state, payload){
@@ -27,6 +27,9 @@ export default new Vuex.Store({
     },
     changeTheme(state, color) {
       state.theme = color
+    },
+    setDate(state, date) {
+      state.today = date
     },
     setUserName(state, rename) {
       state.firebaseUser.name = rename
@@ -36,6 +39,9 @@ export default new Vuex.Store({
     },
     setUserId(state, id) {
       state.firebaseUser.uid = id
+    },
+    setPhotoURL(state, link) {
+      state.firebaseUser.photoURL = link
     }
   },
   actions: {

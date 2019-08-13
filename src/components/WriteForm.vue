@@ -5,7 +5,6 @@
       ABOUT
       <small>자기 소개와 Skill을 작성하세요.</small>
     </v-stepper-step>
-
     <v-stepper-content step="1" class="px-5">
       <v-card class="mb-3 px-3">
         <v-card-text>
@@ -212,14 +211,14 @@
                 </v-sheet>
               </v-flex>
             </v-layout>
-            <v-layout v-if="portItem.dumpList.length > 0">
-              <v-flex v-for="item in portItem.dumpList" lg3 md3 xs3 class="px-3 py-3" style="height: 20rem;">
-                <img v-bind:src="item" width="100%" height="100%">
+            <v-layout v-if="portItem.dumpImg !== null">
+              <v-flex style="height: 20rem;">
+                <img v-bind:src="portItem.dumpImg" width="400rem" height="200rem">
               </v-flex>
             </v-layout>
             <v-layout>
               <v-flex>
-                <v-btn color="grey" @click="portItem.dumpList=[];">Reset</v-btn>
+                <v-btn color="grey" @click="portItem.dumpImg = null;">Reset</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -376,18 +375,14 @@
                 </v-sheet>
               </v-flex>
             </v-layout>
-            <v-layout v-if="portfolio.dumpList.length > 0">
-              <v-flex v-for="item in portfolio.dumpList" lg3 md3 xs3 class="px-3 py-3" style="height: 20rem;">
-                <img v-bind:src="item" width="100%" height="100%">
+            <v-layout v-if="portfolio.dumpImg !== null">
+              <v-flex class="py-5">
+                <img v-bind:src="portfolio.dumpImg" width="400rem" height="200rem">
               </v-flex>
             </v-layout>
             <v-layout>
               <v-flex>
-                <v-btn color="grey" @click="portfolio.dumpList=[];">Reset</v-btn>
-                <!-- dumplist를 확인하기 위한 view -->
-                <v-btn color="primary" @click="viewList()">View</v-btn> 
-                <!-- upload는 최종 저장에서 함께 되도록 함 -->
-                <!--<v-btn color="success" @click="upload()">Upload</v-btn>-->
+                <v-btn color="grey" @click="portfolio.dumpImg = null;">Reset</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -440,11 +435,11 @@ export default {
         hashtags: [],
         repository: null,
         sources: [],
-        imageNames: [],
-        dumpList: []
+        imageNames: null,
+        dumpImg: null
       },
       imageList: [],
-      items: ['html', 'css', 'js', 'json', 'c', 'c++', 'java', 'python'],
+      items: ['html', 'css', 'vue', 'js', 'json', 'c', 'c++', 'java', 'python'],
       isDragging: false,
     }
   },
@@ -463,7 +458,9 @@ export default {
     addSkill: function() {
       // 깊은 복사
       if (this.skill.name !== null && this.skill.degree !== null && this.skill.description !== null) {
-        this.skills.push(JSON.parse(JSON.stringify(this.skill)))
+        let tmp = JSON.parse(JSON.stringify(this.skill))
+        tmp.degree = "Level. " + tmp.degree
+        this.skills.push(tmp)
         this.skill.name = null
         this.skill.degree = null
         this.skill.description = null
@@ -505,11 +502,11 @@ export default {
           reader.onload = function(e) {
             for (let j=0; j < files.length; j++) {
             }
-            _this.portfolio.dumpList.push(e.target.result)
+            _this.portfolio.dumpImg = e.target.result
           }
           reader.readAsDataURL(file)
           console.log(file)
-          _this.portfolio.imageNames.push(file.name)
+          _this.portfolio.imageNames = file.name
           _this.imageList.push(file)
         } else {
           alert('이미지 파일만 올려주세요.')
@@ -522,9 +519,6 @@ export default {
       for (const image in this.imageList) {
         FirebaseServices.uploadfile(user, this.imageList[image])
       }
-    },
-    viewList() {
-      console.log(this.imageList)
     },
     addPortfolio: function() {
       if (this.source.category !== null && this.source.fileName !== null && this.source.gitPath !== null && this.source.fileDes !== null) {
@@ -545,7 +539,7 @@ export default {
         this.portfolio.repository = null
         this.portfolio.sources = []
         this.portfolio.imageList = []
-        this.portfolio.dumpList = []
+        this.portfolio.dumpImg = null
       }
       console.log(this.portfolios)
     },
@@ -555,18 +549,45 @@ export default {
       this.hashtag = null
     },
     // firebase에 최종 저장하기
-    async savePort() {
-      const user = await FirebaseServices.currentUser();
-      console.log(user);
-      // default banner
-      let banner = {theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1'}
-      // default title
-      let title = {content: this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6}
-      // default subtitle
-      let subtitle = {content: this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6}
-      // firebase storage에 저장
-      this.upload(user.uid);
-      const result = await FirebaseServices.postPortfolios(user.uid, this.aboutMe, 'template2', banner, this.portfolios, this.skills, subtitle, title);
+    savePort() {
+      let _this = this
+      firebase.auth().onAuthStateChanged(async function(user) {
+        // default banner
+        let banner = {theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1', layout: 'template2'}
+        // default title
+        let title = {content: _this.pageTitle, color: {red: 255, blue: 255, green: 255}, size: 6, animation: 'none'}
+        // default subtitle
+        let subtitle = {content: _this.greeting, color: {red: 255, blue: 255, green: 255}, size: 6, animation: 'none'}
+        // default list layout
+        let foliotheme = {layout: 'template1', color: 'blue', animation: 'none'}
+        // default aboutme
+        let aboutme = {
+          content: _this.aboutMe,
+          layout: [true, false],
+          theme: [true, false, false],
+          title: {
+            size: '5',
+            color: {
+              red: 255,
+              green: 255,
+              blue: 255
+            }
+          },
+          subtitle: {
+            size: '2',
+            color: {
+              red: 255,
+              green: 255,
+              blue: 255
+            }
+          },
+          animation: 'none'
+        }
+        // firebase storage에 저장
+        _this.upload(user.uid);
+        const result = await FirebaseServices.postPortfolios(user.uid, aboutme, foliotheme, banner, _this.portfolios, _this.skills, subtitle, title, "");
+        return   _this.$router.push('/portfoliopage');
+      })
     }
   }
 }

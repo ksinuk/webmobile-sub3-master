@@ -17,7 +17,7 @@
        :can-cancel="true"
        :on-cancel="onCancel"
        :is-full-page="fullPage"></loading>
-   </div>
+    </div>
     <newFooter></newFooter>
   </div>
   
@@ -25,6 +25,10 @@
 
 <script>
 // @ is an alias to /src
+import firebase from 'firebase'
+import store from '../store'
+import FirebaseServices from '../services/FirebaseServices'
+
 import RankList from '@/components/RankList.vue'
 import MainBanner from '@/components/MainBanner.vue'
 import Intro from '@/components/Intro.vue'
@@ -45,29 +49,52 @@ export default {
     Loading
   },
   mounted(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+          FirebaseServices.updatedStoreUser()
+          store.commit('setUserId', user.uid)
+      } else {
+          FirebaseServices.updatedStoreUser()
+          store.commit('setUserId', null)
+      }
+      store.commit('setDate', this.setDate())
+    })
     this.doAjax();
-    
   },
   data() {
-          return {
-              isLoading: false,
-              fullPage: true,
-              user: null
-          }
-      },
-
-      methods: {
-          doAjax() {
-              this.isLoading = true;
-              // simulate AJAX
-              setTimeout(() => {
-                this.isLoading = false
-              },1000)
-          },
-          onCancel() {
-            console.log('User cancelled the loader.')
-          }
+      return {
+          isLoading: false,
+          fullPage: true,
+          user: null
       }
+  },
+  methods: {
+    doAjax() {
+      this.isLoading = true;
+      // simulate AJAX
+      setTimeout(() => {
+        this.isLoading = false
+      },1000)
+    },
+    onCancel() {
+      console.log('User cancelled the loader.')
+    },
+    setDate() {
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth()+1
+      let day = date.getDate()
+      if(month < 10){
+          month = "0"+month
+      }
+      if(day < 10){
+          day = "0"+day
+      }
+      let today = year+month+day
+      console.log(today)
+      return today
+    },
+  }
 }
 </script>
 

@@ -1,38 +1,35 @@
 <template>
     <div class="header">
-        <v-layout v-if="layout === null" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-if="layout === null" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
-                <p id="portSubtitle" style="display: hidden;"></p>
+                <h1 id="portTitle" class="animated delay-1s" style="display: hidden; font-weight: 300; letter-spacing: 0.08rem;"></h1>
+                <p id="portSubtitle" class="animated delay-2s" style="display: hidden;"></p>
             </v-flex>
         </v-layout>
         <!-- template1 -->
-        <v-layout v-else-if="layout === 'template1'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template1'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex style="padding-left: 7rem;">
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="text-align: left;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem; text-align: left;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s" style="text-align: left;">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <!-- template2 -->
-        <v-layout v-else-if="layout === 'template2'" id="banner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template2'" id="headBanner" row justify-center align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
         <!-- template3 -->
-        <v-layout v-else-if="layout === 'template3'" id="banner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
+        <v-layout v-else-if="layout === 'template3'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
             <v-flex>
-                <h1 id="portTitle" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
-                <p id="portSubtitle" style="text-align: right;">{{portfolio.subtitle.content}}</p>
+                <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
+                <p id="portSubtitle" class="animated delay-2s" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
-            <v-btn outline color="white" style="margin-top: auto; margin-left: auto; margin-bottom: 2rem; margin-right: 2rem;" @click.stop="drawer = !drawer;"><i class="fas fa-palette pr-2"></i>EDIT</v-btn>
         </v-layout>
 
         <!-- sidebar -->
-        <v-navigation-drawer v-model="drawer" :mini-variant="mini" absolute dark temporary>
+        <v-navigation-drawer v-model="headerDrawer" :mini-variant="mini" fixed temporary disable-route-watcher>
             <v-list class="pt-0" dense>
                 <v-expansion-panel>
                     <v-expansion-panel-content>
@@ -48,20 +45,19 @@
                                     <label for="input_file">파일찾기</label>
                                     <input type="file" id="input_file" class="upload-hidden" @change="userImage">
                                 </div>
-                                <v-radio-group v-model="select.opacity">
+                                <v-radio-group v-model="opacity">
                                     <v-radio label="선명하게" value="opacity1" color="primary"></v-radio>
                                     <v-radio label="흐리게" value="opacity2" color="primary"></v-radio>
                                 </v-radio-group>
-                                <div class="py-3" v-if="select.opacity === 'opacity1'">
+                                <div class="py-3" v-if="opacity === 'opacity1'">
                                     <img :src="this.select.img" height="170rem;" width="265rem;"/>
                                 </div>
-                                <div class="my-3" v-else-if="select.opacity === 'opacity2'" style="margin-right: 0.3rem; height: 12.1rem; background-color: white;">
-                                    <img :src="this.select.img" height="170rem;" style="opacity: 0.5; filter: alpha(opacity=50);" width="265rem;"/>
+                                <div class="my-3" v-else-if="opacity === 'opacity2'" style="margin-right: 0.3rem; height: 12.1rem; background-color: white;">
+                                    <img :src="viewImg" height="170rem;" style="opacity: 0.5; filter: alpha(opacity=50);" width="265rem;"/>
                                 </div>
-                                <div style="text-align: center;">
+                                <!--<div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveImg()">Apply</v-btn>
-                                    <!--<v-btn small color="error">Init</v-btn>-->
-                                </div>
+                                </div>-->
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
@@ -71,20 +67,20 @@
                         </template>
                         <v-card>
                             <v-card-text>
-                                <v-radio-group v-model="tmplayout">
+                                <v-radio-group v-model="layout">
                                     <v-radio label="left" value="template1" color="primary"></v-radio>
                                     <v-radio label="center" value="template2" color="primary"></v-radio>
                                     <v-radio label="right" value="template3" color="primary"></v-radio>
                                 </v-radio-group>
-                                <div style="text-align: center;">
+                                <!--<div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveLayout()">Apply</v-btn>
-                                </div>
+                                </div>-->
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fas fa-font pr-3"></i>Font</div>
+                            <div @click="choice = 'title'"><i class="fas fa-font pr-3"></i>Font</div>
                         </template>
                         <v-card>
                             <v-card-text>
@@ -248,25 +244,73 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="text-align: center;">
+                                <!--<div style="text-align: center;">
                                     <v-btn small color="primary" @click="saveFont()">Apply</v-btn>
+                                </div>-->
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <!-- animation selector -->
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div @click="choice = 'title'"><i class="fas fa-play-circle pr-3"></i>Animation</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <div class="px-1">
+                                    <v-radio-group v-model="choice" row>
+                                        <v-radio label="Title" value="title" color="primary"></v-radio>
+                                        <v-radio label="Subtitle" value="subtitle" color="primary"></v-radio>
+                                    </v-radio-group>
+                                    <v-combobox
+                                    v-if="choice === 'title'"
+                                    v-model="titleAni"
+                                    :items="animations"
+                                    label="Select a text animation"
+                                    ></v-combobox>
+                                    <v-combobox
+                                    v-if="choice === 'subtitle'"
+                                    v-model="subtitleAni"
+                                    :items="animations"
+                                    label="Select a text animation"
+                                    ></v-combobox>
                                 </div>
+                                <!--<div style="text-align: center;">
+                                    <v-btn small color="primary" @click="saveAni()">Apply</v-btn>
+                                </div>-->
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fas fa-play-circle pr-3"></i>Animation</div>
+                            <div @click="dialog = true"><i class="fas fa-keyboard pr-3"></i>Contents</div>
                         </template>
-                        <v-card>
-                            <v-card-text>
-                                <p></p>
-                            </v-card-text>
-                        </v-card>
+                        <template v-slot:actions>
+                             <v-icon color="teal"> </v-icon>
+                        </template>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <v-btn small color="primary" @click="saveAll()">Save</v-btn>
+                </div>
             </v-list>
         </v-navigation-drawer>
+        <v-dialog v-model="dialog" max-width="600">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">TITLE</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field v-model="portfolio.title.content" label="Page Title"></v-text-field>
+                    <v-text-field v-model="portfolio.subtitle.content" label="Subtitle"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialog = false; saveHeader();">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -281,7 +325,11 @@ export default {
         return {
             user: null,
             portfolio: [],
-            drawer: null,
+            fileOb: null,
+            headerDrawer: null,
+            viewImg: null,
+            opacity: 'opacity1',
+            dialog: false,
             mini: false,
             select: { theme: 'Dolphin', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample4.jpg?alt=media&token=c3ba9a94-7889-40eb-b68c-2fda0d6247ac', opacity: 'opacity1' },
             fileName: null,
@@ -291,7 +339,6 @@ export default {
                 { theme: 'Horizon', img: 'https://firebasestorage.googleapis.com/v0/b/teamportfolio-d978f.appspot.com/o/banner%2Fexample6.jpg?alt=media&token=b4bed72d-2c2f-4fdd-a9f4-14a1cc17d2e3', opacity: 'opacity1' }
             ],
             layout: null,
-            tmplayout: null,
             choice: 'title',
             titleS: "1",
             subtitleS: "1",
@@ -303,11 +350,16 @@ export default {
             sRed: "255",
             sBlue: "255",
             sGreen: "255",
-            
+            animations: ['none', 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'headShake', 'swing', 'tada', 'wobble', 'jello', 'bounceIn'],
+            titleAni: 'none',
+            subtitleAni: 'none'
         }
     },
-    created() {
+    mounted() {
         this.getPortfolio();
+        this.$EventBus.$on('Header', () => {
+            this.headerDrawer = !this.headerDrawer
+            })
     },
     watch: {
         titleS: function() {
@@ -348,6 +400,44 @@ export default {
             let rgb = 'rgb(' + this.sRed + ',' + this.sGreen + ',' + this.sBlue + ')';
             document.getElementById('subtitleColor').style.backgroundColor = rgb;
             document.getElementById('portSubtitle').style.color = rgb;
+        },
+        titleAni: function() {
+            let elem = document.querySelector('#portTitle');
+            elem.classList.forEach(function(item) {
+                    if (item !== 'animated' && item !== 'delay-1s') {
+                        elem.classList.remove(item);
+                    }
+                })
+            if (this.titleAni !== 'none') {
+                elem.classList.add(this.titleAni);
+            }
+            console.log(elem.classList);
+        },
+        subtitleAni: function() {
+            let elem = document.querySelector('#portSubtitle');
+            elem.classList.forEach(function(item) {
+                    if (item !== 'animated' && item !== 'delay-2s') {
+                        elem.classList.remove(item);
+                    }
+                })
+            if (this.subtitleAni !== 'none') {
+                elem.classList.add(this.subtitleAni);
+            }
+            console.log(elem.classList);
+        },
+        select: function() {
+            this.viewImg = this.select.img;
+        },
+        opacity: function() {
+            this.select.opacity = this.opacity;
+            if (this.opacity === 'opacity1') {
+                document.getElementById('headBanner').style.backgroundImage = "url('" + this.viewImg + "')";
+            } else if (this.opacity === 'opacity2') {
+                document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.viewImg + "')";
+            }
+        },
+        viewImg: function() {
+            document.getElementById('headBanner').style.backgroundImage = "url('" + this.viewImg + "')";
         }
     },
     methods: {
@@ -357,10 +447,9 @@ export default {
                 __this.user = user.uid;
                 FirebaseServices.getMyPort(user.uid).then(function(res) {
                     __this.portfolio = res;
-                    console.log(__this.portfolio);
                     __this.select = __this.portfolio.banner;
-                    __this.layout = __this.portfolio.layout;
-                    __this.tmplayout = __this.layout;
+                    __this.opacity = __this.select.opacity;
+                    __this.layout = __this.select.layout;
                     __this.titleS = __this.portfolio.title.size;
                     __this.subtitleS = __this.portfolio.subtitle.size;
                     __this.tRed = __this.portfolio.title.color.red;
@@ -369,13 +458,24 @@ export default {
                     __this.sRed = __this.portfolio.subtitle.color.red;
                     __this.sBlue = __this.portfolio.subtitle.color.blue;
                     __this.sGreen = __this.portfolio.subtitle.color.green;
-                    document.getElementById('banner').style.backgroundImage = "url('" + __this.select.img + "')";
+                    __this.titleAni = __this.portfolio.title.animation;
+                    __this.subtitleAni = __this.portfolio.subtitle.animation;
+                    console.log(__this.portfolio);
+                }).then(function(res) {
+                    document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
                     if (__this.select.opacity === 'opacity2') {
-                        document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                        document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                    }
+                    // console.log(document.querySelector('#portTitle').classList);
+                    // console.log(document.querySelector('#portSubitle').classList);
+                    if (__this.titleAni !== 'none') {
+                        document.querySelector('#portTitle').classList.add(__this.titleAni);
+                    }
+                    if (__this.subtitleAni !== 'none') {
+                        document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
                     }
                     document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
                     document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
-                    console.log(document.getElementById('portTitle').style);
                     document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
                     document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
                 })
@@ -417,35 +517,28 @@ export default {
                     for (let j=0; j < files.length; j++) {
                     }
                     _this.select.img = e.target.result;
+                    _this.viewImg = e.target.result;
                 }
                 reader.readAsDataURL(file)
                 _this.select.theme = file.name;
+                _this.fileOb = file;
                 _this.select.img = file;
+                console.log(_this.select.img);
                 } else {
                 alert('이미지 파일만 올려주세요.')
                 }
             }
         },
-        async saveImg() {
-            if (typeof(this.select.img) == 'object') {
-                FirebaseServices.uploadfile(user, this.select.img);
+        async saveAll() {
+            let __this = this;
+            if (this.select.img.substring(0, 4) === 'data') {
+                FirebaseServices.uploadfile(this.user, this.fileOb)
                 // download url 가져오기
-                this.getBanner();
+                setTimeout(function() {__this.getBanner()}, 1000);
             }
+            console.log(__this.select);
             this.portfolio.banner = this.select;
-            console.log(this.portfolio.banner);
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
-            document.getElementById('banner').style.backgroundImage = "url('" + this.select.img + "')";
-            if (this.select.opacity === 'opacity2') {
-                document.getElementById('banner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + this.select.img + "')";
-            }
-        },
-        async saveLayout() {
-            this.layout = this.tmplayout;
             this.portfolio.layout = this.layout;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
-        },
-        async saveFont() {
             this.portfolio.title.size = this.titleS;
             this.portfolio.subtitle.size = this.subtitleS;
             this.portfolio.title.color.red = this.tRed;
@@ -454,7 +547,9 @@ export default {
             this.portfolio.subtitle.color.red = this.sRed;
             this.portfolio.subtitle.color.blue = this.sBlue;
             this.portfolio.subtitle.color.green = this.sGreen;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.layout, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title);
+            this.portfolio.title.animation = this.titleAni;
+            this.portfolio.subtitle.animation = this.subtitleAni;
+            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
         }
     }
 }
@@ -490,36 +585,6 @@ export default {
     animation-iteration-count: infinite;
 }
 
-    /*.item-1{
-        animation-name: anim-1;
-    }
-
-.item-2{
-    animation-name: anim-2;
-}
-
-.item-3{
-    animation-name: anim-3;
-}
-
-@keyframes anim-1 {
-    0%, 8.3% { left: -100%; opacity: 0; }
-    8.3%,25% { left: 25%; opacity: 1; }
-    33.33%, 100% { left: 110%; opacity: 0; }
-}
-
-@keyframes anim-2 {
-    0%, 33.33% { left: -100%; opacity: 0; }
-    41.63%, 58.29% { left: 25%; opacity: 1; }
-    66.66%, 100% { left: 110%; opacity: 0; }
-}
-
-@keyframes anim-3 {
-    0%, 66.66% { left: -100%; opacity: 0; }
-    74.96%, 91.62% { left: 25%; opacity: 1; }
-    100% { left: 110%; opacity: 0; }
-    }
-    */
     .filebox input[type="file"] {
         position: absolute;
         width: 1px;
