@@ -2,8 +2,8 @@
 <div>
     <BackBanner>
         <div slot="pageName">
-            <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
-            <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
+            <p class="mainBackBanner" style="font-family: 'Jua', sans-serif; font-size: 4rem;" v-if="ifsearch">Search Results</p>
+            <p class="mainBackBanner" style="font-family: 'Jua', sans-serif; font-size: 4rem;" v-if="!ifsearch">Portfolio Explorer</p>
         </div>
     </BackBanner>
 
@@ -20,14 +20,14 @@
                 <v-expansion-panel>
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
+                            <div style="font-size: 1.3rem;"><i class="fab fa-slack-hash pr-3"></i>hash</div>
                         </template>
                         <v-card>
                             <v-card-text>
-                                <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)" :id="tag">
-                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color:Crimson;"></i></span>
-                                    <span v-show="!elem['check']"><i class="fas fa-square" style="color:Crimson;"></i></span>
-                                    &nbsp&nbsp{{tag}}
+                                <li style="margin-left: 1rem;" class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)" :id="tag">
+                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color: #005caf;"></i></span>
+                                    <span v-show="!elem['check']"><i class="far fa-square" style="color: #005caf;"></i></span>
+                                    <span style="font-size: 1.3rem;">&nbsp&nbsp{{tag}}</span>
                                 </li>
                             </v-card-text>
                         </v-card>
@@ -35,14 +35,14 @@
 
                     <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
                         <template v-slot:header>
-                            <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
+                            <div style="font-size: 1.2rem;"><i class="fas fa-folder-open pr-3"></i>{{mainName}}</div>
                         </template>
                         <v-card>
                             <v-card-text>
-                                <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
-                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color:Crimson;"></i></span>
-                                    <span v-show="!elem['check']"><i class="fas fa-square" style="color:Crimson;"></i></span>
-                                    &nbsp&nbsp{{tag}}
+                                <li style="margin-left: 1rem;" class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
+                                    <span v-show="elem['check']"><i class="fas fa-check-square" style="color: #005caf;"></i></span>
+                                    <span v-show="!elem['check']"><i class="far fa-square" style="color: #005caf;"></i></span>
+                                    <span style="font-size: 1.2rem;">&nbsp&nbsp{{tag}}</span>
                                 </li>
                             </v-card-text>
                         </v-card>
@@ -50,20 +50,20 @@
 
                     <v-expansion-panel-content>
                         <template v-slot:header>
-                            <div><i class="fas fa-filter pr-3"></i>Sort</div>
+                            <div style="font-size: 1.3rem;"><i class="fas fa-filter pr-3"></i>sort</div>
                         </template>
                         <v-card>
                             <v-card-text>
                                 <v-radio-group v-model="radios" :mandatory="false">
-                                    <li class="tag-list" @click="sortup = true">
-                                        <span v-show="sortup"><i class="fas fa-check-circle" style="color:Crimson;"></i></span>                                       
-                                        <span v-show="!sortup"><i class="fas fa-circle" style="color:Crimson;"></i></span>
-                                        &nbsp&nbsp오름차순
+                                    <li style="margin-left: 1rem;" class="tag-list" @click="sortup = true">
+                                        <span v-show="sortup"><i class="far fa-dot-circle" style="color: #005caf;"></i></span>                                       
+                                        <span v-show="!sortup"><i class="far fa-circle" style="color: #005caf;"></i></span>
+                                        <span style="font-size: 1.2rem;">&nbsp&nbsp오름차순</span>
                                     </li>
-                                    <li class="tag-list" @click="sortup = false">
-                                        <span v-show="!sortup"><i class="fas fa-check-circle" style="color:Crimson;"></i></span>                                       
-                                        <span v-show="sortup"><i class="fas fa-circle" style="color:Crimson;"></i></span>
-                                        &nbsp&nbsp내림차순
+                                    <li style="margin-left: 1rem;" class="tag-list" @click="sortup = false">
+                                        <span v-show="!sortup"><i class="far fa-dot-circle" style="color: #005caf;"></i></span>                                       
+                                        <span v-show="sortup"><i class="far fa-circle" style="color: #005caf;"></i></span>
+                                        <span style="font-size: 1.2rem;">&nbsp&nbsp내림차순</span>
                                     </li>
                                 </v-radio-group>
                             </v-card-text>
@@ -72,78 +72,27 @@
                 </v-expansion-panel>
             </v-list>
         </v-navigation-drawer>
-
-        <!-- ---- side bar ---------------------------- -->
-        <!-- <div class="sidebar">
-            <br>
-            <div class="sidebar-part">
-                <h3 class="tag-title">hash</h3>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
-                <div v-if="ifHash">
-                    <ul>
-                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <br>
-
-            <span v-for="(SelectMain , mainName) in SelectDictDict">
-                <div class="sidebar-part">
-                    <h3 class="tag-title">{{mainName}}</h3>
-                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="!SelectIfDict[mainName]">+</btn>
-                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
-                    <div v-if="SelectIfDict[mainName]">
-                        <ul>
-                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
-                                {{tag}}<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                                
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <br>
-            </span>
-
-            <div class="sidebar-part">
-                <h3 class="tag-title">정렬</h3>
-                <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
-                <btn class="open-btn" @click="ifsort = !ifsort" v-if="ifsort">-</btn>
-                <div v-if="ifsort">
-                    <ul>
-                        <li class="tag-list" @click="sortup = true">
-                            이름 : 오름차순 <span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                        <li class="tag-list" @click="sortup = false">
-                            이름 : 내림차순 <span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-        <!-- ----- list --------------------------- -->
-        <div class="foliolist" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
-            <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
-                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
-            </div>
-            <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
-                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
-            </div>
-        </div> -->
+        <!-- list -->
+        <v-container style="margin-left: 2rem; margin-top: 2rem; margin-bottom: 3rem;" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
+            <v-layout v-if="ifsearch">
+                <v-flex>
+                    <p style="font-size: 2rem; font-family: 'Jua', sans-serif;">"{{search_input}}"의 검색 결과입니다.</p>
+                </v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex lg4 class="px-2" v-for="user in folios" v-if="tagCheckNum == 0">
+                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
+                </v-flex>
+                <v-flex lg4 class="px-2" v-for="user in tagoutList" v-if="tagCheckNum != 0">
+                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+                </v-flex>
+            </v-layout>
+        </v-container>
 
         <!-- 검색 결과가 없을 때 -->
-        <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
-            <div>
-                <p class="resultOut">검색 결과가 없습니다.</p>
-            </div>
-        </div>
+        <v-container style="margin-top: 2rem; margin-bottom: 3rem;" v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0">
+            <p style="font-size: 3rem; font-family: 'Jua', sans-serif;">검색 결과가 없습니다.</p>
+        </v-container>
         
     </div>
     <!-- uid : {{me.uid}}<br>
@@ -515,7 +464,6 @@ export default {
     // height:500px;
     width:90%;
     margin:10px auto;
-    border:1px solid blue;
 }
 .folioLink{
     color:blueviolet;
