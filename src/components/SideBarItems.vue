@@ -24,7 +24,6 @@
                 <v-autocomplete label="Search" 
                     :items="items" 
                     v-model="searchItem"
-                    :disabled="isUpdating"
                     v-on:keyup.enter="findItem"
                     color="white"
                 ></v-autocomplete>
