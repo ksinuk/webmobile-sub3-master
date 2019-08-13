@@ -466,7 +466,6 @@ export default {
     // login 1. create DB
     // 신규유저 생성시 users 컬렉션에 uid로 접근 가능한 문서 생성
     async createdbForNewUser(userID, date, name) {
-        console.log(date)
         await db.collection(USERDATA).doc(userID).set({
             displayName: name,
             uid: userID,
