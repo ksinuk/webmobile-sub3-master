@@ -43,7 +43,7 @@ export default {
           imgSrc: 'https://qwealthreport.com/wp-content/uploads/2015/05/community.png',
           icon: 'people',
           title: '포트폴리오를 공유하는 커뮤니티',
-          content: '개인 간 포트폴리오의 공유를 용이하게 하고, 질의응답하는 Q&A 기능을 제공하여 함께 성장할 수 있는 발판을 마련합니다.'
+          content: '개인 간 포트폴리오의 공유를 용이하게 하고, 코멘트 기능을 제공하여 함께 성장할 수 있는 발판을 마련합니다.'
         },
         {
           imgSrc: 'https://images.idgesg.net/images/article/2017/09/online_backup_cloud_service-100737202-large.jpg',
