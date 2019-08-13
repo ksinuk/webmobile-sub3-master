@@ -10,7 +10,7 @@
       class="dark white--text text-xs-center"
     >
       <v-card-text>
-        <v-btn class="mx-3 white--text">
+        <v-btn flat depressed class="mx-3 white--text" style="font-size: 30px;">
           <a href="https://lab.ssafy.com/kimsuhan/webmobile-sub3" target="_blank"><i class="fab fa-github"></i></a>
         </v-btn>
       </v-card-text>

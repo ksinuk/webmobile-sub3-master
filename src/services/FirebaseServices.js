@@ -521,17 +521,6 @@ export default {
             console.log(error)
         })
     },
-    // login 2-1.2 login user whit e-mail
-    loginUserWithEmail(email, password) {
-        let _this = this
-        firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(function(result) {
-            store.commit('setPhotoURL', result.user.photoURL)
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-    },
     // login 2-2. login google
     loginUserWithGoogle() {
         let _this = this

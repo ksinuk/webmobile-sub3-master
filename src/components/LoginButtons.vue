@@ -194,7 +194,7 @@
           :loading="loading"
           :disabled="!form"
           color="success"
-          @click="loader = 'loading'"
+          @click="loader()"
         >
           로그인
         </v-btn>
@@ -207,6 +207,7 @@
 import FirebaseServices from '../services/FirebaseServices'
 import firebase from 'firebase'
 import router from '../router'
+import store from '../store'
 
 export default {
   name: 'Loginbuttons',
@@ -241,36 +242,44 @@ export default {
         v => !!v || '동의가 필요합니다.',
       ],
       // loading button
-      loader: null,
       loading: false,
     }
   },
-  watch: {
-    loader () {
-      if (this.loader === 'loading') {
-        if(this.viewSign == true) {
-          this.createUserWithEmail()
-        } else {
-          this.emailLogin()
-        }
-        
-      }
-      const thisCopy = this
-      const l = thisCopy.loader
-      thisCopy[l] = !thisCopy[l]
-      setTimeout(function () {
-        thisCopy[l] = false
-        thisCopy.goHome()
-        }, 3000)
-      thisCopy.loader = null
-    }
-  },
   methods: {
+    loader() {
+      // btn 클릭에 맞는 func
+      if(this.viewSign == true) {
+        this.createUserWithEmail()
+      } else {
+        this.emailLogin()
+      }
+      // 로딩활성화
+      this.loading = true
+    },
     async createUserWithEmail() {
       await FirebaseServices.createUserWithEmail(this.email, this.password, this.displayName, this.$store.state.today)
     },
-    emailLogin(){
-      FirebaseServices.loginUserWithEmail(this.email, this.password)
+    async emailLogin() {
+      let _this = this
+      await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then(function(result) {
+          store.commit('setPhotoURL', result.user.photoURL)
+          setTimeout(function () {
+          router.push('/')
+          }, 2000)
+        })
+        .catch(function(err) {
+          if (err.code == 'auth/user-not-found') {
+            alert('존재하지 않는 유저 입니다.')
+            _this.email = ''
+            _this.password = ''
+          }
+          else if (err.code == 'auth/wrong-password') {
+            alert ('비밀번호가 틀렸습니다. 다시 입력해주세요.')
+            _this.password = ''
+          }
+          _this.loading = false
+        })
     },
     async googleLogin() {
       await FirebaseServices.loginUserWithGoogle()
@@ -287,9 +296,6 @@ export default {
           router.push('/')
         }
       })
-    },
-    goHome() {
-      this.$router.push('/')
     },
     // 유저네임 특수문자 제한
     characterCheck() {
