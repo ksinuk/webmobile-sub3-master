@@ -3,7 +3,7 @@
 
     <v-flex v-for="item in introText"
       xs12 md3 class="px-3">
-        <v-card class="mx-auto" wrap light min-height="35rem" color="light" style="overflow: hidden;">
+        <v-card class="mx-auto" wrap light height="35rem" color="light" style="overflow: hidden;">
           <v-img
           :src="item.imgSrc"
           aspect-ratio="1.75"
