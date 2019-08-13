@@ -50,14 +50,17 @@ export default {
             })
         })
     },
-    writeComments(uid, writeUid, content){
-        data = {'writer':writeUid, 'content':content, time:firebase.database.ServerValue.TIMESTAMP}
+    writeComments(uid, writer, content){
+        let data = {
+            'writer': writer,
+            'content': content,
+        }
         return db.collection('comments').doc(uid).update({
             comments: firebase.firestore.FieldValue.arrayUnion(data)
         })
     },
     deleteComments(uid,comment){
-        return db.collection('userData').doc(uid).update({
+        return db.collection('comments').doc(uid).update({
             bookmarks: firebase.firestore.FieldValue.arrayRemove(comment)
         })
     },
