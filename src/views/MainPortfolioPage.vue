@@ -73,9 +73,6 @@
             </v-list>
         </v-navigation-drawer>
 
-
-
-    
         <!-- ---- side bar ---------------------------- -->
         <!-- <div class="sidebar">
             <br>
@@ -149,12 +146,12 @@
         </div>
         
     </div>
-    uid : {{me.uid}}<br>
+    <!-- uid : {{me.uid}}<br>
     tagCheckNum : {{tagCheckNum}}<br>
     folio len : {{folios.length}}<br>
     ifsearch : {{ifsearch}}<br>
     search_input : {{search_input}}<br>
-    route : {{this.$route.name}}<br>
+    route : {{this.$route.name}}<br> -->
 
 </div>
 </template>
@@ -510,7 +507,7 @@ export default {
     display: grid;
     margin:30px 0 30px 40px;
     width:70%;
-    border:2px solid black;
+    // border:2px solid black;
     grid-template-columns: 32% 32% 32%;
 }
 

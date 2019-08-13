@@ -72,7 +72,8 @@
             </v-flex>
         </v-layout>
     </div>
-    <!-- user edit modal -->
+    <!-- user comments -->
+    <userComment :userUid="" , :myUid=""></userComment>
 </div>
 </template>
 

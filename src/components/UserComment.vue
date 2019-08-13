@@ -47,10 +47,20 @@ export default {
     },
     methods:{
         writeFunc:function(){
-            this.writeContent
             FirebaseServices.writeComments(this.userUid, this.myUid, this.writeContent)
             let newComment = {content:this.writeContent , writer:this.myUid , time:firebase.database.ServerValue.TIMESTAMP}
             this.comments.push(newComment)
+        },
+        deleteFunc: function(comment){
+            FirebaseServices.deleteComments(this.userUid,comment)
+            for(let i=0; i<this.comments.length; i++){
+                if(this.comments[i] == comment){
+                    for(let j=i; j<this.comments.length; j++){
+                        this.comments[j] = this.comments[j+1]
+                    }
+                }
+                this.comments.pop()
+            }
         },
 
     }
