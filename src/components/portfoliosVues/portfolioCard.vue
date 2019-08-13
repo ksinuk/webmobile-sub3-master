@@ -2,7 +2,7 @@
 <div v-if="isshow">
     <v-card class="card-body">
         <div>
-            <v-img class="white--text" :src="result.banner.img" :alt="result.pk" style="width: 100%; height: 100%;">
+            <v-img class="white--text" :src="result.banner.img" :alt="result.pk" style="width: 100%; height: 20rem; object-fit: cover;">
                 <v-container fill-height fluid>
                     <v-layout fill-height>
                     <v-flex xs12 align-end flexbox>
@@ -15,7 +15,7 @@
         <v-card-text>
             <div class="text-center">
                 <div style="font-weight: 600;" class="text-center">
-                    <p style="font-family: 'Jua', sans-serif; font-size: 1.5rem;" v-if="userData">{{ userData.displayName }}</p>
+                    <span style="font-family: 'Jua', sans-serif; font-size: 1.5rem;" v-if="userData">{{ userData.displayName }}</span>
                     <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                     <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
@@ -71,6 +71,7 @@
 import FirebaseService from '@/services/FirebaseServices'
 import Loading from 'vue-loading-overlay';
 import FirebaseServices from '../../services/FirebaseServices';
+import firebase from 'firebase/app'
 
 export default {
     name:'folioCard',
@@ -99,13 +100,27 @@ export default {
     methods: {
         async reboot(){
             // console.log("card route : ",this.$route)
+            let __this = this;
             if(this.$route.name == 'home') this.isbookmark = false
             this.userData = await FirebaseServices.getVisitView(this.result.uid)
-            // console.log(this.userData.displayName);
             this.checkme()
             this.makeTagList()
             this.makeAddr()
-
+            console.log(this.result)
+            if (this.result.banner.img.substring(0, 8) !== 'https://') {
+                var storage = firebase.storage();
+                var storageRef = storage.ref();
+                storageRef.child('users/' + this.userData.uid + '/' + this.result.banner.theme).getDownloadURL().then(function(url) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function(event) {
+                        var blob = xhr.response;
+                    }
+                    xhr.open('GET', url)
+                    xhr.send();
+                    __this.result.banner.img = url;
+                })
+            }
             this.isshow = false
             this.isshow = true
         },

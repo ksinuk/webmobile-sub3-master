@@ -59,10 +59,10 @@ export default {
             comments: firebase.firestore.FieldValue.arrayUnion(data)
         })
     },
-    deleteComments(uid,comment){
-        return db.collection('comments').doc(uid).update({
-            bookmarks: firebase.firestore.FieldValue.arrayRemove(comment)
-        })
+    deleteComments(uid, comment){
+        return db.collection('comments').doc(uid).set({
+            comments: comment.reverse()
+        }).then(console.log('done'))
     },
     //make tag DB
     async setTagsDBall(inputDB){
@@ -385,7 +385,7 @@ export default {
 
     // 파이어베이스에 포트폴리오를 입력하는 함수
     // hashtag 를 저장하는 단계에서 str.toLowerCase() 함수를 사용하여 소문자로 변환, 저장하기 <- 검색 단계를 위함
-    postPortfolios(user, aboutMe, foliotheme, banner, portfolios, skills, subtitle, title, userImage) {
+    postPortfolios(user, aboutMe, foliotheme, banner, portfolios, skills, subtitle, title) {
         return db.collection(MYPORT).doc(user).set({
             uid: user,
             title: title,
@@ -395,8 +395,7 @@ export default {
             portfolios: portfolios,
             created_at: firebase.firestore.FieldValue.serverTimestamp(),
             foliotheme: foliotheme,
-            banner: banner,
-            userImage: userImage
+            banner: banner
         }).then(console.log('done'))
     },
     // userstate 1. onAuthStateChanged
@@ -507,7 +506,7 @@ export default {
                 career: [],
             },
             created_at: date,
-            photoURL: null,
+            photoURL: 'http://dy.gnch.or.kr/img/no-image.jpg',
         })
     },
     // 현재 로그인 된 유저의 프로필 정보를 업데이트

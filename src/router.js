@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import firebase from 'firebase'
+import firebaseApp from 'firebase/app'
 import AdminPage from './views/AdminPage.vue'
 import UserPage from './views/UserPage.vue'
 import LoginPage from './views/LoginPage.vue'
@@ -28,11 +29,19 @@ Vue.use(Router)
 
 // 로그인 상태 정보를 vuex에 저장하고 판단
 const requireAuth = () => (to, from, next) => {
-  let _user = firebase.auth().currentUser
-  if (!_user) {
-    alert('login please')
-    return next('/login')
-  }
+    firebaseApp.auth().onAuthStateChanged(function(user){
+        if(!user || !user.uid){
+            alert('로그인이 필요합니다!')
+            return next('/login')
+        }
+    })
+
+
+//   let _user = firebase.auth().currentUser
+//   if (!_user) {
+//     alert('login please')
+//     return next('/')
+//   }
   next()
 }
 
@@ -98,7 +107,8 @@ export default new Router({
         {
             path: '/portfoliopage',
             name: 'portfoliopage',
-            component: PortfolioPage
+            component: PortfolioPage,
+            beforeEnter: requireAuth()
         },
         {
             path: '/portfoliopage/:uid',

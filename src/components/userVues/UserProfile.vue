@@ -42,6 +42,18 @@
         </v-card-text>
       </v-card>
     </v-container>
+
+    <v-container>
+      <v-tabs v-model="tab" vertical grow>
+        <v-tab v-for="item in items" :key="item">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
+    </v-container>
+    
+    <v-tabs-items v-model="tab">
+      <!-- activities 1 -->
+      <v-tab-item>
         <v-container>
           <v-flex>
             <!-- 투명색 지정 -->
@@ -49,6 +61,7 @@
               <v-layout row style="margin-top: 3rem;">
                 <v-flex>
                   <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif;">ACTIVITIES</p>
+                  <p style="font-family: 'Jua', sans-serif;">조회수를 볼 수 있어요.</p>
                   <!-- 뷰 길이가 3 이상 -->
                   <v-layout v-show="spark" my-3>
                     <v-card flat>
@@ -91,7 +104,54 @@
             </v-card>
           </v-flex>
         </v-container>
-      
+      </v-tab-item>
+
+
+      <!-- activities 2 -->
+      <v-tab-item>
+        <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif; margin-top: 67px;">COMMENTS</p>
+        <p style="font-family: 'Jua', sans-serif;">댓글을 남겨주세요.</p>
+        <v-container>
+          <!-- 입력 -->
+          <v-flex>
+            <v-text-field
+              v-model="comment"
+              label="Comment"
+              outline
+              :append-icon="comment ? 'send' : ''"
+              @click:append="sendComment()"
+            ></v-text-field>
+          </v-flex>
+
+          <v-card v-for="(item, key) in commentList" style="margin-bottom: 5px;">
+            <v-card-text class="headline font-weight-bold">{{ item.content }}</v-card-text>
+            <v-card-actions>
+              <v-list-tile class="grow">
+                <v-list-tile-avatar color="grey darken-3">
+                  <v-img
+                    class="elevation-6"
+                    :src="item.writer.photoURL"
+                  ></v-img>
+                </v-list-tile-avatar>
+
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.writer.displayName }}</v-list-tile-title>
+                </v-list-tile-content>
+
+                <v-layout align-center justify-end>
+                  <span class="subheading mr-2">작성 {{ item.writer.date }}</span>
+                  <v-btn flat v-if="item.writer.uid == inUser" @click="delComment(key)">
+                    <v-icon>fas fa-cut</v-icon>
+                  </v-btn>
+                </v-layout>
+              </v-list-tile>
+            </v-card-actions>
+          </v-card>
+          {{ this.commentList}}
+          
+        </v-container>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 
@@ -100,6 +160,7 @@ import FirebaseServices from '../../services/FirebaseServices'
 import firebase from 'firebase'
 import UserDialog from './UserDialog.vue'
 import { constants } from 'crypto';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'UserProfile',
@@ -131,7 +192,17 @@ export default {
       // send comment
       inUser: this.$store.state.firebaseUser.uid,
       comment: null,
-      commentList: []
+      commentList: [],
+      show1: false,
+    }
+  },
+  watch: {
+    tab() {
+      this.getComment()
+      this.comment = null
+    },
+    commentList() {
+      this.getComment()
     }
   },
   created() {
@@ -159,7 +230,12 @@ export default {
       } else {
         this.careerData.userImg = this.userData.userData.photoURL
       }
-      this.portAddr = '/portfoliopage/' + this.userData.userData.uid;
+      if (this.$store.state.firebaseUser.uid === this.$route.params.userId) {
+        this.portAddr = '/portfoliopage'
+      } else {
+        this.portAddr = '/portfoliopage/' + this.userData.userData.uid;
+      }
+      
       console.log(this.portAddr);
     },
     setSpark() {
@@ -193,18 +269,26 @@ export default {
         photoURL: this.$store.state.firebaseUser.photoURL,
         date: this.$store.state.today
       }
+      this.commentList.push({comment: this.comment, writer})
       FirebaseServices.writeComments(this.$route.params.userId, writer, this.comment)
       // 초기화
       this.comment = null
+      // setTimeout
+      this.getComment()
     },
     async getComment() {
       let result = await FirebaseServices.getComments(this.$route.params.userId)
-      this.commentList = result
+      this.commentList = result.reverse()
     },
     delComment(comment) {
-      console.log(comment)
-      // FirebaseServices.deleteComments(this.$route.params.userId, )
-    }
+      for (let i=0; i < this.commentList.length; i++) {
+        if (comment == i) {
+          this.$delete(this.commentList, comment)
+        }
+      }
+      FirebaseServices.deleteComments(this.$route.params.userId, this.commentList)
+      this.getComment()
+    },
   }
 }
 </script>

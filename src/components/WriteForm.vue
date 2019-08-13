@@ -585,7 +585,7 @@ export default {
         }
         // firebase storage에 저장
         _this.upload(user.uid);
-        const result = await FirebaseServices.postPortfolios(user.uid, aboutme, foliotheme, banner, _this.portfolios, _this.skills, subtitle, title, "");
+        const result = await FirebaseServices.postPortfolios(user.uid, aboutme, foliotheme, banner, _this.portfolios, _this.skills, subtitle, title);
         return   _this.$router.push('/portfoliopage');
       })
     }
