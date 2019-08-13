@@ -6,11 +6,11 @@
         <v-container class="aboutContainer">
           <div class="title_line"></div>
           <h4>
-            <span class="aboutMe_title">Intro</span>
+            <span class="aboutMe_title" style="color: white; opacity: 0.5; font-size: 1.7rem; font-family: 'Nanum Gothic', sans-serif;">Intro</span>
             <span id="aboutTitle1" class="aboutMe_subTitle">About myself.</span>
           </h4>
           <div id="aboutSubtitle1">
-            <p v-for="item in (portfolio.aboutMe.content || '').split('.')" >{{ item }}</p>
+            <p style="font-family: 'Nanum Gothic', sans-serif;" v-for="item in (portfolio.aboutMe.content || '').split('.')" >{{ item }}</p>
           </div>
         </v-container>
       </div>
@@ -20,11 +20,11 @@
         <v-container class="aboutContainer">
           <div class="title_line"></div>
           <h4>
-            <span class="aboutMe_title">skills</span>
+            <span class="aboutMe_title" style="color: white; opacity: 0.5; font-size: 1.7rem; font-family: 'Nanum Gothic', sans-serif;">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
           <div id="aboutSubtitle2" v-for="item in portfolio.tmp">
-              <p style="display: inline;">{{ item.name }}</p>
+              <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;">{{ item.name }}</p>
               <div :id="item.name" class="bar back" :data-skill="item.degree"></div>
           </div>
         </v-container>

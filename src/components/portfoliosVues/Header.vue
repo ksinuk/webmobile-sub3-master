@@ -323,7 +323,6 @@ export default {
     name: 'header',
     data() {
         return {
-            user: null,
             portfolio: [],
             fileOb: null,
             headerDrawer: false,
@@ -355,6 +354,7 @@ export default {
             subtitleAni: 'none'
         }
     },
+    props: ['userData'],
     mounted() {
         this.getPortfolio();
         this.$EventBus.$on('Header', () => {
@@ -443,48 +443,46 @@ export default {
     methods: {
         getPortfolio() {
             let __this = this;
-            const tmp = firebase.auth().onAuthStateChanged(function(user) {
-                __this.user = user.uid;
-                FirebaseServices.getMyPort(user.uid).then(function(res) {
-                    __this.portfolio = res;
-                    __this.select = __this.portfolio.banner;
-                    __this.opacity = __this.select.opacity;
-                    __this.layout = __this.select.layout;
-                    __this.titleS = __this.portfolio.title.size;
-                    __this.subtitleS = __this.portfolio.subtitle.size;
-                    __this.tRed = __this.portfolio.title.color.red;
-                    __this.tBlue = __this.portfolio.title.color.blue;
-                    __this.tGreen = __this.portfolio.title.color.green;
-                    __this.sRed = __this.portfolio.subtitle.color.red;
-                    __this.sBlue = __this.portfolio.subtitle.color.blue;
-                    __this.sGreen = __this.portfolio.subtitle.color.green;
-                    __this.titleAni = __this.portfolio.title.animation;
-                    __this.subtitleAni = __this.portfolio.subtitle.animation;
-                    console.log(__this.portfolio);
-                }).then(function(res) {
-                    document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
-                    if (__this.select.opacity === 'opacity2') {
-                        document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
-                    }
-                    // console.log(document.querySelector('#portTitle').classList);
-                    // console.log(document.querySelector('#portSubitle').classList);
-                    if (__this.titleAni !== 'none') {
-                        document.querySelector('#portTitle').classList.add(__this.titleAni);
-                    }
-                    if (__this.subtitleAni !== 'none') {
-                        document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
-                    }
-                    document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
-                    document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
-                    document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
-                    document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
-                })
+            FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
+                __this.portfolio = res;
+                console.log(__this.portfolio);
+                __this.select = __this.portfolio.banner;
+                __this.opacity = __this.select.opacity;
+                __this.layout = __this.select.layout;
+                __this.titleS = __this.portfolio.title.size;
+                __this.subtitleS = __this.portfolio.subtitle.size;
+                __this.tRed = __this.portfolio.title.color.red;
+                __this.tBlue = __this.portfolio.title.color.blue;
+                __this.tGreen = __this.portfolio.title.color.green;
+                __this.sRed = __this.portfolio.subtitle.color.red;
+                __this.sBlue = __this.portfolio.subtitle.color.blue;
+                __this.sGreen = __this.portfolio.subtitle.color.green;
+                __this.titleAni = __this.portfolio.title.animation;
+                __this.subtitleAni = __this.portfolio.subtitle.animation;
+                console.log(__this.portfolio);
+            }).then(function(res) {
+                document.getElementById('headBanner').style.backgroundImage = "url('" + __this.select.img + "')";
+                if (__this.select.opacity === 'opacity2') {
+                    document.getElementById('headBanner').style.backgroundImage = "linear-gradient(to top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)), url('" + __this.select.img + "')";
+                }
+                // console.log(document.querySelector('#portTitle').classList);
+                // console.log(document.querySelector('#portSubitle').classList);
+                if (__this.titleAni !== 'none') {
+                    document.querySelector('#portTitle').classList.add(__this.titleAni);
+                }
+                if (__this.subtitleAni !== 'none') {
+                    document.querySelector('#portSubtitle').classList.add(__this.subtitleAni);
+                }
+                document.getElementById('portTitle').style.fontSize = __this.titleS + 'rem';
+                document.getElementById('portTitle').style.color = 'rgb(' + __this.tRed + ',' + __this.tGreen + ',' + __this.tBlue + ')';
+                document.getElementById('portSubtitle').style.fontSize = __this.subtitleS + 'rem';
+                document.getElementById('portSubtitle').style.color = 'rgb(' + __this.sRed + ',' + __this.sGreen + ',' + __this.sBlue + ')';
             })
         },
         getBanner: function() {
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            storageRef.child('users/' + this.user + '/' + this.select.theme).getDownloadURL().then(function(url) {
+            storageRef.child('users/' + this.userData.uid + '/' + this.select.theme).getDownloadURL().then(function(url) {
                 var xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 xhr.onload = function(event) {
@@ -532,7 +530,7 @@ export default {
         async saveAll() {
             let __this = this;
             if (this.select.img.substring(0, 4) === 'data') {
-                FirebaseServices.uploadfile(this.user, this.fileOb)
+                FirebaseServices.uploadfile(this.userData.uid, this.fileOb)
                 // download url 가져오기
                 setTimeout(function() {__this.getBanner()}, 1000);
             }
@@ -549,7 +547,7 @@ export default {
             this.portfolio.subtitle.color.green = this.sGreen;
             this.portfolio.title.animation = this.titleAni;
             this.portfolio.subtitle.animation = this.subtitleAni;
-            const result = await FirebaseServices.postPortfolios(this.user, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
+            const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolio.aboutMe, this.portfolio.foliotheme, this.portfolio.banner, this.portfolio.portfolios, this.portfolio.skills, this.portfolio.subtitle, this.portfolio.title, this.portfolio.userImage);
             alert('저장 완료!');
         }
     }
