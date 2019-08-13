@@ -2,7 +2,7 @@
 <div v-if="isshow">
     <v-card class="card-body">
         <div>
-            <v-img class="white--text" :src="result.banner.img" :alt="result.pk" style="width: 100%; height: 100%;">
+            <v-img class="white--text" :src="result.banner.img" :alt="result.pk" style="width: 100%; height: 20rem; object-fit: cover;">
                 <v-container fill-height fluid>
                     <v-layout fill-height>
                     <v-flex xs12 align-end flexbox>
