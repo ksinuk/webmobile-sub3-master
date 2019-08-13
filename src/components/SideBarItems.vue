@@ -15,7 +15,6 @@
             <v-divider/>
         </div>
         <div>
-            <v-btn active-class="active" flat block to="/board">board</v-btn>
             <v-btn active-class="active" flat block to="/portfoliopage">my portfolio</v-btn>
             <v-btn active-class="active" flat block to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
@@ -81,6 +80,7 @@ export default {
         },
         logoutUser() {
             FirebaseServices.logoutUser()
+            this.islogin = false
             this.closeDrawer('Logout')
         },
         findItem: function() {

@@ -31,8 +31,8 @@ Vue.use(Router)
 const requireAuth = () => (to, from, next) => {
     firebaseApp.auth().onAuthStateChanged(function(user){
         if(!user || !user.uid){
-            alert('login please')
-            return next('/')
+            alert('로그인이 필요합니다!')
+            return next('/login')
         }
     })
 
