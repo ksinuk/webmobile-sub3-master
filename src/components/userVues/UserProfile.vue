@@ -42,60 +42,62 @@
         </v-card-text>
       </v-card>
     </v-container>
-    <v-container>
-      <v-flex>
-        <!-- 투명색 지정 -->
-        <v-card flat color="rgb(0, 0, 0, 0)">
-          <v-layout row style="margin-top: 3rem;">
-            <v-flex>
-              <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif;">ACTIVITIES</p>
-              <!-- 뷰 길이가 3 이상 -->
-              <v-layout v-show="spark" my-3>
-                <v-card flat>
-                  <v-sheet
-                    color="green"
-                    max-width="calc(100%)"
-                  >
-                    <v-sparkline
-                      :labels="this.userData.spark.labels"
-                      :value="this.userData.spark.value"
-                      color="white"
-                      line-width="1"
-                      padding="16"
-                    ></v-sparkline>
-                  </v-sheet>
-                </v-card>
+        <v-container>
+          <v-flex>
+            <!-- 투명색 지정 -->
+            <v-card flat color="rgb(0, 0, 0, 0)">
+              <v-layout row style="margin-top: 3rem;">
+                <v-flex>
+                  <p style="color: #2c3e50; font-size: 3rem; font-family: 'Jua', sans-serif;">ACTIVITIES</p>
+                  <!-- 뷰 길이가 3 이상 -->
+                  <v-layout v-show="spark" my-3>
+                    <v-card flat>
+                      <v-sheet
+                        color="green"
+                        max-width="calc(100%)"
+                      >
+                        <v-sparkline
+                          :labels="this.userData.spark.labels"
+                          :value="this.userData.spark.value"
+                          color="white"
+                          line-width="1"
+                          padding="16"
+                        ></v-sparkline>
+                      </v-sheet>
+                    </v-card>
+                  </v-layout>
+                  <!-- 뷰 길이가 3 이하 -->
+                  <v-layout v-show="!spark" my-3>
+                    <v-card flat>
+                      <v-sheet
+                        color="green"
+                        max-width="calc(100%)"
+                      >
+                        <v-sparkline
+                          :labels="this.examSpark.labels"
+                          :value="this.examSpark.value"
+                          color="white"
+                          line-width="1"
+                          padding="16"
+                        ></v-sparkline>
+                      </v-sheet>
+                      <div id="sparkOverlay">
+                        <p class="sparkP" style="margin-top: 2.5rem; font-size: 3rem; font-family: 'Jua', sans-serif;">아직 활동 정보가 없어요 :(</p>
+                      </div>
+                    </v-card>
+                  </v-layout>
+                </v-flex>
               </v-layout>
-              <!-- 뷰 길이가 3 이하 -->
-              <v-layout v-show="!spark" my-3>
-                <v-card flat>
-                  <v-sheet
-                    color="green"
-                    max-width="calc(100%)"
-                  >
-                    <v-sparkline
-                      :labels="this.examSpark.labels"
-                      :value="this.examSpark.value"
-                      color="white"
-                      line-width="1"
-                      padding="16"
-                    ></v-sparkline>
-                  </v-sheet>
-                  <div id="sparkOverlay">
-                    <p class="sparkP" style="margin-top: 2.5rem; font-size: 3rem; font-family: 'Jua', sans-serif;">아직 활동 정보가 없어요 :(</p>
-                  </div>
-                </v-card>
-              </v-layout>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-container>
+            </v-card>
+          </v-flex>
+        </v-container>
+      
   </div>
 </template>
 
 <script>
 import FirebaseServices from '../../services/FirebaseServices'
+import firebase from 'firebase'
 import UserDialog from './UserDialog.vue'
 import { constants } from 'crypto';
 
@@ -107,6 +109,10 @@ export default {
   props: ['userData'],
   data () {
     return {
+      // tab
+      tab: null,
+      items: ['activites', 'comment'],
+      // user data
       careerData: {
         userImg: null,
         selected: {
@@ -122,6 +128,10 @@ export default {
         labels: ['none', 'none', 'none'],
         value: [222, 222, 222]
       },
+      // send comment
+      inUser: this.$store.state.firebaseUser.uid,
+      comment: null,
+      commentList: []
     }
   },
   created() {
@@ -170,6 +180,30 @@ export default {
         this.careerData.selected.inUser = true
       }
       console.log('get user career success')
+    },
+
+
+    // activitis 2 comment
+    sendComment() {
+      // uid, writeUid, content
+      // console.log(firebase.database.ServerValue)
+      let writer = {
+        displayName: this.$store.state.firebaseUser.name,
+        uid: this.$store.state.firebaseUser.uid,
+        photoURL: this.$store.state.firebaseUser.photoURL,
+        date: this.$store.state.today
+      }
+      FirebaseServices.writeComments(this.$route.params.userId, writer, this.comment)
+      // 초기화
+      this.comment = null
+    },
+    async getComment() {
+      let result = await FirebaseServices.getComments(this.$route.params.userId)
+      this.commentList = result
+    },
+    delComment(comment) {
+      console.log(comment)
+      // FirebaseServices.deleteComments(this.$route.params.userId, )
     }
   }
 }
