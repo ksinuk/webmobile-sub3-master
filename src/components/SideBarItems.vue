@@ -21,12 +21,8 @@
             <!-- 제공되는 검색 기능 -->
             <v-flex>
                 <!--<v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>-->
-                <v-autocomplete label="Search" 
-                    :items="items" 
-                    v-model="searchItem"
-                    v-on:keyup.enter="findItem"
-                    color="white"
-                ></v-autocomplete>
+                <v-autocomplete label="Search" :items="items"  v-model="searchItem" v-on:keyup.enter="findItem" color="white" >
+                </v-autocomplete>
             </v-flex>
         </div>
     </v-container>
@@ -49,6 +45,8 @@ export default {
 
             me : '',
             islogin : false,
+
+            items:[],
         }
     },
     mounted() {
@@ -66,9 +64,11 @@ export default {
         })
 
         this.tagDict = await FirebaseServices.getTagsAll()
+        console.log("this.tagDict : ",this.tagDict)
         for (let item in this.tagDict) {
             this.items.push(item);
         }
+        console.log("this.items : ",this.items)
         this.$EventBus.$on('changePhoto', (URL) => {
             store.commit('setPhotoURL', URL)
             this.userImg.bool = true
