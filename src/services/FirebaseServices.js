@@ -70,7 +70,7 @@ export default {
                     resolve(doc.data())
                 }
                 else{
-                    out = {
+                    let out = {
                             'bookmarks': [],
                             'uid': uid,
                             'selected': {'career':[], 'recruit':[], 'tool':[]},
