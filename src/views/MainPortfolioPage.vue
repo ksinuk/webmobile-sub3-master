@@ -229,6 +229,7 @@ export default {
         // user 정보 불러 오기
         settingMe:async function(th){
             await firebase.auth().onAuthStateChanged(function(user) {
+                // console.log("main folio user : ",user)
                 if(user && user.uid){
                     Firebase.getUserData(user.uid).then(function(data){
                         if(data){
@@ -483,20 +484,6 @@ export default {
 
             return str1.localeCompare(str2)
         },
-
-
-        // search 페이지에서 가져옴 -----------------------------------------
-
-        // doAjax() {
-        //     this.isLoading = true;
-        //     // simulate AJAX
-        //     setTimeout(() => {
-        //         this.isLoading = false
-        //     },1000)
-        // },
-        // onCancel() {
-        //     console.log('User cancelled the loader.')
-        // }
     },
     watch:{
          sortup:function(){
