@@ -7,7 +7,7 @@
                 <span class="secondary">Portfolio</span>
                 <span class="primar" id="prim">My works</span>
             </h2>
-            <v-container id="portfolio" class="section-content gallery alternate" v-for="(item, index) in portfolios.portfolios">
+            <div id="portfolio" class="section-content gallery alternate" v-for="(item, index) in portfolios.portfolios" style="margin-top: 3rem;">
                 <v-card>
                 <v-card-text role="article" id="work1" class="gallery-item is-init is-animated" data-animation="fade-left">
                     <figure role="group" class="gallery-figure">
@@ -64,7 +64,7 @@
                     </table>
                 </v-card-text>
                 </v-card>
-            </v-container>
+            </div>
         </div>
     </section>
     </div>
@@ -137,7 +137,7 @@
                                 <td v-else-if="source.category === 'java'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #001f3f; color: white;">{{ source.category }}</span></td>
                                 <td v-else-if="source.category === 'c'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #FFDC00; color: white;">{{ source.category }}</span></td>
                                 <td v-else-if="source.category === 'c++'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #B10DC9; color: white;">{{ source.category }}</span></td>
-                                <td v-else-if="source.category === 'python'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: ##FF4136; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'python'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #FF4136; color: white;">{{ source.category }}</span></td>
                                 <td data-th="Source"><a :href="source.gitPath" target="_blank">{{ source.fileName }}</a></td>
                                 <td data-th="Related Keywords">{{ source.fileDes }}</td>
                             </tr>
@@ -423,6 +423,9 @@ export default {
     },
     props: ['userData'],
     mounted(){
+        this.$EventBus.$on('Portfolio', () => {
+            this.PortfolioDrawer = !this.PortfolioDrawer
+        })
         this.$watch('userData', userData => {
             this.getPortfolio()
         })
@@ -608,7 +611,8 @@ export default {
                 this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));
                 console.log(this.portfolios.portfolios);
             }
-            const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolios.aboutMe, this.portfolios.layout, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
+            this.upload(this.userData.uid);
+            const result = await FirebaseServices.postPortfolios(this.userData.uid, this.portfolios.aboutMe, this.portfolios.foliotheme, this.portfolios.banner, this.portfolios.portfolios, this.portfolios.skills, this.portfolios.subtitle, this.portfolios.title);
             this.getPortfolio();
             alert('저장 완료!');
             
