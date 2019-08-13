@@ -71,6 +71,7 @@
 import FirebaseService from '@/services/FirebaseServices'
 import Loading from 'vue-loading-overlay';
 import FirebaseServices from '../../services/FirebaseServices';
+import firebase from 'firebase/app'
 
 export default {
     name:'folioCard',
@@ -99,13 +100,27 @@ export default {
     methods: {
         async reboot(){
             // console.log("card route : ",this.$route)
+            let __this = this;
             if(this.$route.name == 'home') this.isbookmark = false
             this.userData = await FirebaseServices.getVisitView(this.result.uid)
-            // console.log(this.userData.displayName);
             this.checkme()
             this.makeTagList()
             this.makeAddr()
-
+            console.log(this.result)
+            if (this.result.banner.img.substring(0, 8) !== 'https://') {
+                var storage = firebase.storage();
+                var storageRef = storage.ref();
+                storageRef.child('users/' + this.userData.uid + '/' + this.result.banner.theme).getDownloadURL().then(function(url) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function(event) {
+                        var blob = xhr.response;
+                    }
+                    xhr.open('GET', url)
+                    xhr.send();
+                    __this.result.banner.img = url;
+                })
+            }
             this.isshow = false
             this.isshow = true
         },
