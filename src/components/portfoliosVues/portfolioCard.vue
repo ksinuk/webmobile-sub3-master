@@ -12,63 +12,57 @@
                 </v-container>
             </v-img>
         </div>
-
-        <v-card-title primary-title>
-            <div>
-                <div style="font-weight: 600;">
-                    <p style="color: ">{{ userData.displayName }}</p>
+        <v-card-text>
+            <div class="text-center">
+                <div style="font-weight: 600;" class="text-center">
+                    <p style="font-family: 'Jua', sans-serif; font-size: 1.5rem;">{{ userData.displayName }}</p>
                     <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                     <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
                 <div>
                     <span v-for="hashtag in taglist">
-                        <v-chip color="teal" text-color="white">
-                            <v-avatar>
-                                <v-icon>check_circle</v-icon>
+                        <v-chip color="#00bfdd" text-color="white">
+                            <v-avatar style="margin-right: 0;">
+                                <i class="fab fa-slack-hash"></i>
                             </v-avatar>
-                            {{ hashtag }}
+                            <span style="font-family: 'Jua', sans-serif; font-size: 1.2rem;">{{ hashtag }}</span>
                         </v-chip>
                     </span>
 
                     <span v-if="result.userData.selected">
                         <span v-for="career in result.userData.selected.career">
-                            <v-chip color="red" text-color="white">
-                                <v-avatar>
-                                    <v-icon>check_circle</v-icon>
+                            <v-chip color="#8dca35" text-color="white">
+                                <v-avatar style="margin-right: 0;">
+                                    <i class="fab fa-slack-hash"></i>
                                 </v-avatar>
-                                {{ career }}
+                                <span style="font-family: 'Jua', sans-serif; font-size: 1.2rem;">{{ career }}</span>
                             </v-chip>
                         </span>
                         <span v-for="recruit in result.userData.selected.recruit">
-                            <v-chip color="blue" text-color="white">
-                                <v-avatar>
-                                    <v-icon>check_circle</v-icon>
+                            <v-chip color="#ff702a" text-color="white">
+                                <v-avatar style="margin-right: 0;">
+                                    <i class="fab fa-slack-hash"></i>
                                 </v-avatar>
-                                {{ recruit }}
+                                <span style="font-family: 'Jua', sans-serif; font-size: 1.2rem;">{{ recruit }}</span>
                             </v-chip>
                         </span>
                         <span v-for="tool in result.userData.selected.tool">
-                            <v-chip color="black" text-color="white">
-                                <v-avatar>
-                                    <v-icon>check_circle</v-icon>
+                            <v-chip color="#39CCCC" text-color="white">
+                                <v-avatar style="margin-right: 0;">
+                                    <i class="fab fa-slack-hash"></i>
                                 </v-avatar>
-                                {{ tool }}
+                                <span style="font-family: 'Jua', sans-serif; font-size: 1.2rem;">{{ tool }}</span>
                             </v-chip>
                         </span>
                     </span>
                 </div>
             </div>
-        </v-card-title>
+        </v-card-text>
         <!-- 해당 포트폴리오 페이지로 이동 -->
-        <v-card-actions>
-            <v-btn flat color="purple" :to="userAddr">Explore</v-btn>
-            <v-spacer></v-spacer>
-        </v-card-actions>
+        <div class="text-center">
+            <v-btn class="ma-2" outline color="indigo" :to="userAddr">Explore</v-btn>
+        </div>
     </v-card>
-    <!-- <div class="vld-parent">
-        <loading :active.sync="isLoading" :can-cancel="true" :on-cancel="onCancel" :is-full-page="fullPage">
-        </loading>
-    </div> -->
 </div>
 </template>
 

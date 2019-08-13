@@ -17,7 +17,10 @@
           </v-flex>
         </v-layout>
         <v-layout class="my-4" style="padding-bottom: 3rem;">
-          <UserDialog v-bind:careerData="careerData"/>
+          <v-flex>
+            <v-btn small round color="#3090D7" dark :to="portAddr" style="height: 3rem; padding-left: 1.5rem; padding-right: 1.5rem; font-size: 1.1rem;"><i class="fas fa-external-link-alt" style="margin-right: 1rem;"></i><span>portfolio</span></v-btn>
+            <UserDialog v-bind:careerData="careerData"/>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-layout>
@@ -113,6 +116,7 @@ export default {
         },
       },
       userImg: null,
+      portAddr: null,
       spark: true,
       examSpark: {
         labels: ['none', 'none', 'none'],
@@ -145,6 +149,8 @@ export default {
       } else {
         this.careerData.userImg = this.userData.userData.photoURL
       }
+      this.portAddr = '/portfoliopage/' + this.userData.userData.uid;
+      console.log(this.portAddr);
     },
     setSpark() {
       if (this.userData.spark.labels.length < 3) {
@@ -164,7 +170,7 @@ export default {
         this.careerData.selected.inUser = true
       }
       console.log('get user career success')
-    },
+    }
   }
 }
 </script>

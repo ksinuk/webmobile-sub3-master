@@ -20,18 +20,14 @@
             <v-btn active-class="active" flat block to="/Portfolios">other portfolio</v-btn>
             <!-- 제공되는 검색 기능 -->
             <v-flex>
-                <v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>
+                <!--<v-text-field label="Search" v-model="searchItem" v-on:keyup.enter="findItem" color="white" ></v-text-field>-->
+                <v-autocomplete label="Search" 
+                    :items="items" 
+                    v-model="searchItem"
+                    v-on:keyup.enter="findItem"
+                    color="white"
+                ></v-autocomplete>
             </v-flex>
-            <div>
-                <span v-for="(tag, name) in tagDict" @click="writeTag(name)">
-                    <v-btn style="text-transform:none; backgroundColor:teal;" round depressed small v-if="tag.color == 'teal'">{{name}}</v-btn>
-                    <v-btn style="text-transform:none; backgroundColor:red;" round depressed small v-if="tag.color == 'red'">{{name}}</v-btn> 
-                    <v-btn style="text-transform:none; backgroundColor:blue;" round depressed small v-if="tag.color == 'blue'">{{name}}</v-btn> 
-                    <v-btn style="text-transform:none; backgroundColor:black;" round depressed small v-if="tag.color == 'black'">{{name}}</v-btn>    
-                </span>
-                <!-- <v-btn style="backgroundColor:red;" round depressed small >임베디드</v-btn> -->
-                
-            </div>
         </div>
     </v-container>
 </template>
@@ -44,8 +40,11 @@ export default {
     name: "sideBarItems",
     data() {
         return {
+            userImg: {
+                bool: false,
+                src: null
+            },
             searchItem: '',
-
             tagDict: {},
 
             me : '',
@@ -67,12 +66,14 @@ export default {
         })
 
         this.tagDict = await FirebaseServices.getTagsAll()
-
+        for (let item in this.tagDict) {
+            this.items.push(item);
+        }
         this.$EventBus.$on('changePhoto', (URL) => {
-            this.userImg = URL
+            store.commit('setPhotoURL', URL)
+            this.userImg.bool = true
+            this.userImg.src = URL
         })
-
-        // console.log("this.$store : ", this.$store)
     },
     methods: {
         closeDrawer(trigger) {
@@ -86,6 +87,7 @@ export default {
             // console.log(this.searchItem)
             this.$router.push("/search/" + this.searchItem)
             window.location.reload()
+            this.searchItem = '';
         },
         writeTag: function(input){
             this.searchItem += ' '+input.trim().replace(' ','_')
