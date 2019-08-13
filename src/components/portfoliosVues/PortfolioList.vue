@@ -605,7 +605,6 @@ export default {
                 this.portfolios.portfolios[this.idx].sources = this.portfolio.sources;
                 this.portfolios.portfolios[this.idx].imageNames = this.portfolio.imageNames;
                 this.portfolios.portfolios[this.idx].dumpImg = this.portfolio.dumpImg;
-                this.upload(this.userData.uid);
                 this.imageList = [];
             } else {
                 this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));
