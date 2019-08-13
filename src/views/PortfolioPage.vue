@@ -38,11 +38,6 @@ export default {
     getUserID() {
       let __this = this;
       const tmp = firebase.auth().onAuthStateChanged(async function(user) {
-          // user login 정보가 없을 때 로그인 페이지로 redirect
-          if (!user) {
-            alert('로그인이 필요합니다!');
-            return __this.$router.push('/login');
-          }
           if (__this.$route.params.uid === undefined) {
             __this.isotherUid = true;
             __this.userData = await FirebaseServices.getVisitView(user.uid)
