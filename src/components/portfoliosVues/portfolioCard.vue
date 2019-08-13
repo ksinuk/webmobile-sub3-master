@@ -15,7 +15,7 @@
         <v-card-text>
             <div class="text-center">
                 <div style="font-weight: 600;" class="text-center">
-                    <p style="font-family: 'Jua', sans-serif; font-size: 1.5rem;">{{ userData.displayName }}</p>
+                    <p style="font-family: 'Jua', sans-serif; font-size: 1.5rem;" v-if="userData">{{ userData.displayName }}</p>
                     <v-icon v-if="islike && isbookmark" class="mx-2" color="warning" @click="enrollLike()">star</v-icon>
                     <v-icon v-if="!islike && isbookmark" class="mx-2" @click="enrollLike()">star</v-icon>
                 </div>
@@ -98,10 +98,10 @@ export default {
     },
     methods: {
         async reboot(){
-            console.log("card route : ",this.$route)
+            // console.log("card route : ",this.$route)
             if(this.$route.name == 'home') this.isbookmark = false
             this.userData = await FirebaseServices.getVisitView(this.result.uid)
-            console.log(this.userData.displayName);
+            // console.log(this.userData.displayName);
             this.checkme()
             this.makeTagList()
             this.makeAddr()
