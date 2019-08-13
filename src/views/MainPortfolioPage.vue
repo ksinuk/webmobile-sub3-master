@@ -6,82 +6,58 @@
             <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
         </div>
     </BackBanner>
-    <v-navigation-drawer permanent>
-    <v-toolbar flat>
-      <v-list>
-        <v-list-tile>
-            <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
-        </v-list-tile>
-      </v-list>
-    </v-toolbar>
-    <v-list dense class="pt-0">
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-briefcase pr-3"></i>Career</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-wrench pr-3"></i>Tool</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-filter pr-3"></i>Sort</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-radio-group v-model="radios" :mandatory="false">
-                        <v-radio label="Radio 1" value="radio-1"></v-radio>
-                        <v-radio label="Radio 2" value="radio-2"></v-radio>
-                    </v-radio-group>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-list>
-  </v-navigation-drawer>
+    <!-- <v-navigation-drawer permanent>
+        <v-toolbar flat>
+            <v-list>
+                <v-list-tile>
+                    <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
+                </v-list-tile>
+            </v-list>
+        </v-toolbar>
+        <v-list dense class="pt-0">
+            <v-expansion-panel>
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                        <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
+                    </template>
+                    <v-card>
+                        <v-card-text>
+                            <span v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
+                                <v-checkbox  :label="tag" :id="tag"></v-checkbox>
+                            </span>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+
+                <v-expansion-panel-content  v-for="(SelectMain , mainName) in SelectDictDict">
+                    <template v-slot:header>
+                        <div><i class="fas fa-briefcase pr-3"></i>{{mainName}}</div>
+                    </template>
+                    <v-card>
+                        <v-card-text>
+                            <v-container fluid>
+                                <v-checkbox v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)" :label="tag"></v-checkbox>
+                            </v-container>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                        <div><i class="fas fa-filter pr-3"></i>Sort</div>
+                    </template>
+                    <v-card>
+                        <v-card-text>
+                            <v-radio-group v-model="radios" :mandatory="false">
+                                <v-radio label="Radio 1" value="radio-1"></v-radio>
+                                <v-radio label="Radio 2" value="radio-2"></v-radio>
+                            </v-radio-group>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-list>
+    </v-navigation-drawer> -->
 
 
 
@@ -112,7 +88,8 @@
                     <div v-if="SelectIfDict[mainName]">
                         <ul>
                             <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
-                                {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                {{tag}}<span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
+                                
                             </li>
                         </ul>
                     </div>
@@ -368,6 +345,10 @@ export default {
 
         // 각각의 테그에 해당하는 portfolio만 화면애 출력
         tagcheck:function(tag, tag_name){ //선택한 테그와 테그의 이름
+            console.log("tagcheck this.tagoutList : ",this.tagoutList)
+            console.log("tagcheck this.hashDict : ",this.hashDict)
+            // console.log("tagcheck this.SelectDictDict : ",this.SelectDictDict)
+
             tag['check'] = !tag['check'] //테그의 체크 아이콘 출력 변경
             this.tagCheckNum += tag['check'] ? 1:-1 //지금까지 선택한 테그의 갯수 계산
             
@@ -376,16 +357,20 @@ export default {
             }
             else if(tag['check'] && this.tagCheckNum == 1){ // 선택한 테그가 1개이면 테그 목록 출력
                 // console.log("solo tag : ",tag)
-                this.tagoutList = tag
+                for(let i=0; i<tag.length; i++){
+                    this.tagoutList.push(tag[i])
+                }
             }
             else if(tag['check']){ // 해당 테그가 없는 포트폴리오를 출력 목록에서 제거
                 for(let i=0; i<this.tagoutList.length; i++){
                     let nowUser = this.tagoutList[i]
                     let len = this.tagoutList.length
                     if(!this.ifelemInList(nowUser, tag)){
+                        console.log("tag check this.hashDict : ",this.hashDict)
                         this.tagoutList[i] = this.tagoutList[len-1]
                         i-=1
                         this.tagoutList.pop()
+                        if(this.tagoutList.length == 0) return 0
                     }
                 }
             }
