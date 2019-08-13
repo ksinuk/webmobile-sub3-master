@@ -56,7 +56,7 @@
                                 <td v-else-if="source.category === 'java'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #001f3f; color: white;">{{ source.category }}</span></td>
                                 <td v-else-if="source.category === 'c'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #FFDC00; color: white;">{{ source.category }}</span></td>
                                 <td v-else-if="source.category === 'c++'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #B10DC9; color: white;">{{ source.category }}</span></td>
-                                <td v-else-if="source.category === 'python'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: ##FF4136; color: white;">{{ source.category }}</span></td>
+                                <td v-else-if="source.category === 'python'" data-th="Category"><span class="categ" style="text-transform: uppercase; background: #FFA500; color: white;">{{ source.category }}</span></td>
                                 <td data-th="Source"><a :href="source.gitPath" target="_blank">{{ source.fileName }}</a></td>
                                 <td data-th="Related Keywords">{{ source.fileDes }}</td>
                             </tr>
@@ -605,7 +605,6 @@ export default {
                 this.portfolios.portfolios[this.idx].sources = this.portfolio.sources;
                 this.portfolios.portfolios[this.idx].imageNames = this.portfolio.imageNames;
                 this.portfolios.portfolios[this.idx].dumpImg = this.portfolio.dumpImg;
-                this.upload(this.userData.uid);
                 this.imageList = [];
             } else {
                 this.portfolios.portfolios.push(JSON.parse(JSON.stringify(this.portfolio)));

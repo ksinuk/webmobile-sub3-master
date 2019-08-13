@@ -5,24 +5,6 @@
             <carousel :per-page="pageNum">
                 <slide v-for="folio in folios" class="px-2">
                     <folioCard :result="folio" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
-
-                    <!-- <v-card>
-                        <v-img :src="folio.banner.img" height="200px">
-                        </v-img>
-
-                        <v-card-title primary-title>
-                        <div>
-                            <div class="headline">{{folio.uid}}</div>
-                            <span class="grey--text">Portfolio category</span>
-                        </div>
-                        </v-card-title>
-
-                        <v-card-actions>
-                            <v-btn flat>Like</v-btn>
-                            <v-btn flat color="purple">Explore</v-btn>
-                            <v-spacer></v-spacer>
-                        </v-card-actions>
-                    </v-card> -->
                 </slide>
             </carousel>
         </v-flex>
