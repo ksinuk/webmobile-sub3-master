@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="tempView" :class="{css1:cssArr[0], xs6:cssArr[0], css2:cssArr[1], xs12:cssArr[1]}">
-    <div :themeColor="this.$store.state.theme" class="aboutMeBody">
+    <div :themeColor="this.$store.state.theme" class="aboutMeBody" style="overflow: hidden; height: auto;">
       <!-- about my self -->
       <div class="contentSize aboutMe_about">
         <v-container class="aboutContainer">
@@ -23,10 +23,10 @@
             <span class="aboutMe_title" style="color: white; opacity: 0.5; font-size: 1.7rem; font-family: 'Nanum Gothic', sans-serif;">skills</span>
             <span id="aboutTitle2" class="aboutMe_subTitle">What I can do.</span>
           </h4>
-          <div id="aboutSubtitle2" v-for="item in portfolio.skills">
-              <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;"><span>{{ item.name }}</span><span>{{ item.degree }}</span></p>
+          <div id="aboutSubtitle2" v-for="item in portfolio.skills" style="margin-bottom: 1rem;">
+              <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;"><i class="far fa-check-circle"></i><span style="margin-left: 1rem;">{{ item.name }}</span><span style="font-size: 70%; margin-left: 0.8rem;">/ {{ item.degree }}</span></p>
               <!--<div :id="item.name" class="bar back" :data-skill="item.degree"></div>-->
-              <p><i class="far fa-check-circle"></i><span>{{ item.description }}</span></p>
+              <p style="font-size: 90%;"><span style="margin-left: 3rem;">{{ item.description }}</span></p>
           </div>
         </v-container>
       </div>
@@ -42,6 +42,7 @@
         </v-container>
         <v-img class="aboutMe_image" :src="userData.photoURL"
           lazy-src="https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2015/10/designer-developer-1200x616.jpg"
+          style="object-fit: cover;"
         ></v-img>
       </div>
 
