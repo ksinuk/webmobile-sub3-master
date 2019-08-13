@@ -1,171 +1,107 @@
 <template>
-<div>
-    <BackBanner>
-        <div slot="pageName">
-            <p class="mainBackBanner" v-if="ifsearch"> <span style="color:red;">{{search_input}}</span> Search Results</p>
-            <p class="mainBackBanner" v-if="!ifsearch">Portfolio Explorer</p>
-        </div>
-    </BackBanner>
-    <v-navigation-drawer permanent>
-    <v-toolbar flat>
-      <v-list>
-        <v-list-tile>
-            <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
-        </v-list-tile>
-      </v-list>
-    </v-toolbar>
-    <v-list dense class="pt-0">
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-briefcase pr-3"></i>Career</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-wrench pr-3"></i>Tool</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
-                        <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-            <template v-slot:header>
-                <div><i class="fas fa-filter pr-3"></i>Sort</div>
-            </template>
-            <v-card>
-                <v-card-text>
-                    <v-radio-group v-model="radios" :mandatory="false">
-                        <v-radio label="Radio 1" value="radio-1"></v-radio>
-                        <v-radio label="Radio 2" value="radio-2"></v-radio>
-                    </v-radio-group>
-                </v-card-text>
-            </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-list>
-  </v-navigation-drawer>
-
-
-
-    <div style="display:flex; position:relative;" v-if="prnok">
-        <!-- ---- side bar ---------------------------- -->
-        <div class="sidebar">
-            <br>
-            <div class="sidebar-part">
-                <h3 class="tag-title">hash</h3>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="!ifHash">+</btn>
-                <btn class="open-btn" @click="ifHash = !ifHash" v-if="ifHash">-</btn>
-                <div v-if="ifHash">
-                    <ul>
-                        <li class="tag-list" v-for="(elem,tag) in hashDict" @click="tagcheck(elem,tag)">
-                            {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
+    <div>
+        <BackBanner>
+            <div slot="pageName">
+                <p class="mainBackBanner" v-if="ifsearch" style="font-family: 'Jua', sans-serif;">Search Results</p>
+                <p class="mainBackBanner" v-if="!ifsearch" style="font-family: 'Jua', sans-serif;">Portfolio Explorer</p>
             </div>
-            <hr>
-            <br>
-
-            <span v-for="(SelectMain , mainName) in SelectDictDict">
-                <div class="sidebar-part">
-                    <h3 class="tag-title">{{mainName}}</h3>
-                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="!SelectIfDict[mainName]">+</btn>
-                    <btn class="open-btn" @click="turnSelectIf(SelectIfDict ,mainName)" v-if="SelectIfDict[mainName]">-</btn>
-                    <div v-if="SelectIfDict[mainName]">
-                        <ul>
-                            <li class="tag-list" v-for="(elem,tag) in SelectMain" @click="tagcheck(elem,tag,mainName)">
-                                {{tag}} <span v-show="elem['check']"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <br>
-            </span>
-
-            <div class="sidebar-part">
-                <h3 class="tag-title">정렬</h3>
-                <btn class="open-btn" @click="ifsort = !ifsort" v-if="!ifsort">+</btn>
-                <btn class="open-btn" @click="ifsort = !ifsort" v-if="ifsort">-</btn>
-                <div v-if="ifsort">
-                    <ul>
-                        <li class="tag-list" @click="sortup = true">
-                            이름 : 오름차순 <span v-show="sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                        <li class="tag-list" @click="sortup = false">
-                            이름 : 내림차순 <span v-show="!sortup"><i class="fas fa-check" style="color:Crimson;"></i></span>
-                        </li>
-                    </ul>
-                </div>
+        </BackBanner>
+        <v-layout>
+            <v-navigation-drawer permanent height="70vh">
+            <v-toolbar flat>
+            <v-list>
+                <v-list-tile>
+                    <i class="fas fa-sliders-h" style="margin-left: 1rem; color: #AF7995;"></i><span style="font-weight: bolder; margin-left: 1rem; color: #AF7995;">Filter</span>
+                </v-list-tile>
+            </v-list>
+            </v-toolbar>
+            <v-list dense class="pt-0">
+                <v-expansion-panel>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fab fa-slack-hash pr-3"></i>Hash</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                                <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-briefcase pr-3"></i>Career</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-container fluid>
+                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                                </v-container>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-search-plus pr-3"></i>Recruit</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-container fluid>
+                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                                </v-container>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-wrench pr-3"></i>Tool</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-container fluid>
+                                    <v-checkbox v-model="selected" label="John" value="John"></v-checkbox>
+                                    <v-checkbox v-model="selected" label="Jacob" value="Jacob"></v-checkbox>
+                                </v-container>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><i class="fas fa-filter pr-3"></i>Sort</div>
+                        </template>
+                        <v-card>
+                            <v-card-text>
+                                <v-radio-group v-model="radios" :mandatory="false">
+                                    <v-radio label="Radio 1" value="radio-1"></v-radio>
+                                    <v-radio label="Radio 2" value="radio-2"></v-radio>
+                                </v-radio-group>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+                </v-list>
+            </v-navigation-drawer>
+            <!-- list -->
+            <div class="foliolist" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
+                <p>"{{search_input}}" 의 검색 결과입니다.</p>
+                <v-layout class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
+                    <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
+                </v-layout>
+                <v-layout class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
+                    <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
+                    <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
+                </v-layout>
             </div>
 
-        </div>
-        <!-- ----- list --------------------------- -->
-        <div class="foliolist" v-if="folios.length != 0 && (tagoutList.length != 0 || tagCheckNum == 0)">
-            <div class="folio" v-for="user in folios" v-if="tagCheckNum == 0">
-                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
-            </div>
-            <div class="folio" v-for="user in tagoutList" v-if="tagCheckNum != 0">
-                <!-- <p><a class="folioLink" :href="user.addr">{{user.pk}}</a></p> -->
-                <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
-            </div>
-        </div>
-
-        <!-- 검색 결과가 없을 때 -->
-        <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
-            <div>
+            <!-- 검색 결과가 없을 때 -->
+            <div v-if="folios.length == 0 || tagoutList.length == 0 && tagCheckNum != 0" style="height: 50vh;">
                 <p class="resultOut">검색 결과가 없습니다.</p>
             </div>
-        </div>
-        
+        </v-layout>
     </div>
-    uid : {{me.uid}}<br>
-    tagCheckNum : {{tagCheckNum}}<br>
-    folio len : {{folios.length}}<br>
-    ifsearch : {{ifsearch}}<br>
-    search_input : {{search_input}}
-
-
-</div>
 </template>
 
 <script>

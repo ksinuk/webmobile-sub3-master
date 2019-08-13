@@ -2,7 +2,7 @@
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-if="careerData.selected.inUser == true" v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Edit</v-btn>
+        <v-btn round color="#3090D7" dark v-on="on">Edit</v-btn>
       </template>
       <v-card>
         <v-card-title>
