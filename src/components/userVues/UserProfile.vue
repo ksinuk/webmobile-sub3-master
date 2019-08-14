@@ -147,7 +147,6 @@
               </v-list-tile>
             </v-card-actions>
           </v-card>
-          {{ this.commentList}}
           
         </v-container>
       </v-tab-item>
