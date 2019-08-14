@@ -114,13 +114,8 @@
         <v-container>
           <!-- 입력 -->
           <v-flex>
-            <v-text-field
-              v-model="comment"
-              label="Comment"
-              outline
-              :append-icon="comment ? 'send' : ''"
-              @click:append="sendComment()"
-            ></v-text-field>
+            <v-text-field v-model="comment" label="Comment" outline :append-icon="comment ? 'send' : ''" @keyup.enter="sendComment()"  @click:append="sendComment()" >
+            </v-text-field>
           </v-flex>
 
           <v-card v-for="(item, key) in commentList" style="margin-bottom: 5px;">

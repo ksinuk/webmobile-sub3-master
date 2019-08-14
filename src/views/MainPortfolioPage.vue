@@ -80,10 +80,10 @@
                 </v-flex>
             </v-layout>
             <v-layout>
-                <v-flex xs4 class="px-2" v-for="user in folios" v-if="tagCheckNum == 0">
+                <v-flex xs3 class="px-2" v-for="user in folios" v-if="tagCheckNum == 0">
                     <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
                 </v-flex>
-                <v-flex xs4 class="px-2" v-for="user in tagoutList" v-if="tagCheckNum != 0">
+                <v-flex xs3 class="px-2" v-for="user in tagoutList" v-if="tagCheckNum != 0">
                     <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal"/>
                 </v-flex>
             </v-layout>
