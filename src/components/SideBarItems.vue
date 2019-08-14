@@ -87,7 +87,8 @@ export default {
         },
         findItem: function() {
             // console.log(this.searchItem)
-            this.$router.push("/search/" + this.searchItem)
+
+            this.$router.push("/search/" + this.searchItem.replace(' ','_'))
             window.location.reload()
             this.searchItem = '';
         },
