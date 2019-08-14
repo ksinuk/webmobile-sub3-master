@@ -175,7 +175,6 @@ export default {
           tool: [],
           career: [],
         },
-      me:false,
       },
       userImg: null,
       portAddr: null,
@@ -189,6 +188,7 @@ export default {
       comment: null,
       commentList: [],
       show1: false,
+      me:false,
     }
   },
   watch: {
@@ -204,7 +204,7 @@ export default {
     let th = this
     firebase.auth().onAuthStateChanged(function(user){
       if(user && user.uid){
-        Firebase.getUserData(user.uid).then(function(data){
+        FirebaseServices.getUserData(user.uid).then(function(data){
           if(data){
               th.me = data
               th.me['uid'] = user.uid
