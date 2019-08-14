@@ -95,7 +95,7 @@
         </v-container>
         
     </div>
-
+    folios.length : {{folios.length}}
 </div>
 </template>
 
@@ -194,6 +194,7 @@ export default {
                         for(let j=0;j<folio.hashtags.length;j++){
                             //hash tag 추출 
                             let tag = folio.hashtags[j]
+                            if(typeof(tag) != 'string') continue
 
                             //hash tag 사전에 각각의 portfolio 저장
                             if(th.hashDict[tag]){
@@ -221,6 +222,7 @@ export default {
                         let selectList = seleteDict[seleter]
                         for(let j=0; j<selectList.length; j++){
                             let selectName = selectList[j]
+                            if(typeof(selectName) != 'string') continue
                             // selected 사전에 해당하는 portfolio 저장
                             if(th.SelectDictDict[seleter][selectName]){
                                 th.SelectDictDict[seleter][selectName].push(post)
