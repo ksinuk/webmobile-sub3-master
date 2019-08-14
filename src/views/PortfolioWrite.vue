@@ -2,7 +2,7 @@
   <div>
     <BackBanner>
       <div slot="pageName">
-        <p style="font-size: 3rem; font-weight: 300; letter-spacing: 0.08rem; text-shadow: 2px 2px 2px #103b5b; color: white;">Write Portfolio</p>
+        <p style="font-family: 'Jua', sans-serif; font-size: 4rem; font-weight: 300; letter-spacing: 0.08rem; text-shadow: 2px 2px 2px #103b5b; color: white;">Write Portfolio</p>
       </div>
     </BackBanner>
 
