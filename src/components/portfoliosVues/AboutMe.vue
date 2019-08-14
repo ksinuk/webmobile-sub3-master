@@ -27,7 +27,7 @@
             <div v-for="item in portfolio.skills" style="margin-bottom: 1rem;">
               <p style="display: inline; font-family: 'Nanum Gothic', sans-serif; font-weight: bolder;"><i class="far fa-check-circle"></i><span style="margin-left: 1rem;">{{ item.name }}</span><span style="font-size: 70%; margin-left: 0.8rem;">/ {{ item.degree }}</span></p>
               <!--<div :id="item.name" class="bar back" :data-skill="item.degree"></div>-->
-              <p style="font-size: 90%;"><span style="margin-left: 3rem;">{{ item.description }}</span></p>
+              <div style="font-size: 90%; margin-left: 3rem;"><span>{{ item.description }}</span></div>
             </div>
           </div>
         </v-container>
@@ -495,6 +495,7 @@ export default {
       let __this = this;
       FirebaseServices.getMyPort(this.userData.uid).then(function(res) {
         __this.portfolio = res;
+        console.log(__this.portfolio);
         // 0812 / theme select
         for (let i=0; i < __this.themeArr.length; i++) {
           if (__this.portfolio.aboutMe.theme[i] === true) {
