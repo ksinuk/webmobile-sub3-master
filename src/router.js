@@ -29,14 +29,16 @@ Vue.use(Router)
 
 // 로그인 상태 정보를 vuex에 저장하고 판단
 const requireAuth = () => (to, from, next) => {
+    const inUser = true
     firebaseApp.auth().onAuthStateChanged(function(user){
         if(!user || !user.uid){
-            alert('로그인이 필요합니다!')
-            return next('/login')
+            inUser = false
         }
     })
-
-
+    if (inUser === false) {
+        alert('로그인이 필요합니다!')
+        return next('/login')
+    }
 //   let _user = firebase.auth().currentUser
 //   if (!_user) {
 //     alert('login please')

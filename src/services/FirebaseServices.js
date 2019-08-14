@@ -565,11 +565,11 @@ export default {
     logoutUser() {
         firebase.auth().signOut().then(function() {})
         // 로그아웃 후 세션삭제
-        .then(sessionStorage.clear())
-        // 홈페이지로 이동
-        .then(router.push('/'))
-        .catch(function(error) {
-            console.log(error)
+            .then(sessionStorage.clear())
+            // 홈페이지로 이동
+            .then(router.push('/'))
+            .catch(function(error) {
+                console.log(error)
         })
     },
     login() {
