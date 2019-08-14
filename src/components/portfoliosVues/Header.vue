@@ -22,7 +22,7 @@
         </v-layout>
         <!-- template3 -->
         <v-layout v-else-if="layout === 'template3'" id="headBanner" row align-center style="min-height: 100vh; position: relative; background-size: cover;">
-            <v-flex>
+            <v-flex style="padding-right: 7rem;">
                 <h1 id="portTitle" class="animated delay-1s" style="font-weight: 300; letter-spacing: 0.08rem; text-align: right;">{{portfolio.title.content}}</h1>
                 <p id="portSubtitle" class="animated delay-2s" style="text-align: right;">{{portfolio.subtitle.content}}</p>
             </v-flex>
