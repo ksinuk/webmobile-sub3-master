@@ -5,7 +5,7 @@
             <p class="mianBanner-write-css2">DevFolio</p>
             <h2 id="bannerTitle"></h2>
             <div class="py-4">
-                <v-btn round color="light" to="/login" style="color: #ff6b6b; font-weight: bold; padding: .375rem 2.75rem;">GET STARTED</v-btn>
+                <v-btn round color="light" @click="gotoPage()" style="color: #ff6b6b; font-weight: bold; padding: .375rem 2.75rem;">GET STARTED</v-btn>
             </div>
         </v-flex>
         <v-flex xs6 style="padding-right: 10%;">
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import firebase from 'firebase'
+import FirebaseServices from '@/services/FirebaseServices.js'
 
 export default {
     name: 'ImageBanner',
@@ -22,19 +24,49 @@ export default {
         return {
             images:['https://d19m59y37dris4.cloudfront.net/foliou/2-0-0/img/hero-macbook.png'],
             currentNumber:0,
-            timer : null
+            timer : null,
+            me : false,
         }
     },
     mounted() {
         // 0729 error 주석처리
         // this.startRotation();
     },
+    created(){
+        let th = this
+        firebase.auth().onAuthStateChanged(function(user) {
+            // console.log("main folio user : ",user)
+            if(user && user.uid){
+                FirebaseServices.getUserData(user.uid).then(function(data){
+                    if(data){
+                        th.me = data
+                        th.me['uid'] = user.uid
+                        th.cardUpdateSignal += 1
+                    }
+                    else{
+                        th.me = {'uid':user.uid}
+                        th.cardUpdateSignal += 1
+                    }
+                })
+            }
+        })
+
+    },
 
     methods : {
         // aboutFunction: function() {
         //   // 723.2000122070312
         //   document.documentElement.scrollTop = 796;
-        // }
+        // },
+
+        gotoPage:function(){
+            if(!this.me){
+                window.location.replace('/login')
+            }
+            else {
+                window.location.replace("/user/"+this.me.uid)
+            }
+        },
     }
 }
 

@@ -64,6 +64,7 @@
 
 <script>
 import LoginButtons from '../components/LoginButtons'
+import firebase from 'firebase'
 
 export default {
   name: 'loginpage',
@@ -74,6 +75,15 @@ export default {
     return {
       viewSign: true,
     }
+  },
+  created(){
+    let th = this
+    firebase.auth().onAuthStateChanged(function(user){
+      console.log("login but user : ",user)
+      if(user && user.uid){
+        window.location.replace("/user/"+user.uid)
+      }
+    })
   }
 }
 </script>
