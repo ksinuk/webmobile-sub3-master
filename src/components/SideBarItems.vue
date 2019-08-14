@@ -49,7 +49,9 @@ export default {
         }
     },
     mounted() {
-        
+        this.$EventBus.$on('changePhoto', (URL) => {
+        this.me.photoURL = URL
+    })
     },
     async created(){
         let th = this
