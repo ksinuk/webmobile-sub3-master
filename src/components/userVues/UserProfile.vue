@@ -113,7 +113,7 @@
         <p style="font-family: 'Jua', sans-serif;">댓글을 남겨주세요.</p>
         <v-container>
           <!-- 입력 -->
-          <v-flex>
+          <v-flex v-if="me">
             <v-text-field v-model="comment" label="Comment" outline :append-icon="comment ? 'send' : ''" @keyup.enter="sendComment()"  @click:append="sendComment()" >
             </v-text-field>
           </v-flex>
@@ -175,6 +175,7 @@ export default {
           tool: [],
           career: [],
         },
+      me:false,
       },
       userImg: null,
       portAddr: null,
@@ -200,6 +201,22 @@ export default {
     }
   },
   created() {
+    let th = this
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user && user.uid){
+        Firebase.getUserData(user.uid).then(function(data){
+          if(data){
+              th.me = data
+              th.me['uid'] = user.uid
+          }
+          else{
+              th.me = {'uid':user.uid}
+          }
+        })
+      }
+    })
+
+
     this.setProfile()
     this.setSpark()
     this.getCareer()
