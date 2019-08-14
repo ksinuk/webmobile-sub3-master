@@ -289,7 +289,9 @@ export default {
                         
                         for(let j=0;j<folio.length;j++){
                             let hashtags = folio[j].hashtags
+                            console.log("func hashtags : ",hashtags)
                             for(let k=0;k<hashtags.length;k++){
+                                if(typeof(hashtags[k]) != 'string') continue
                                 for(let ini=0; ini<inputs.length; ini++){
                                     if(hashtags[k].replace(' ','_') == inputs[ini]){
                                         inputs[ini] = inputs[inputs.length-1]
@@ -312,6 +314,7 @@ export default {
                                 let main = doc.userData.selected[mainName]
                                 for(let j=0;j<main.length; j++){
                                     for(let ini=0; ini<inputs.length; ini++){
+                                        if(typeof(main[j]) != 'string') continue
                                         if(main[j].replace(' ','_') == inputs[ini]){
                                             inputs[ini] = inputs[inputs.length-1]
                                             inputs.pop()
@@ -322,12 +325,13 @@ export default {
                                 if(inputs.length == 0) break
                             }
                         }
-
+                        console.log("inputs : ",inputs)
                         if(inputs.length == 0){
                             out.push(doc)
                         } 
                     }
                     // console.log("getPortfolios() return : ",out)
+                    console.log("search out : ",out)
                     resolve(out)
                 })
                 .catch(function(res){
