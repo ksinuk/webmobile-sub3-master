@@ -79,7 +79,7 @@
                     <p style="font-size: 2rem; font-family: 'Jua', sans-serif;">"{{search_input}}"의 검색 결과입니다.</p>
                 </v-flex>
             </v-layout>
-            <v-layout>
+            <v-layout row wrap>
                 <v-flex xs4 class="px-2" v-for="user in folios" v-if="tagCheckNum == 0">
                     <folioCard :result="user" :me="me" :updateSignal="cardUpdateSignal" style="height:100%;"/>
                 </v-flex>
