@@ -39,12 +39,22 @@ const requireAuth = () => (to, from, next) => {
         alert('로그인이 필요합니다!')
         return next('/login')
     }
-//   let _user = firebase.auth().currentUser
-//   if (!_user) {
-//     alert('login please')
-//     return next('/')
-//   }
-  next()
+    next()
+}
+
+const existAuth = () => (to, from, next) => {
+    const inUser = false
+    firebaseApp.auth().onAuthStateChanged(function(user){
+        if (user) {
+            inUser = true
+        }
+    })
+    if (inUser === true) {
+        alert('로그인되어 있습니다!')
+        return next('/')
+    }
+    console.log('asdasd')
+    next()
 }
 
 export default new Router({
@@ -74,7 +84,8 @@ export default new Router({
         {
             path: '/login',
             name: 'loginpage',
-            component: LoginPage
+            component: LoginPage,
+            beforeEnter: existAuth()
         },
         {
             path: '/board',

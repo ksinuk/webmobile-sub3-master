@@ -94,7 +94,7 @@
                 <v-card-text>
                     <figure role="group" class="gallery-figure">
                         <figcaption class="gallery-caption">
-                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ portidx+1 }}</p></span>{{ portfolio.title }}</h3>
+                            <h3 class="gallery-title"><span id="listTitle"><p class="index">0</p><p class="index">{{ portidx+1 }}</p></span style="font-size: 2rem; padding-left: 1rem;">{{ portfolio.title }}</h3>
                             <ul class="gallery-spec">
                                 <li v-if="portfolio.viewport !== null" class="gallery-spec-item"><strong class="gallery-spec-key">Viewport</strong> <span class="gallery-spec-value">{{ portfolio.viewport }}</span></li>
                                 <li v-if="portfolio.ie !== null" class="gallery-spec-item"><strong class="gallery-spec-key">IE support</strong> <span class="gallery-spec-value">{{ portfolio.ie }}</span></li>
