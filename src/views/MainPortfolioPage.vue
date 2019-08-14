@@ -95,7 +95,6 @@
         </v-container>
         
     </div>
-    folios.length : {{folios.length}}
 </div>
 </template>
 
